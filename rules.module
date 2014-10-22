@@ -220,6 +220,7 @@ function rules_fetch_data($hook) {
   );
 
   if (!isset($data[$hook])) {
+    $data[$hook] = array();
     foreach (module_implements('rules_' . $hook) as $module) {
       $result = call_user_func($module . '_rules_' . $hook);
       if (isset($result) && is_array($result)) {
