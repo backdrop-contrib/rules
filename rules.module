@@ -12,6 +12,8 @@ require_once dirname(__FILE__) . '/modules/events.inc';
  * Implements hook_init().
  */
 function rules_init() {
+  // Enable event invocation once hook_init() was invoked for Rules.
+  rules_event_invocation_enabled(TRUE);
   rules_invoke_event('init');
 }
 
@@ -1663,6 +1665,10 @@ function rules_entity_metadata_wrapper_all_properties_callback(EntityMetadataWra
 /**
  * Helper to enable or disable the invocation of rules events.
  *
+ * Rules invocation is disabled by default, such that Rules does not operate
+ * when Drupal is not fully bootstrapped. It gets enabled in rules_init() and
+ * rules_enable().
+ *
  * @param bool|NULL $enable
  *   NULL to leave the setting as is and TRUE / FALSE to change the behaviour.
  *
@@ -1670,7 +1676,7 @@ function rules_entity_metadata_wrapper_all_properties_callback(EntityMetadataWra
  *   Whether the rules invocation is enabled or disabled.
  */
 function rules_event_invocation_enabled($enable = NULL) {
-  static $invocation_enabled = TRUE;
+  static $invocation_enabled = FALSE;
   if (isset($enable)) {
     $invocation_enabled = (bool) $enable;
   }
