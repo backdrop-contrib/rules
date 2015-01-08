@@ -352,7 +352,7 @@ function &rules_get_cache($cid = 'data') {
         $cache[$cid] = FALSE;
         _rules_rebuild_component_cache();
       }
-      elseif (strpos($cid, 'event_') === 0) {
+      elseif (strpos($cid, 'event_') === 0 || $cid == 'rules_event_whitelist') {
         $cache[$cid] = FALSE;
         RulesEventSet::rebuildEventCache();
       }
@@ -447,7 +447,6 @@ function rules_flush_caches() {
  */
 function rules_clear_cache() {
   cache_clear_all('*', 'cache_rules', TRUE);
-  variable_del('rules_event_whitelist');
   drupal_static_reset('rules_get_cache');
   drupal_static_reset('rules_fetch_data');
   drupal_static_reset('rules_config_update_dirty_flag');
@@ -984,17 +983,16 @@ function rules_invoke_all() {
  * @see rules_invoke_event_by_args()
  */
 function rules_invoke_event() {
-  global $conf;
-
   $args = func_get_args();
   $event_name = $args[0];
   unset($args[0]);
   // We maintain a whitelist of configured events to reduces the number of cache
-  // reads. We access it directly via the global $conf as this is fast without
-  // having to introduce another static cache. Then, if the whitelist is unset,
-  // we ignore it so cache rebuilding is triggered.
-  if (rules_event_invocation_enabled() && (!isset($conf['rules_event_whitelist']) || isset($conf['rules_event_whitelist'][$event_name])) && $event = rules_get_cache('event_' . $event_name)) {
-    $event->executeByArgs($args);
+  // reads. If the whitelist is empty we proceed and it is rebuilt.
+  if (rules_event_invocation_enabled()) {
+    $whitelist = rules_get_cache('rules_event_whitelist');
+    if ((empty($whitelist) || isset($whitelist[$event_name])) && $event = rules_get_cache('event_' . $event_name)) {
+      $event->executeByArgs($args);
+    }
   }
 }
 
@@ -1016,14 +1014,13 @@ function rules_invoke_event() {
  * @see rules_invoke_event()
  */
 function rules_invoke_event_by_args($event_name, $args = array()) {
-  global $conf;
-
   // We maintain a whitelist of configured events to reduces the number of cache
-  // reads. We access it directly via the global $conf as this is fast without
-  // having to introduce another static cache. Then, if the whitelist is unset,
-  // we ignore it so cache rebuilding is triggered.
-  if (rules_event_invocation_enabled() && (!isset($conf['rules_event_whitelist']) || isset($conf['rules_event_whitelist'][$event_name])) && $event = rules_get_cache('event_' . $event_name)) {
-    $event->executeByArgs($args);
+  // reads. If the whitelist is empty we proceed and it is rebuilt.
+  if (rules_event_invocation_enabled()) {
+    $whitelist = rules_get_cache('rules_event_whitelist');
+    if ((empty($whitelist) || isset($whitelist[$event_name])) && $event = rules_get_cache('event_' . $event_name)) {
+      $event->executeByArgs($args);
+    }
   }
 }
 
