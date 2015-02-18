@@ -9,9 +9,43 @@
 require_once dirname(__FILE__) . '/modules/events.inc';
 
 /**
+ * Implements hook_module_implements_alter().
+ */
+function rules_module_implements_alter(&$implementations, $hook) {
+  // Ensures the invocation of hook_menu_get_item_alter() triggers
+  // rules_menu_get_item_alter() first so the rules invocation is ready for all
+  // sub-sequent hook implementations.
+  if ($hook == 'menu_get_item_alter' && array_key_exists('rules', $implementations)) {
+    $group = $implementations['rules'];
+    unset($implementations['rules']);
+    $implementations = array_merge(array('rules' => $group), $implementations);
+  }
+}
+
+/**
+ * Implements hook_menu_get_item_alter().
+ */
+function rules_menu_get_item_alter() {
+  // Make sure that event invocation is enabled before menu items are loaded.
+  // But make sure later calls to menu_get_item() won't automatically re-enabled
+  // the rules invocation.
+  // Example: modules that implement hook_entity_ENTITY_TYPE_load() might want
+  // to invoke Rules events in that load hook, which is also invoked for menu
+  // item loading. Since this can happen even before hook_init() we need to make
+  // sure that firing Rules events is enabled at that point. A typical use case
+  // for this is Drupal Commerce with commerce_cart_commerce_order_load().
+  if (!drupal_static('rules_init', FALSE)) {
+    rules_event_invocation_enabled(TRUE);
+  }
+}
+
+/**
  * Implements hook_init().
  */
 function rules_init() {
+  // See rules_menu_get_item_alter().
+  $rules_init = &drupal_static(__FUNCTION__, FALSE);
+  $rules_init = TRUE;
   // Enable event invocation once hook_init() was invoked for Rules.
   rules_event_invocation_enabled(TRUE);
   rules_invoke_event('init');
