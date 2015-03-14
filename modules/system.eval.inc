@@ -9,19 +9,19 @@
  */
 
 /**
- * Action: Show a drupal message.
+ * Action: Show a backdrop message.
  */
-function rules_action_drupal_message($message, $status, $repeat) {
-  drupal_set_message(filter_xss_admin($message), $status, $repeat);
+function rules_action_backdrop_message($message, $status, $repeat) {
+  backdrop_set_message(filter_xss_admin($message), $status, $repeat);
 }
 
 /**
  * Action: Page redirect.
  *
  * @see rules_page_build()
- * @see rules_drupal_goto_alter()
+ * @see rules_backdrop_goto_alter()
  */
-function rules_action_drupal_goto($url, $force = FALSE, $destination = FALSE) {
+function rules_action_backdrop_goto($url, $force = FALSE, $destination = FALSE) {
   // Don't let administrators lock them out from Rules administration pages.
   if (isset($_GET['q']) && strpos($_GET['q'], 'admin/config/workflow/rules') === 0) {
     rules_log('Skipped page redirect on Rules administration page.', array(), RulesLog::WARN);
@@ -36,18 +36,18 @@ function rules_action_drupal_goto($url, $force = FALSE, $destination = FALSE) {
   // Keep the current destination parameter if there is one set.
   if ($destination) {
     $url .= strpos($url, '?') === FALSE ? '?' : '&';
-    $url .= drupal_http_build_query(drupal_get_destination());
+    $url .= backdrop_http_build_query(backdrop_get_destination());
   }
   // If force is enabled, remove any destination parameter.
   if ($force && isset($_GET['destination'])) {
     unset($_GET['destination']);
   }
-  // We don't invoke drupal_goto() right now, as this would end the the current
-  // page execution unpredictly for modules. So we'll take over drupal_goto()
-  // calls from somewhere else via hook_drupal_goto_alter() and make sure
-  // a drupal_goto() is invoked before the page is output with
+  // We don't invoke backdrop_goto() right now, as this would end the the current
+  // page execution unpredictly for modules. So we'll take over backdrop_goto()
+  // calls from somewhere else via hook_backdrop_goto_alter() and make sure
+  // a backdrop_goto() is invoked before the page is output with
   // rules_page_build().
-  $GLOBALS['_rules_action_drupal_goto_do'] = array($url, $force);
+  $GLOBALS['_rules_action_backdrop_goto_do'] = array($url, $force);
 }
 
 /**
@@ -69,7 +69,7 @@ function rules_action_breadcrumb_set(array $titles, array $paths) {
       }
     }
   }
-  drupal_set_breadcrumb($trail);
+  backdrop_set_breadcrumb($trail);
 }
 
 /**
@@ -89,7 +89,7 @@ function rules_action_mail($to, $subject, $message, $from = NULL, $langcode, $se
   $languages = language_list();
   $language = isset($languages[$langcode]) ? $languages[$langcode] : language_default();
 
-  $message = drupal_mail('rules', $key, $to, $language, $params, $from);
+  $message = backdrop_mail('rules', $key, $to, $language, $params, $from);
   if ($message['result']) {
     watchdog('rules', 'Successfully sent email to %recipient', array('%recipient' => $to));
   }
@@ -102,7 +102,7 @@ function rules_action_mail_to_users_of_role($roles, $subject, $message, $from = 
   $from = !empty($from) ? str_replace(array("\r", "\n"), '', $from) : NULL;
 
   // All authenticated users, which is everybody.
-  if (in_array(DRUPAL_AUTHENTICATED_RID, $roles)) {
+  if (in_array(BACKDROP_AUTHENTICATED_RID, $roles)) {
     $result = db_query('SELECT mail FROM {users} WHERE uid > 0');
   }
   else {
@@ -122,13 +122,13 @@ function rules_action_mail_to_users_of_role($roles, $subject, $message, $from = 
 
   $message = array('result' => TRUE);
   foreach ($result as $row) {
-    $message = drupal_mail('rules', $key, $row->mail, language_default(), $params, $from);
+    $message = backdrop_mail('rules', $key, $row->mail, language_default(), $params, $from);
     // If $message['result'] is FALSE, then it's likely that email sending is
     // failing at the moment, and we should just abort sending any more. If
     // however, $mesage['result'] is NULL, then it's likely that a module has
     // aborted sending this particular email to this particular user, and we
     // should just keep on sending emails to the other users.
-    // For more information on the result value, see drupal_mail().
+    // For more information on the result value, see backdrop_mail().
     if ($message['result'] === FALSE) {
       break;
     }

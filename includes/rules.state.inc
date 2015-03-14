@@ -115,7 +115,7 @@ class RulesState {
    * Returns whether the given wrapper is savable.
    */
   public function isSavable($wrapper) {
-    return ($wrapper instanceof EntityDrupalWrapper && entity_type_supports($wrapper->type(), 'save')) || $wrapper instanceof RulesDataWrapperSavableInterface;
+    return ($wrapper instanceof EntityBackdropWrapper && entity_type_supports($wrapper->type(), 'save')) || $wrapper instanceof RulesDataWrapperSavableInterface;
   }
 
   /**
@@ -173,7 +173,7 @@ class RulesState {
       $this->save($selector, $wrapper, $immediate);
     }
     // No entity, so try saving the parent.
-    elseif (empty($info['skip save']) && isset($info['parent']) && !($wrapper instanceof EntityDrupalWrapper)) {
+    elseif (empty($info['skip save']) && isset($info['parent']) && !($wrapper instanceof EntityBackdropWrapper)) {
       // Cut of the last part of the selector.
       $selector = implode(':', explode(':', $selector, -1));
       $this->saveChanges($selector, $info['parent'], $immediate);
@@ -615,8 +615,8 @@ class RulesData  {
    * @see RulesPlugin::availableVariables()
    */
   public static function addSiteMetadata(EntityMetadataWrapper $wrapper, $property_info) {
-    $site_info = entity_get_property_info('site');
-    $property_info['properties'] += $site_info['properties'];
+    //$site_info = entity_get_property_info('site');
+    //$property_info['properties'] += $site_info['properties'];
     // Also invoke the usual callback for altering metadata, in case actions
     // have specified further metadata.
     return RulesData::applyMetadataAssertions($wrapper, $property_info);
@@ -624,7 +624,7 @@ class RulesData  {
 }
 
 /**
- * A wrapper class similar to the EntityDrupalWrapper, but for non-entities.
+ * A wrapper class similar to the EntityBackdropWrapper, but for non-entities.
  *
  * This class is intended to serve as base for a custom wrapper classes of
  * identifiable data types, which are non-entities. By extending this class only

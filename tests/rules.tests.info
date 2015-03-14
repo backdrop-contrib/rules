@@ -1,0 +1,5 @@
+[RulesTestCase]      
+name = Rules Engine tests
+description = Test using the rules API to create and evaluate rules
+group = Rules
+file = rules.test

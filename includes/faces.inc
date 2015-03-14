@@ -223,7 +223,9 @@ if (!class_exists('FacesExtendable', FALSE)) {
           throw new FacesExtendableException("Missing methods for implementing the interface " . check_plain($interface) . ".");
         }
         $this->faces[$interface] = $interface;
-        $this->faces += class_implements($interface);
+		if(class_implements($interface)){ //add this check for Backdrop version
+          $this->faces += class_implements($interface);
+		}
       }
       $this->addIncludes($face_methods, $includes);
       foreach ($face_methods as $method) {
@@ -261,7 +263,9 @@ if (!class_exists('FacesExtendable', FALSE)) {
      */
     protected function addIncludes($methods, $includes) {
       $includes = isset($includes['module']) && is_string($includes['module']) ? array_fill_keys($methods, $includes) : $includes;
+	  if($includes){  //add this check for Backdrop version
       $this->facesIncludes = $includes + array_diff_key($this->facesIncludes, array_flip($methods));
+	  }
     }
 
     /**

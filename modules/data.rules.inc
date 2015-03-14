@@ -618,7 +618,7 @@ function rules_condition_data_is_assertions($element) {
   // Assert the bundle of entities, if its compared.
   if ($wrapper = $element->applyDataSelector($element->settings['data:select'])) {
     $info = $wrapper->info();
-    if (isset($info['parent']) && $info['parent'] instanceof EntityDrupalWrapper) {
+    if (isset($info['parent']) && $info['parent'] instanceof EntityBackdropWrapper) {
       $entity_info = $info['parent']->entityInfo();
       if (isset($entity_info['entity keys']['bundle']) && $entity_info['entity keys']['bundle'] == $info['name']) {
         // Assert that the entity is of bundle $value.

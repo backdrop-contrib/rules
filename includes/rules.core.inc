@@ -29,7 +29,7 @@ class RulesEntityController extends EntityAPIControllerExportable {
 
   /**
    * Overridden.
-   * @see DrupalDefaultEntityController::attachLoad()
+   * @see DefaultEntityController::attachLoad()
    */
   protected function attachLoad(&$queried_entities, $revision_id = FALSE) {
     // Retrieve stdClass records and turn them in rules objects stored in 'data'
@@ -108,7 +108,7 @@ class RulesEntityController extends EntityAPIControllerExportable {
    *   RulesPlugin::export() method, or the PHP export as usual PHP array.
    */
   public function import($export, &$error_msg = '') {
-    $export = is_array($export) ? $export : drupal_json_decode($export);
+    $export = is_array($export) ? $export : _json_decode($export);
     if (!is_array($export)) {
       $error_msg = t('Unable to parse the pasted export.');
       return FALSE;
@@ -1127,8 +1127,8 @@ abstract class RulesPlugin extends RulesExtendable {
           // Clear event whitelist for rebuild.
           cache_clear_all('rules_event_whitelist', 'cache_rules', TRUE);
         }
-        drupal_static_reset('rules_get_cache');
-        drupal_static_reset('rules_config_update_dirty_flag');
+        backdrop_static_reset('rules_get_cache');
+        backdrop_static_reset('rules_config_update_dirty_flag');
       }
 
       return $return;
@@ -1155,7 +1155,7 @@ abstract class RulesPlugin extends RulesExtendable {
 
   public function __sleep() {
     // Keep the id always as we need it for the recursion prevention.
-    $array = drupal_map_assoc(array('parent', 'id', 'elementId', 'weight', 'settings'));
+    $array = backdrop_map_assoc(array('parent', 'id', 'elementId', 'weight', 'settings'));
     // Keep properties related to configurations if they are there.
     $info = entity_get_info('rules_config');
     $fields = array_merge($info['schema_fields_sql']['base table'], array('recursion', 'tags'));
@@ -1203,6 +1203,7 @@ abstract class RulesPlugin extends RulesExtendable {
       }
     }
     elseif (isset($this->id)) {
+	print('rcinc1207');
       entity_get_controller('rules_config')->delete(array($this->name));
       rules_clear_cache();
     }
@@ -1782,7 +1783,7 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
         $dirs += $result;
       }
       foreach ($dirs as $module => $directory) {
-        foreach (glob(drupal_get_path('module', $module) . "/$directory/*.{inc,php}", GLOB_BRACE) as $filename) {
+        foreach (glob(_get_path('module', $module) . "/$directory/*.{inc,php}", GLOB_BRACE) as $filename) {
           include_once $filename;
         }
       }
@@ -1805,6 +1806,7 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
   }
 
   protected function getFileName($function, $includes) {
+    module_load_include('inc','rules','tests/rules_test.test');
     $reflector = new ReflectionFunction($function);
     // On windows the path contains backslashes instead of slashes, fix that.
     $file = str_replace('\\', '/', $reflector->getFileName());
@@ -2576,7 +2578,7 @@ class RulesLog {
   static function logger() {
     if (!isset(self::$logger)) {
       $class = __CLASS__;
-      self::$logger = new $class(variable_get('rules_log_level', self::INFO));
+      self::$logger = new $class(config_get('rules.settings','rules_log_level'));
     }
     return self::$logger;
   }
@@ -2747,7 +2749,7 @@ class RulesEvaluationException extends RulesException {
         rules_clear_cache();
       }
     }
-    // @todo fix _drupal_decode_exception() to use __toString() and override it.
+    // @todo fix __decode_exception() to use __toString() and override it.
     $this->message = t($this->msg, $this->args);
   }
 }
@@ -2791,7 +2793,7 @@ class RulesDependencyException extends RulesIntegrityException {}
  *   The default to return if no special plugin can be found.
  */
 function _rules_import_get_plugin($key, $default = 'action') {
-  $map = &drupal_static(__FUNCTION__);
+  $map = &_static(__FUNCTION__);
   if (!isset($map)) {
     $cache = rules_get_cache();
     foreach ($cache['plugin_info'] as $name => $info) {

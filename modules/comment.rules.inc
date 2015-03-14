@@ -43,7 +43,7 @@ function rules_comment_event_info() {
       'variables' => array(
         'comment' => array('type' => 'comment', 'label' => t('viewed comment')),
       ),
-      'help' => t("Note that if drupal's page cache is enabled, this event won't be generated for pages served from cache."),
+      'help' => t("Note that if backdrop's page cache is enabled, this event won't be generated for pages served from cache."),
     ),
     'comment_delete' => $defaults + array(
       'label' => t('After deleting a comment'),

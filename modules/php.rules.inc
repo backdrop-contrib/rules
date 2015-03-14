@@ -138,7 +138,7 @@ function rules_php_evaluator_help($var_info, $action_help = FALSE) {
     $row   = array();
     $row[] = '$'. check_plain($name);
     $label = isset($cache['data_info'][$info['type']]['label']) ? $cache['data_info'][$info['type']]['label'] : $info['type'];
-    $row[] = check_plain(drupal_ucfirst($label));
+    $row[] = check_plain(backdrop_ucfirst($label));
     $row[] = check_plain($info['label']);
     $render['vars']['#rows'][] = $row;
   }

@@ -52,3 +52,16 @@ function rules_test_get_referenced_node($node) {
 function rules_test_no_access($op) {
   return $op == 'edit' ? FALSE : TRUE;
 }
+
+/**
+ * Implements hook_autoload_info().
+ */
+function rules_test_autoload_info()
+{
+  return array(
+    'RulesTestContainer' => 'rules_test.rules.inc',
+    'RulesTestEventHandler' => 'rules_test.rules.inc',
+    'RulesTestTypeWrapper' => 'rules_test.rules.inc',
+    'RulesTestClassAction' => 'rules_test.rules.inc',
+  );
+}

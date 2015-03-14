@@ -34,7 +34,7 @@ function rules_upgrade_form($form, &$form_state) {
 
   $option_rules = $option_sets = array();
   if (!db_table_exists('rules_rules')) {
-    drupal_set_message('There are no Rules 1.x rules or rule sets left to convert.', 'error');
+    backdrop_set_message('There are no Rules 1.x rules or rule sets left to convert.', 'error');
   }
   else {
     foreach (_rules_upgrade_fetch_all_rules() as $name => $rule) {
@@ -99,20 +99,20 @@ function rules_upgrade_form_submit($form, &$form_state) {
 
   try {
     foreach ($form_state['values']['rules'] as $name) {
-      drupal_set_message(t('Converting %plugin %name...', array('%plugin' => t('rule'), '%name' => $name)));
+      backdrop_set_message(t('Converting %plugin %name...', array('%plugin' => t('rule'), '%name' => $name)));
       $configs[$name] = rules_upgrade_convert_rule($name, _rules_upgrade_fetch_item($name, 'rules_rules'));
     }
     foreach ($form_state['values']['sets'] as $name) {
-      drupal_set_message(t('Converting %plugin %name...', array('%plugin' => t('rule set'), '%name' => $name)));
+      backdrop_set_message(t('Converting %plugin %name...', array('%plugin' => t('rule set'), '%name' => $name)));
       $configs[$name] = rules_upgrade_convert_rule_set($name, _rules_upgrade_fetch_item($name, 'rules_sets'));
     }
-    drupal_set_message(t('Completed.'));
+    backdrop_set_message(t('Completed.'));
 
     if ($form_state['values']['method'] == 'save') {
       foreach ($configs as $config) {
         $config->save();
       }
-      drupal_set_message(t('Converted configurations have been saved to the database and will appear in the Rules administration interface.'));
+      backdrop_set_message(t('Converted configurations have been saved to the database and will appear in the Rules administration interface.'));
     }
     elseif ($form_state['values']['method'] == 'export') {
       $export = array();
@@ -124,7 +124,7 @@ function rules_upgrade_form_submit($form, &$form_state) {
     }
   }
   catch (RulesException $e) {
-    drupal_set_message($e->getMessage(), 'error');
+    backdrop_set_message($e->getMessage(), 'error');
   }
 }
 
@@ -141,7 +141,7 @@ function rules_upgrade_confirm_clear_form_submit($form, &$form_state) {
   db_drop_table('rules_rules');
   db_drop_table('rules_sets');
   db_drop_table('rules_scheduler_d6');
-  drupal_set_message(t('Rules 1.x configurations have been deleted.'));
+  backdrop_set_message(t('Rules 1.x configurations have been deleted.'));
   $form_state['redirect'] = 'admin';
 }
 
@@ -158,7 +158,7 @@ function _rules_upgrade_fetch_item($name, $table) {
  * Fetches all rules.
  */
 function _rules_upgrade_fetch_all_rules() {
-  $static = drupal_static(__FUNCTION__);
+  $static = backdrop_static(__FUNCTION__);
 
   if (!isset($static)) {
     $query = db_select('rules_rules', 'r')->fields('r');
@@ -208,7 +208,7 @@ function rules_upgrade_convert_rule_set($name, $cfg_old) {
   // Add in all rules of the set.
   foreach(_rules_upgrade_fetch_all_rules() as $rule_name => $rule) {
     if ($rule['#set'] == $name) {
-      drupal_set_message(' >> ' . t('Converting %plugin %name...', array('%plugin' => t('rule'), '%name' => $rule_name . ': ' . $rule['#label'])));
+      backdrop_set_message(' >> ' . t('Converting %plugin %name...', array('%plugin' => t('rule'), '%name' => $rule_name . ': ' . $rule['#label'])));
       $new_rule = rules_upgrade_plugin_factory($rule);
       rules_upgrade_convert_element($rule, $new_rule);
       $new_rule->setParent($config);
@@ -276,7 +276,7 @@ function rules_upgrade_convert_element(array $element, RulesPlugin $target) {
     }
   }
 
-  drupal_alter('rules_element_upgrade', $element, $target);
+  backdrop_alter('rules_element_upgrade', $element, $target);
   // Recurse down, if necessary.
   foreach (element_children($element) as $key) {
     $child = rules_upgrade_plugin_factory($element[$key]);
@@ -440,7 +440,7 @@ function rules_action_add_node_upgrade($element, $target) {
   rules_upgrade_element_parameter_settings($element, $target, 'type', 'param_type');
   rules_upgrade_element_variable_settings($element, $target, 'node_added', 'entity_created');
   if (!empty($element['#settings']['node_access'])) {
-    drupal_set_message(t('Warning: The node-access check option for the node creation action is not supported any more.'));
+    backdrop_set_message(t('Warning: The node-access check option for the node creation action is not supported any more.'));
   }
 }
 function rules_action_load_node_upgrade_map_name($element) {
@@ -565,16 +565,16 @@ function rules_action_mail_to_user_upgrade_map_name($element) {
 function rules_action_mail_to_user_upgrade($element, $target) {
   $target->settings['to:select'] = $element['#settings']['#argument map']['user'] . ':mail';
 }
-function rules_action_drupal_goto_upgrade_map_name($element) {
+function rules_action_backdrop_goto_upgrade_map_name($element) {
   return 'redirect';
 }
-function rules_action_drupal_goto_upgrade($element, $target) {
+function rules_action_backdrop_goto_upgrade($element, $target) {
   $settings = $element['#settings'];
   $target->settings['url'] = $settings['path'];
   $target->settings['url'] .= $settings['query'] ? '?' . $settings['query'] : '';
   $target->settings['url'] .= $settings['fragment'] ? '#' . $settings['fragment'] : '';
   if ($settings['immediate']) {
-    drupal_set_message(t("Warning: The 'immediate' option for the page redirect action has been dropped in Rules 2.x."));
+    backdrop_set_message(t("Warning: The 'immediate' option for the page redirect action has been dropped in Rules 2.x."));
   }
 }
 
@@ -637,7 +637,7 @@ function rules_action_user_removerole_upgrade($element, $target) {
 }
 function rules_action_load_user_upgrade_map_name($element) {
   if (!empty($element['#settings']['username'])) {
-    drupal_set_message(t('Warning: Directly upgrading the load user by name action is not supported.'));
+    backdrop_set_message(t('Warning: Directly upgrading the load user by name action is not supported.'));
   }
   return 'entity_fetch';
 }

@@ -87,7 +87,7 @@ function rules_action_user_remove_role($account, $roles) {
  */
 function rules_action_user_block($account) {
   $account->status = 0;
-  drupal_session_destroy_uid($account->uid);
+  backdrop_session_destroy_uid($account->uid);
 }
 
 /**
@@ -110,11 +110,11 @@ function rules_action_user_send_account_email($account, $email_type) {
     // This code is adapted from _user_mail_notify().
     $params = array('account' => $account);
     $language = user_preferred_language($account);
-    $mail = drupal_mail('user', $email_type, $account->mail, $language, $params);
+    $mail = backdrop_mail('user', $email_type, $account->mail, $language, $params);
     if ($email_type == 'register_pending_approval') {
       // If a user registered requiring admin approval, notify the admin, too.
       // We use the site default language for this.
-      drupal_mail('user', 'register_pending_approval_admin', variable_get('site_mail', ini_get('sendmail_from')), language_default(), $params);
+      backdrop_mail('user', 'register_pending_approval_admin', config_get('rules.settings','site_mail'), language_default(), $params);
     }
 
     $result = empty($mail) ? NULL : $mail['result'];

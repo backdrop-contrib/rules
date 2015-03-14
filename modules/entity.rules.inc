@@ -217,7 +217,7 @@ function rules_action_entity_parameter_options_list(RulesPlugin $element, $param
 function rules_action_entity_savedelete_access(RulesAbstractPlugin $element) {
   if ($wrapper = $element->applyDataSelector($element->settings['data:select'])) {
     $op = $element->getElementName() == 'entity_save' ? 'save' : 'delete';
-    return $wrapper instanceof EntityDrupalWrapper && $wrapper->entityAccess($op);
+    return $wrapper instanceof EntityBackdropWrapper && $wrapper->entityAccess($op);
   }
   return FALSE;
 }
@@ -463,7 +463,7 @@ function rules_condition_entity_has_field_options(RulesAbstractPlugin $element) 
   else {
     $fields = field_info_fields();
   }
-  return drupal_map_assoc(array_keys($fields));
+  return backdrop_map_assoc(array_keys($fields));
 }
 
 /**

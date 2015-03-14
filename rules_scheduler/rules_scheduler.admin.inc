@@ -10,12 +10,15 @@
  */
 function rules_scheduler_schedule_page() {
   // Display view for all scheduled tasks
+  $task_list = ""; 
   if (module_exists('views')) {
     // We cannot use views_embed_view() here as we need to set the path for the
     // component filter form.
     $view = views_get_view('rules_scheduler');
-    $view->override_path = RULES_SCHEDULER_PATH;
-    $task_list = $view->preview();
+	if($view){
+    	$view->override_path = RULES_SCHEDULER_PATH;
+    	$task_list = $view->preview();
+	}
   }
   else {
     $task_list = t('To display scheduled tasks you have to install the <a href="http://drupal.org/project/views">Views</a> module.');
@@ -23,9 +26,9 @@ function rules_scheduler_schedule_page() {
   $page['task_view'] = array(
     '#markup' => $task_list,
   );
-  $form = drupal_get_form('rules_scheduler_form');
+  $form = backdrop_get_form('rules_scheduler_form');
   $page['delete'] = array(
-    '#markup' => drupal_render($form),
+    '#markup' => backdrop_render($form),
   );
   return $page;
 }
@@ -67,7 +70,7 @@ function rules_scheduler_form($form, &$form_state) {
 function rules_scheduler_form_delete_by_config_submit($form, &$form_state) {
   $config = rules_config_load($form_state['values']['config']);
   rules_action('schedule_delete')->execute($config->name);
-  drupal_set_message(t('All scheduled tasks associated with %config have been deleted.', array('%config' => $config->label())));
+  backdrop_set_message(t('All scheduled tasks associated with %config have been deleted.', array('%config' => $config->label())));
   $form_state['redirect'] = RULES_SCHEDULER_PATH;
 }
 
@@ -102,7 +105,7 @@ function rules_scheduler_delete_task($form, &$form_state, $task) {
  */
 function rules_scheduler_delete_task_submit($form, &$form_state) {
   rules_scheduler_task_delete($form_state['task']['tid']);
-  drupal_set_message(t('Task %tid has been deleted.', array('%tid' => $form_state['task']['tid'])));
+  backdrop_set_message(t('Task %tid has been deleted.', array('%tid' => $form_state['task']['tid'])));
   $form_state['redirect'] = RULES_SCHEDULER_PATH;
 }
 
@@ -125,7 +128,7 @@ function rules_scheduler_schedule_form($form, &$form_state, $rules_config, $base
     $form['#validate'] = array('rules_ui_form_rules_config_validate');
     return $form;
   }
-  drupal_not_found();
+  backdrop_not_found();
   exit;
 }
 
@@ -135,6 +138,6 @@ function rules_scheduler_schedule_form($form, &$form_state, $rules_config, $base
 function rules_scheduler_schedule_form_submit($form, &$form_state) {
   $action = $form_state['rules_element'];
   $action->execute();
-  drupal_set_message(t('Component %label has been scheduled.', array('%label' => rules_config_load($form_state['component'])->label())));
+  backdrop_set_message(t('Component %label has been scheduled.', array('%label' => rules_config_load($form_state['component'])->label())));
   $form_state['redirect'] = RULES_SCHEDULER_PATH;
 }

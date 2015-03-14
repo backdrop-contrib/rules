@@ -179,7 +179,7 @@ class Rule extends RulesActionContainer {
   }
 
   public function __sleep() {
-    return parent::__sleep() + drupal_map_assoc(array('conditions', 'label'));
+    return parent::__sleep() + backdrop_map_assoc(array('conditions', 'label'));
   }
 
   /**
@@ -485,7 +485,7 @@ class RulesReactionRule extends Rule implements RulesTriggerableInterface {
   }
 
   public function __sleep() {
-    return parent::__sleep() + drupal_map_assoc(array('events', 'eventSettings'));
+    return parent::__sleep() + backdrop_map_assoc(array('events', 'eventSettings'));
   }
 
   protected function exportChildren($key = 'ON') {
@@ -804,7 +804,7 @@ class RulesEventSet extends RulesRuleSet {
       $set->sortChildren();
       $set->optimize();
       // Allow modules to alter the cached event set.
-      drupal_alter('rules_event_set', $event_name, $set);
+      backdrop_alter('rules_event_set', $event_name, $set);
       rules_set_cache('event_' . $event_name, $set);
     }
     // Cache a whitelist of configured events so we can use it to speed up later

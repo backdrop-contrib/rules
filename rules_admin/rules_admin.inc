@@ -44,7 +44,7 @@ function rules_admin_reaction_overview($form, &$form_state, $base_path) {
     '#collapsible' => TRUE,
   );
   $form['filter']['#id'] = 'rules-filter-form';
-  $form['filter']['#attached']['css'][] = drupal_get_path('module', 'rules') . '/ui/rules.ui.css';
+  $form['filter']['#attached']['css'][] = backdrop_get_path('module', 'rules') . '/ui/rules.ui.css';
   $form['filter']['event'] = array(
     '#type' => 'select',
     '#title' => t('Filter by event'),
@@ -115,7 +115,7 @@ function rules_admin_components_overview($form, &$form_state, $base_path) {
     '#collapsible' => TRUE,
   );
   $form['filter']['#id'] = 'rules-filter-form';
-  $form['filter']['#attached']['css'][] = drupal_get_path('module', 'rules') . '/ui/rules.ui.css';
+  $form['filter']['#attached']['css'][] = backdrop_get_path('module', 'rules') . '/ui/rules.ui.css';
   $form['filter']['plugin'] = array(
     '#type' => 'select',
     '#title' => t('Filter by plugin'),
@@ -169,7 +169,7 @@ function rules_admin_settings($form, &$form_state) {
       '#type' => 'select',
       '#title' => t('URL path cleaning method'),
       '#description' => t('Choose the path cleaning method to be applied when generating URL path aliases.') . ' ' . $pathauto_help,
-      '#default_value' => variable_get('rules_path_cleaning_callback', 'rules_path_default_cleaning_method'),
+      '#default_value' => config_get('rules.settings','rules_path_cleaning_callback'),
       '#options' => $options,
     );
   }
@@ -181,7 +181,7 @@ function rules_admin_settings($form, &$form_state) {
       RulesLog::WARN => t('Log all warnings and errors'),
       RulesLog::ERROR => t('Log errors only'),
     ),
-    '#default_value' => variable_get('rules_log_errors', RulesLog::WARN),
+    '#default_value' => config_get('rules.settings','rules_log_errors'),
     '#description' => t('Evaluations errors are logged to the system log.'),
   );
 
@@ -192,12 +192,12 @@ function rules_admin_settings($form, &$form_state) {
   $form['debug']['rules_debug_log'] = array(
     '#type' => 'checkbox',
     '#title' => t('Log debug information to the system log'),
-    '#default_value' => variable_get('rules_debug_log', 0),
+    '#default_value' => config_get('rules.settings','rules_debug_log'),
   );
   $form['debug']['rules_debug'] = array(
     '#type' => 'radios',
     '#title' => t('Show debug information'),
-    '#default_value' => variable_get('rules_debug', 0),
+    '#default_value' => config_get('rules.settings','rules_debug'),
     '#options' => array(
       0 => t('Never'),
       RulesLog::WARN => t('In case of errors'),
@@ -206,40 +206,35 @@ function rules_admin_settings($form, &$form_state) {
     '#description' => t('Debug information is only shown when rules are evaluated and is visible for users having the permission <a href="!url">%link</a>.', array('%link' => t('Access the Rules debug log'), '!url' => url('admin/people/permissions', array('fragment' => 'module-rules')))),
   );
 
-  $form['debug']['regions'] = array(
-    '#type' => 'container',
-    '#states' => array(
-      // Hide the regions settings when the debug log is disabled.
-      'invisible' => array(
-        'input[name="rules_debug"]' => array('value' => '0'),
-      ),
-    ),
-  );
 
-  $theme_default = variable_get('theme_default', 'bartik');
-  $admin_theme = variable_get('admin_theme', 'seven');
+  $theme_default = config_get('rules.settings','theme_default');
+  $admin_theme = config_get('rules.settings','admin_theme');
 
-  $form['debug']['regions']['rules_debug_region_' . $theme_default] = array(
-    '#type' => 'select',
-    '#title' => t('Default theme region'),
-    '#description' => t("The region, where the debug log should be displayed on the default theme %theme. For other themes, Rules will try to display the log on the same region, or hide it in case it doesn't exist.", array('%theme' => $theme_default)),
-    '#options' => system_region_list($theme_default, REGIONS_VISIBLE),
-    '#default_value' => variable_get('rules_debug_region_' . $theme_default, 'help'),
-  );
+    // Add a submit button
+    $form['actions']['#type'] = 'actions';
+    $form['actions']['submit'] = array(
+        '#type' => 'submit',
+        '#value' => t('Save configuration'),
+    );
 
-  $form['debug']['regions']['rules_debug_region_' . $admin_theme] = array(
-    '#type' => 'select',
-    '#title' => t('Admin theme region'),
-    '#description' => t('The region, where the debug log should be displayed on the admin theme %theme.', array('%theme' => $admin_theme)),
-    '#options' => system_region_list($admin_theme, REGIONS_VISIBLE),
-    '#default_value' => variable_get('rules_debug_region_' . $admin_theme, 'help'),
-  );
-  if (db_table_exists('rules_rules')) {
-    drupal_set_message(t('There are left over rule configurations from a previous Rules 1.x installation. Proceed to the <a href="!url">upgrade page</a> to convert them and consult the README.txt for more details.', array('!url' => url('admin/config/workflow/rules/upgrade'))), 'warning');
-  }
-
-  return system_settings_form($form);
+    // Return the form!
+    return $form;
 }
+
+
+// Add a submit function to process config
+function rules_admin_settings_submit($form, &$form_state) {
+    $config = config('rules.settings');
+    $config->set('rules_path_cleaning_callback', $form_state['values']['rules_path_cleaning_callback']);
+    $config->set('rules_log_errors', $form_state['values']['rules_log_errors']);
+    $config->set('rules_debug_log', $form_state['values']['rules_debug_log']);
+    $config->set('rules_debug', $form_state['values']['rules_debug']);
+    $config->set('rules_debug_region_' . $theme_default, $form_state['values']['rules_debug_region_' . $theme_default]);
+    $config->set('rules_debug_region_' . $admin_theme, $form_state['values']['rules_debug_region_' . $admin_theme]);
+    $config->save();
+    backdrop_set_message(t('The configuration options have been saved.'));
+}
+
 
 /**
  * Advanced settings form.
@@ -282,11 +277,11 @@ function rules_admin_settings_integrity_check_submit($form, &$form_state) {
     if ($rules_config->dirty) {
       $count++;
       $variables = array('%label' => $rules_config->label(), '%name' => $rules_config->name, '@plugin' => $rules_config->plugin(), '!uri'=> url(RulesPluginUI::path($rules_config->name)));
-      drupal_set_message(t('The @plugin <a href="!uri">%label (%name)</a> fails the integrity check and cannot be executed.', $variables), 'error');
+      backdrop_set_message(t('The @plugin <a href="!uri">%label (%name)</a> fails the integrity check and cannot be executed.', $variables), 'error');
     }
 
   }
-  drupal_set_message(t('Integrity of %count configurations checked in %duration seconds. %count_failed broken configurations found.', array(
+  backdrop_set_message(t('Integrity of %count configurations checked in %duration seconds. %count_failed broken configurations found.', array(
     '%count' => count($rules_configs),
     '%count_failed' => $count,
     '%duration' => round(microtime(TRUE) - $start, 2),
@@ -303,7 +298,7 @@ function rules_admin_settings_cache_rebuild_submit($form, &$form_state) {
   rules_get_cache();
   _rules_rebuild_component_cache();
   RulesEventSet::rebuildEventCache();
-  drupal_set_message(t('Rules cache rebuilt in %duration seconds.', array(
+  backdrop_set_message(t('Rules cache rebuilt in %duration seconds.', array(
     '%duration' => round(microtime(TRUE) - $start, 2),
   )));
 }
@@ -431,6 +426,6 @@ function rules_admin_add_component_validate($form, &$form_state) {
 function rules_admin_add_component_submit($form, &$form_state) {
   $rules_config = $form_state['rules_config'];
   $rules_config->form_submit($form, $form_state);
-  drupal_set_message(t('Your changes have been saved.'));
+  backdrop_set_message(t('Your changes have been saved.'));
   $form_state['redirect'] = RulesPluginUI::path($rules_config->name);
 }

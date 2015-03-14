@@ -1,15 +1,15 @@
 
 // Registers the rules namespace.
-Drupal.rules = Drupal.rules || {};
+Backdrop.rules = Backdrop.rules || {};
 
 (function($) {
-  Drupal.behaviors.rules_autocomplete = {
+  Backdrop.behaviors.rules_autocomplete = {
     attach: function(context) {
-      var autocomplete_settings = Drupal.settings.rules_autocomplete;
+      var autocomplete_settings = Backdrop.settings.rules_autocomplete;
 
       $('input.rules-autocomplete').once(function() {
         var input = this;
-        new Drupal.rules.autocomplete(input, autocomplete_settings[$(input).attr('id')]);
+        new Backdrop.rules.autocomplete(input, autocomplete_settings[$(input).attr('id')]);
       });
     }
   };
@@ -17,7 +17,7 @@ Drupal.rules = Drupal.rules || {};
   /**
    * Rules autocomplete object.
    */
-  Drupal.rules.autocomplete = function(input, settings) {
+  Backdrop.rules.autocomplete = function(input, settings) {
     this.id = settings.inputId;
     this.uri = settings.source;
     this.jqObject = $('#' + this.id);
@@ -147,7 +147,7 @@ Drupal.rules = Drupal.rules || {};
   /**
    * Success function for Rules autocomplete object.
    */
-  Drupal.rules.autocomplete.prototype.success = function(data, request, response) {
+  Backdrop.rules.autocomplete.prototype.success = function(data, request, response) {
     var list = new Array();
     jQuery.each(data, function(index, value) {
       list.push( {
@@ -165,7 +165,7 @@ Drupal.rules = Drupal.rules || {};
    * @param searchFor The term for will be searched for. If undefined then the
    *                  entered input text will be used.
    */
-  Drupal.rules.autocomplete.prototype.open = function(searchFor) {
+  Backdrop.rules.autocomplete.prototype.open = function(searchFor) {
     // If searchFor is undefined, we want to search for the passed argument.
     this.jqObject.autocomplete("search", ((searchFor === undefined) ? this.jqObject.val() : searchFor));
     this.button.addClass("ui-state-focus");
@@ -174,7 +174,7 @@ Drupal.rules = Drupal.rules || {};
   /**
    * Close the autocomplete window.
    */
-  Drupal.rules.autocomplete.prototype.close = function() {
+  Backdrop.rules.autocomplete.prototype.close = function() {
     this.jqObject.autocomplete("close");
     this.button.removeClass("ui-state-focus");
   };
@@ -182,7 +182,7 @@ Drupal.rules = Drupal.rules || {};
   /**
    * Toogle the autcomplete window.
    */
-  Drupal.rules.autocomplete.prototype.toggle = function() {
+  Backdrop.rules.autocomplete.prototype.toggle = function() {
     if (this.jqObject.autocomplete("widget").is(":visible")) {
       this.close();
       this.focusOpens = true;

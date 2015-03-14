@@ -25,13 +25,13 @@ class RulesUIController {
     $items[$base_path . '/manage/%rules_config'] = array(
       'title callback' => 'rules_get_title',
       'title arguments' => array('Editing !plugin "!label"', $base_count + 1),
-      'page callback' => 'drupal_get_form',
+      'page callback' => 'backdrop_get_form',
       'page arguments' => array('rules_ui_form_edit_rules_config', $base_count + 1, $base_path),
       'access callback' => 'rules_config_access',
       'access arguments' => array('update', $base_count + 1),
       'type' => MENU_VISIBLE_IN_BREADCRUMB,
       'file' => 'ui/ui.forms.inc',
-      'file path' => drupal_get_path('module', 'rules'),
+      'file path' => backdrop_get_path('module', 'rules'),
     );
     $items[$base_path . '/manage/%rules_config/add/%rules_element'] = array(
       // Adding another part to the path would hit the menu path-part-limit
@@ -40,46 +40,46 @@ class RulesUIController {
       'title callback' => 'rules_menu_add_element_title',
       // Wrap the integer in an array, so it is passed as is.
       'title arguments' => array(array($base_count + 4)),
-      'page callback' => 'drupal_get_form',
+      'page callback' => 'backdrop_get_form',
       'page arguments' => array('rules_ui_add_element', $base_count + 1, $base_count + 4, $base_count + 3, $base_path),
       'access callback' => 'rules_config_access',
       'access arguments' => array('update', $base_count + 1),
       'load arguments' => array($base_count + 1),
       'file' => 'ui/ui.forms.inc',
-      'file path' => drupal_get_path('module', 'rules'),
+      'file path' => backdrop_get_path('module', 'rules'),
     );
     $items[$base_path . '/manage/%rules_config/add/event'] = array(
       'title callback' => 'rules_get_title',
       'title arguments' => array('Adding event to !plugin "!label"', $base_count + 1),
-      'page callback' => 'drupal_get_form',
+      'page callback' => 'backdrop_get_form',
       'page arguments' => array('rules_ui_add_event_page', $base_count + 1, $base_path),
       'access callback' => 'rules_config_access',
       'access arguments' => array('update', $base_count + 1),
       'load arguments' => array($base_count + 1),
       'file' => 'ui/ui.forms.inc',
-      'file path' => drupal_get_path('module', 'rules'),
+      'file path' => backdrop_get_path('module', 'rules'),
     );
     $items[$base_path . '/manage/%rules_config/delete/event'] = array(
       //@todo: improve title.
       'title' => 'Remove event',
-      'page callback' => 'drupal_get_form',
+      'page callback' => 'backdrop_get_form',
       'page arguments' => array('rules_ui_remove_event', $base_count + 1, $base_count + 4, $base_path),
       'access callback' => 'rules_config_access',
       'access arguments' => array('update', $base_count + 1),
       'description' => 'Remove an event from a reaction rule.',
       'file' => 'ui/ui.forms.inc',
-      'file path' => drupal_get_path('module', 'rules'),
+      'file path' => backdrop_get_path('module', 'rules'),
     );
     $items[$base_path . '/manage/%rules_config/edit/%rules_element'] = array(
       'title callback' => 'rules_get_title',
       'title arguments' => array('Editing !plugin "!label"', $base_count + 3),
-      'page callback' => 'drupal_get_form',
+      'page callback' => 'backdrop_get_form',
       'page arguments' => array('rules_ui_edit_element', $base_count + 1, $base_count + 3, $base_path),
       'access callback' => 'rules_config_access',
       'access arguments' => array('update', $base_count + 1),
       'load arguments' => array($base_count + 1),
       'file' => 'ui/ui.forms.inc',
-      'file path' => drupal_get_path('module', 'rules'),
+      'file path' => backdrop_get_path('module', 'rules'),
     );
     $items[$base_path . '/manage/%rules_config/autocomplete'] = array(
       'page callback' => 'rules_ui_form_data_selection_auto_completion',
@@ -88,69 +88,69 @@ class RulesUIController {
       'access arguments' => array('update', $base_count + 1),
       'type' => MENU_CALLBACK,
       'file' => 'ui/ui.forms.inc',
-      'file path' => drupal_get_path('module', 'rules'),
+      'file path' => backdrop_get_path('module', 'rules'),
     );
     $items[$base_path . '/manage/%rules_config/delete/%rules_element'] = array(
       'title callback' => 'rules_get_title',
       'title arguments' => array('Editing !plugin "!label"', $base_count + 3),
-      'page callback' => 'drupal_get_form',
+      'page callback' => 'backdrop_get_form',
       'page arguments' => array('rules_ui_delete_element', $base_count + 1, $base_count + 3, $base_path),
       'access callback' => 'rules_config_access',
       'access arguments' => array('update', $base_count + 1),
       'load arguments' => array($base_count + 1),
       'file' => 'ui/ui.forms.inc',
-      'file path' => drupal_get_path('module', 'rules'),
+      'file path' => backdrop_get_path('module', 'rules'),
     );
     $items[$base_path . '/manage/%rules_config/%'] = array(
-      'page callback' => 'drupal_get_form',
+      'page callback' => 'backdrop_get_form',
       'page arguments' => array('rules_ui_form_rules_config_confirm_op', $base_count + 1, $base_count + 2, $base_path),
       'access callback' => 'rules_config_access',
       'access arguments' => array('update', $base_count + 1),
       'file' => 'ui/ui.forms.inc',
-      'file path' => drupal_get_path('module', 'rules'),
+      'file path' => backdrop_get_path('module', 'rules'),
     );
     $items[$base_path . '/manage/%rules_config/clone'] = array(
       'title callback' => 'rules_get_title',
       'title arguments' => array('Cloning !plugin "!label"', $base_count + 1),
-      'page callback' => 'drupal_get_form',
+      'page callback' => 'backdrop_get_form',
       'page arguments' => array('rules_ui_form_clone_rules_config', $base_count + 1, $base_path),
       'access callback' => 'rules_config_access',
       'access arguments' => array('update', $base_count + 1),
       'file' => 'ui/ui.forms.inc',
-      'file path' => drupal_get_path('module', 'rules'),
+      'file path' => backdrop_get_path('module', 'rules'),
     );
     $items[$base_path . '/manage/%rules_config/export'] = array(
       'title callback' => 'rules_get_title',
       'title arguments' => array('Export of !plugin "!label"', $base_count + 1),
-      'page callback' => 'drupal_get_form',
+      'page callback' => 'backdrop_get_form',
       'page arguments' => array('rules_ui_form_export_rules_config', $base_count + 1, $base_path),
       'access callback' => 'rules_config_access',
       'access arguments' => array('view', $base_count + 1),
       'file' => 'ui/ui.forms.inc',
-      'file path' => drupal_get_path('module', 'rules'),
+      'file path' => backdrop_get_path('module', 'rules'),
     );
     $items[$base_path . '/manage/%rules_config/execute'] = array(
       'title callback' => 'rules_get_title',
       'title arguments' => array('Executing !plugin "!label"', $base_count + 1),
-      'page callback' => 'drupal_get_form',
+      'page callback' => 'backdrop_get_form',
       'page arguments' => array('rules_ui_form_execute_rules_config', $base_count + 1, $base_path),
       'access callback' => 'rules_config_access',
       'access arguments' => array('update', $base_count + 1),
       'file' => 'ui/ui.forms.inc',
-      'file path' => drupal_get_path('module', 'rules'),
+      'file path' => backdrop_get_path('module', 'rules'),
     );
-    drupal_alter('rules_ui_menu', $items, $base_path, $base_count);
+    backdrop_alter('rules_ui_menu', $items, $base_path, $base_count);
 
     if (module_exists('rules_scheduler')) {
       $items[$base_path . '/manage/%rules_config/schedule'] = array(
         'title callback' => 'rules_get_title',
         'title arguments' => array('Schedule !plugin "!label"', $base_count + 1),
-        'page callback' => 'drupal_get_form',
+        'page callback' => 'backdrop_get_form',
         'page arguments' => array('rules_scheduler_schedule_form', $base_count + 1, $base_path),
         'access callback' => 'rules_config_access',
         'access arguments' => array('update', $base_count + 1),
         'file' => 'rules_scheduler.admin.inc',
-        'file path' => drupal_get_path('module', 'rules_scheduler'),
+        'file path' => backdrop_get_path('module', 'rules_scheduler'),
       );
     }
     return $items;
@@ -239,7 +239,7 @@ class RulesUIController {
       '#empty' => t('None.'),
     );
     $table['#attributes']['class'][] = 'rules-overview-table';
-    $table['#attached']['css'][] = drupal_get_path('module', 'rules') . '/ui/rules.ui.css';
+    $table['#attached']['css'][] = backdrop_get_path('module', 'rules') . '/ui/rules.ui.css';
 
     // TODO: hide configs where access() is FALSE.
     return $table;
@@ -296,24 +296,24 @@ class RulesUIController {
       $text = $config->active ? t('disable') : t('enable');
       $active_class = $config->active ? 'disable' : 'enable';
       $link_path = RulesPluginUI::path($name, $active_class);
-      $row[] = $config->hasStatus(ENTITY_FIXED) ? '' : l($text, $link_path, array('attributes' => array('class' => array($active_class, 'action')), 'query' => drupal_get_destination()));
+      $row[] = $config->hasStatus(ENTITY_FIXED) ? '' : l($text, $link_path, array('attributes' => array('class' => array($active_class, 'action')), 'query' => backdrop_get_destination()));
     }
     $row[] = l(t('clone'), RulesPluginUI::path($name, 'clone'), array('attributes' => array('class' => array('clone', 'action'))));
 
     // Add execute link for for components.
     if ($options['show execution op']) {
-      $row[] = ($config instanceof RulesTriggerableInterface) ? '' : l(t('execute'), RulesPluginUI::path($name, 'execute'), array('attributes' => array('class' => array('execute', 'action')), 'query' => drupal_get_destination()));
+      $row[] = ($config instanceof RulesTriggerableInterface) ? '' : l(t('execute'), RulesPluginUI::path($name, 'execute'), array('attributes' => array('class' => array('execute', 'action')), 'query' => backdrop_get_destination()));
       if (module_exists('rules_scheduler')) {
         // Add schedule link for action components only.
-        $row[] = $config instanceof RulesActionInterface ? l(t('schedule'), RulesPluginUI::path($name, 'schedule'), array('attributes' => array('class' => array('schedule', 'action')), 'query' => drupal_get_destination())) : '';
+        $row[] = $config instanceof RulesActionInterface ? l(t('schedule'), RulesPluginUI::path($name, 'schedule'), array('attributes' => array('class' => array('schedule', 'action')), 'query' => backdrop_get_destination())) : '';
       }
     }
 
     if (!$config->hasStatus(ENTITY_IN_CODE) && !$config->hasStatus(ENTITY_FIXED)) {
-      $row[] = l(t('delete'), RulesPluginUI::path($name, 'delete'), array('attributes' => array('class' => array('delete', 'action')), 'query' => drupal_get_destination()));
+      $row[] = l(t('delete'), RulesPluginUI::path($name, 'delete'), array('attributes' => array('class' => array('delete', 'action')), 'query' => backdrop_get_destination()));
     }
     elseif ($config->hasStatus(ENTITY_OVERRIDDEN) && !$config->hasStatus(ENTITY_FIXED)) {
-      $row[] = l(t('revert'), RulesPluginUI::path($name, 'revert'), array('attributes' => array('class' => array('revert', 'action')), 'query' => drupal_get_destination()));
+      $row[] = l(t('revert'), RulesPluginUI::path($name, 'revert'), array('attributes' => array('class' => array('revert', 'action')), 'query' => backdrop_get_destination()));
     }
     else {
       $row[] = '';

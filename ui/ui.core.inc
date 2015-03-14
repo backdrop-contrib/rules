@@ -306,10 +306,10 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
     // For translatable parameters, pre-populate an internal translation source
     // key so data type forms or input evaluators (i18n) may produce suiting
     // help.
-    if (drupal_multilingual() && !empty($info['translatable'])) {
-      $parameter = $this->element->pluginParameterInfo();
-      $info['custom translation language'] = !empty($parameter['language']);
-    }
+   // if (backdrop_multilingual() && !empty($info['translatable'])) {
+   //   $parameter = $this->element->pluginParameterInfo();
+   //   $info['custom translation language'] = !empty($parameter['language']);
+   // }
 
     // Add the parameter form.
     if ($mode == 'input' && $supports_input_mode) {
@@ -403,6 +403,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
    * Adds the configuration settings form (label, tags, description, ..).
    */
   public function settingsForm(&$form, &$form_state) {
+  module_load_include('inc', 'rules', 'includes/extentity.functions');
     $form_values = RulesPluginUI::getFormStateValues($form, $form_state);
     // Add the settings in a separate fieldset below.
     $form['settings'] = array(
@@ -446,7 +447,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
     $form['settings']['tags'] = array(
       '#type' => 'textfield',
       '#title' => t('Tags'),
-      '#default_value' => isset($this->element->tags) ? drupal_implode_tags($this->element->tags) : '',
+      '#default_value' => isset($this->element->tags) ? backdrop_implode_tags($this->element->tags) : '',
       '#autocomplete_path' => 'admin/config/workflow/rules/autocomplete_tags',
       '#description' => t('Tags associated with this configuration, used for filtering in the admin interface. Separate multiple tags with commas.'),
     );
@@ -558,7 +559,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
     }
 
     // Attach the default permissions page JavaScript.
-    $form['#attached']['js'][] = drupal_get_path('module', 'user') . '/user.permissions.js';
+    $form['#attached']['js'][] = backdrop_get_path('module', 'user') . '/user.permissions.js';
 
     return $form;
   }
@@ -573,7 +574,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
       $this->element->name = $module . '_' . $form_values['name'];
       $form_state['redirect'] = RulesPluginUI::path($this->element->name, 'edit', $this->element);
     }
-    $this->element->tags = empty($form_values['tags']) ? array() : drupal_explode_tags($form_values['tags']);
+    $this->element->tags = empty($form_values['tags']) ? array() : backdrop_explode_tags($form_values['tags']);
 
     if (isset($form_values['vars']['items'])) {
       $vars = &$this->element->componentVariables();
@@ -750,7 +751,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
       if (!empty($this->element->dirty)) {
         rules_config_update_dirty_flag($this->element);
         $variables = array('%label' => $this->element->label(), '%name' => $this->element->name, '@plugin' => $this->element->plugin());
-        drupal_set_message(t('The @plugin %label (%name) was marked dirty, but passes the integrity check now and is active again.', $variables));
+        backdrop_set_message(t('The @plugin %label (%name) was marked dirty, but passes the integrity check now and is active again.', $variables));
         rules_clear_cache();
       }
     }
@@ -851,11 +852,11 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
   public static function formDefaults(&$form, &$form_state) {
     form_load_include($form_state, 'inc', 'rules', 'ui/ui.forms');
     // Add our own css.
-    $form['#attached']['css'][] = drupal_get_path('module', 'rules') . '/ui/rules.ui.css';
+    $form['#attached']['css'][] = backdrop_get_path('module', 'rules') . '/ui/rules.ui.css';
     // Workaround for problems with jquery css in seven theme and the core
     // autocomplete.
     if ($GLOBALS['theme'] == 'seven') {
-      $form['#attached']['css'][] = drupal_get_path('module', 'rules') . '/ui/rules.ui.seven.css';
+      $form['#attached']['css'][] = backdrop_get_path('module', 'rules') . '/ui/rules.ui.seven.css';
     }
 
     // Specify the wrapper div used by #ajax.
@@ -877,7 +878,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
       ->groupBy('tag')
       ->execute()
       ->fetchCol('tag');
-    return drupal_map_assoc($result);
+    return backdrop_map_assoc($result);
   }
 }
 
@@ -1057,7 +1058,7 @@ class RulesContainerPluginUI extends RulesPluginUI {
           '#theme' => 'rules_content_group',
           '#caption' => t('Tags'),
           'tags' => array(
-            '#markup' => check_plain(drupal_implode_tags($this->element->tags)),
+            '#markup' => check_plain(backdrop_implode_tags($this->element->tags)),
           ),
         );
       }
@@ -1224,10 +1225,10 @@ class RulesUICategory {
         continue;
       }
       if ($group = RulesUICategory::getItemGroup($info)) {
-        $sorted_data[drupal_ucfirst($group)][$name] = drupal_ucfirst($info['label']);
+        $sorted_data[backdrop_ucfirst($group)][$name] = backdrop_ucfirst($info['label']);
       }
       else {
-        $ungrouped[$name] = drupal_ucfirst($info['label']);
+        $ungrouped[$name] = backdrop_ucfirst($info['label']);
       }
     }
     asort($ungrouped);

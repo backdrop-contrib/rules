@@ -63,14 +63,14 @@ function rules_action_taxonomy_term_path_alias($term, $alias) {
  * Condition implementation: Check if the path has an alias.
  */
 function rules_condition_path_has_alias($source, $langcode = LANGUAGE_NONE) {
-  return (bool) drupal_lookup_path('alias', $source, $langcode);
+  return (bool) backdrop_lookup_path('alias', $source, $langcode);
 }
 
 /**
  * Condition implementation: Check if the URL alias exists.
  */
 function rules_condition_path_alias_exists($alias, $langcode = LANGUAGE_NONE) {
-  return (bool) drupal_lookup_path('source', $alias, $langcode);
+  return (bool) backdrop_lookup_path('source', $alias, $langcode);
 }
 
 /**
@@ -83,20 +83,20 @@ function rules_condition_path_alias_exists($alias, $langcode = LANGUAGE_NONE) {
  * in the site's settings.php file.
  */
 function rules_path_default_cleaning_method($path) {
-  $replace = variable_get('rules_path_replacement_char', '-');
+  $replace = config_get('rules.settings','rules_path_replacement_char');
   if ($replace) {
     // If the transliteration module is enabled, transliterate the alias first.
-    if (module_exists('transliteration') && variable_get('rules_path_transliteration', TRUE)) {
+    if (module_exists('transliteration') && config_get('rules.settings','rules_path_transliteration')) {
       $path = transliteration_get($path);
     }
 
-    $array = variable_get('rules_clean_path', array('/[^a-zA-Z0-9\-_]+/', $replace));
+    $array = config_get('rules.settings','rules_clean_path');
     $array[2] = $path;
     // Replace it and remove trailing and leading replacement characters.
     $output = trim(call_user_func_array('preg_replace', $array), $replace);
 
-    if (variable_get('rules_path_lower_case', TRUE)) {
-      $output = drupal_strtolower($output);
+    if (config_get('rules.settings','rules_path_lower_case')) {
+      $output = backdrop_strtolower($output);
     }
     return $output;
   }
@@ -109,7 +109,7 @@ function rules_path_default_cleaning_method($path) {
  * Cleans the given string so it can be used as part of a URL path.
  */
 function rules_clean_path($path) {
-  $function = variable_get('rules_path_cleaning_callback', 'rules_path_default_cleaning_method');
+  $function = config_get('rules.settings','rules_path_cleaning_callback');
   if (!function_exists($function)) {
     rules_log('An invalid URL path cleaning callback has been configured. Falling back to the default cleaning method.', array(), RulesLog::WARN);
     $function = 'rules_path_default_cleaning_method';
@@ -126,9 +126,9 @@ function rules_path_clean_ctools($path) {
   // Make use of the CTools cleanstring implementation.
   ctools_include('cleanstring');
   $settings = array(
-    'separator' => variable_get('rules_path_replacement_char', '-'),
-    'transliterate' => module_exists('transliteration') && variable_get('rules_path_transliteration', TRUE),
-    'lower case' => variable_get('rules_path_lower_case', TRUE),
+    'separator' => config_get('rules.settings','rules_path_replacement_char'),
+    'transliterate' => module_exists('transliteration') && config_get('rules.settings','rules_path_transliteration'),
+    'lower case' => config_get('rules.settings','rules_path_lower_case'),
   );
   return ctools_cleanstring($path, $settings);
 }

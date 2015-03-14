@@ -77,14 +77,14 @@ class RulesI18nStringObjectWrapper extends i18n_string_object_wrapper {
         if (is_array($element->settings[$name])) {
           foreach ($element->settings[$name] as $i => $value) {
             $properties[$element->elementId() . ':' . $name . ':' . $i] = array(
-              'title' => t('@plugin "@label" (id @id), @parameter, Value @delta', array('@plugin' => drupal_ucfirst($element->plugin()), '@label' => $element->label(), '@id' => $element->elementId(), '@parameter' => $info['label'], '@delta' => $i + 1)),
+              'title' => t('@plugin "@label" (id @id), @parameter, Value @delta', array('@plugin' => backdrop_ucfirst($element->plugin()), '@label' => $element->label(), '@id' => $element->elementId(), '@parameter' => $info['label'], '@delta' => $i + 1)),
               'string' => $value,
             );
           }
         }
         else {
           $properties[$element->elementId() . ':' . $name] = array(
-            'title' => t('@plugin "@label" (id @id), @parameter', array('@plugin' => drupal_ucfirst($element->plugin()), '@label' => $element->label(), '@id' => $element->elementId(), '@parameter' => $info['label'])),
+            'title' => t('@plugin "@label" (id @id), @parameter', array('@plugin' => backdrop_ucfirst($element->plugin()), '@label' => $element->label(), '@id' => $element->elementId(), '@parameter' => $info['label'])),
             'string' => $element->settings[$name],
           );
         }

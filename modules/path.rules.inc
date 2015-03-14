@@ -82,7 +82,7 @@ function rules_path_action_info() {
         'alias' => array(
           'type' => 'text',
           'label' => t('URL alias'),
-          'description' => t('Specify an alternative path by which the term can be accessed. For example, "content/drupal" for a Drupal term. Use a relative path and do not add a trailing slash.') .' '. t('Leave it empty to delete the URL alias.'),
+          'description' => t('Specify an alternative path by which the term can be accessed. For example, "content/backdrop" for a Backdrop term. Use a relative path and do not add a trailing slash.') .' '. t('Leave it empty to delete the URL alias.'),
           'optional' => TRUE,
           'cleaning callback' => 'rules_path_clean_replacement_values',
         ),

@@ -20,7 +20,7 @@ function rules_system_file_info() {
 function rules_system_event_info() {
   return array(
     'init' => array(
-      'label' => t('Drupal is initializing'),
+      'label' => t('Backdrop is initializing'),
       'group' => t('System'),
       'help' => t("Be aware that some actions might initialize the theme system. After that, it's impossible for any module to change the used theme."),
       'access callback' => 'rules_system_integration_access',
@@ -95,7 +95,7 @@ function _rules_system_watchdog_log_entry_info() {
  */
 function rules_system_action_info() {
   return array(
-    'drupal_message' => array(
+    'backdrop_message' => array(
       'label' => t('Show a message on the site'),
       'group' => t('System'),
       'parameter' => array(
@@ -108,7 +108,7 @@ function rules_system_action_info() {
         'type' => array(
           'type' => 'token',
           'label' => t('Message type'),
-          'options list' => 'rules_action_drupal_message_types',
+          'options list' => 'rules_action_backdrop_message_types',
           'default value' => 'status',
           'optional' => TRUE,
         ),
@@ -121,7 +121,7 @@ function rules_system_action_info() {
           'restriction' => 'input',
         ),
       ),
-      'base' => 'rules_action_drupal_message',
+      'base' => 'rules_action_backdrop_message',
       'access callback' => 'rules_system_integration_access',
     ),
     'redirect' => array(
@@ -131,13 +131,13 @@ function rules_system_action_info() {
         'url' => array(
           'type' => 'uri',
           'label' => t('URL'),
-          'description' => t('A Drupal path, path alias, or external URL to redirect to. Enter (optional) queries after "?" and (optional) anchor after "#".'),
+          'description' => t('A Backdrop path, path alias, or external URL to redirect to. Enter (optional) queries after "?" and (optional) anchor after "#".'),
         ),
         'force' => array(
           'type' => 'boolean',
           'label' => t('Force redirect'),
           'restriction' => 'input',
-          'description' => t("Force the redirect even if another destination parameter is present. Per default Drupal would redirect to the path given as destination parameter, in case it is set. Usually the destination parameter is set by appending it to the URL, e.g. !example_url", array('!example_url' => 'http://example.com/user/login?destination=node/2')),
+          'description' => t("Force the redirect even if another destination parameter is present. Per default Backdrop would redirect to the path given as destination parameter, in case it is set. Usually the destination parameter is set by appending it to the URL, e.g. !example_url", array('!example_url' => 'http://example.com/user/login?destination=node/2')),
           'optional' => TRUE,
           'default value' => TRUE,
         ),
@@ -150,7 +150,7 @@ function rules_system_action_info() {
           'default value' => FALSE,
         ),
       ),
-      'base' => 'rules_action_drupal_goto',
+      'base' => 'rules_action_backdrop_goto',
       'access callback' => 'rules_system_integration_access',
     ),
     'breadcrumb_set' => array(
@@ -166,7 +166,7 @@ function rules_system_action_info() {
         'paths' => array(
           'type' => 'list<text>',
           'label' => t('Paths'),
-          'description' => t('A list of Drupal paths for the breadcrumb links, matching the order of the titles.'),
+          'description' => t('A list of Backdrop paths for the breadcrumb links, matching the order of the titles.'),
         ),
       ),
       'base' => 'rules_action_breadcrumb_set',
@@ -275,9 +275,9 @@ function rules_system_integration_access($type, $name) {
 }
 
 /**
- * Options list callback defining drupal_message types.
+ * Options list callback defining backdrop_message types.
  */
-function rules_action_drupal_message_types() {
+function rules_action_backdrop_message_types() {
   return array(
     'status' => t('Status'),
     'warning' => t('Warning'),

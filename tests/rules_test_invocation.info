@@ -1,5 +1,5 @@
 name = "Rules Test invocation"
 description = "Helper module to test Rules invocations."
 package = Testing
-core = 7.x
+backdrop = 1.x
 hidden = TRUE

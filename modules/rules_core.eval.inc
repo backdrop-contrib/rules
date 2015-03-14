@@ -108,7 +108,7 @@ class RulesURIInputEvaluator extends RulesDataInputEvaluator {
     if (!url_is_external($uri)) {
       // Extract the path and build the URL using the url() function, so URL
       // aliases are applied and query parameters and fragments get handled.
-      $url = drupal_parse_url($uri);
+      $url = backdrop_parse_url($uri);
       $url_options = array('absolute' => TRUE);
       $url_options['query'] = $url['query'];
       $url_options['fragment'] = $url['fragment'];
@@ -215,7 +215,7 @@ class RulesNumericOffsetProcessor extends RulesDataProcessor {
 /**
  * A custom wrapper class for vocabularies that is capable of loading vocabularies by machine name.
  */
-class RulesTaxonomyVocabularyWrapper extends EntityDrupalWrapper {
+class RulesTaxonomyVocabularyWrapper extends EntityBackdropWrapper {
 
   /**
    * Overridden to support identifying vocabularies by machine names.

@@ -18,7 +18,7 @@ class RulesTestTaskHandler extends RulesSchedulerDefaultTaskHandler {
     $data = unserialize($task['data']);
 
     // Set the variable defined in the test to TRUE.
-    variable_set($data['variable'], TRUE);
+    config_set('rules.settings',$data['variable'], TRUE);
   }
 
 }

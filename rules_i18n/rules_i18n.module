@@ -30,7 +30,7 @@ function rules_i18n_rules_ui_menu_alter(&$items, $base_path, $base_count) {
       'access arguments' => array('rules_config', $base_count + 1),
       'type' => MENU_LOCAL_TASK,
       'file' => 'i18n.pages.inc',
-      'file path' => drupal_get_path('module', 'i18n'),
+      'file path' => backdrop_get_path('module', 'i18n'),
       'weight' => 10,
     );
 
@@ -42,7 +42,7 @@ function rules_i18n_rules_ui_menu_alter(&$items, $base_path, $base_count) {
       'access arguments' => array('rules_config', $base_count),
       'type' => MENU_CALLBACK,
       'file' => 'i18n.pages.inc',
-      'file path' => drupal_get_path('module', 'i18n'),
+      'file path' => backdrop_get_path('module', 'i18n'),
       'weight' => 10,
     );
   }
@@ -129,4 +129,17 @@ function rules_i18n_rules_config_defaults_rebuild($rules_configs, $originals) {
       rules_i18n_rules_config_update($rule_config, $originals[$name]);
     }
   }
+}
+
+/**
+ * Implements hook_autoload_info().
+ */
+function rules_i18n_autoload_info()
+{
+  return array(
+    'RulesI18nStringController' => 'rules_i18n.i18n.inc',
+    'RulesI18nStringObjectWrapper' => 'rules_i18n.i18n.inc',
+    'RulesI18nStringEvaluator' => 'rules_i18.rules.inc',
+    'RulesI18nTestCase' => 'rules_i18n.test',
+  ),
 }

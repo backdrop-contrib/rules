@@ -55,7 +55,7 @@ function rules_node_event_info() {
     'node_view' => array(
       'label' => t('Content is viewed'),
       'category' => 'node',
-      'help' => t("Note that if drupal's page cache is enabled, this event won't be generated for pages served from cache."),
+      'help' => t("Note that if backdrop's page cache is enabled, this event won't be generated for pages served from cache."),
       'variables' => rules_events_node_variables(t('viewed content')) + array(
         'view_mode' => array(
           'type' => 'text',

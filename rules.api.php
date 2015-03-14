@@ -246,7 +246,7 @@ function hook_rules_file_info() {
  * @see rules_discover_plugins()
  */
 function hook_rules_directory() {
-  return 'lib/Drupal/fluxtwitter/Rules/*';
+  return 'lib/Backdrop/fluxtwitter/Rules/*';
 }
 
 /**
@@ -870,7 +870,7 @@ function hook_default_rules_configuration() {
   $rule->event('node_update')
        ->condition(rules_condition('data_is', array('data:select' => 'node:status', 'value' => TRUE))->negate())
        ->condition('data_is', array('data:select' => 'node:type', 'value' => 'page'))
-       ->action('drupal_message', array('message' => 'A node has been updated.'));
+       ->action('backdrop_message', array('message' => 'A node has been updated.'));
 
   $configs['rules_test_default_1'] = $rule;
   return $configs;
@@ -1052,12 +1052,12 @@ function hook_rules_ui_menu_alter(&$items, $base_path, $base_count) {
   $items[$base_path . '/manage/%rules_config/schedule'] = array(
     'title callback' => 'rules_get_title',
     'title arguments' => array('Schedule !plugin "!label"', $base_count + 1),
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('rules_scheduler_schedule_form', $base_count + 1, $base_path),
     'access callback' => 'rules_config_access',
     'access arguments' => array('update', $base_count + 1),
     'file' => 'rules_scheduler.admin.inc',
-    'file path' => drupal_get_path('module', 'rules_scheduler'),
+    'file path' => backdrop_get_path('module', 'rules_scheduler'),
   );
 }
 

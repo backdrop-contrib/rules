@@ -34,7 +34,7 @@ function rules_menu_get_item_alter() {
   // item loading. Since this can happen even before hook_init() we need to make
   // sure that firing Rules events is enabled at that point. A typical use case
   // for this is Drupal Commerce with commerce_cart_commerce_order_load().
-  if (!drupal_static('rules_init', FALSE)) {
+  if (!backdrop_static('rules_init', FALSE)) {
     rules_event_invocation_enabled(TRUE);
   }
 }
@@ -44,7 +44,7 @@ function rules_menu_get_item_alter() {
  */
 function rules_init() {
   // See rules_menu_get_item_alter().
-  $rules_init = &drupal_static(__FUNCTION__, FALSE);
+  $rules_init = &backdrop_static(__FUNCTION__, FALSE);
   $rules_init = TRUE;
   // Enable event invocation once hook_init() was invoked for Rules.
   rules_event_invocation_enabled(TRUE);
@@ -59,7 +59,7 @@ function rules_init() {
  * @return RulesUIController
  */
 function rules_ui() {
-  $static = drupal_static(__FUNCTION__);
+  $static = backdrop_static(__FUNCTION__);
   if (!isset($static)) {
     $static = new RulesUIController();
   }
@@ -212,9 +212,9 @@ function rules_log($msg, $args = array(), $priority = RulesLog::INFO, RulesPlugi
 
   // Statically cache the variable settings as this is called very often.
   if (!isset($settings)) {
-    $settings['rules_log_errors'] = variable_get('rules_log_errors', RulesLog::WARN);
-    $settings['rules_debug_log'] = variable_get('rules_debug_log', FALSE);
-    $settings['rules_debug'] = variable_get('rules_debug', FALSE);
+    $settings['rules_log_errors'] = config_get('rules.settings','rules_log_errors');
+    $settings['rules_debug_log'] = config_get('rules.settings','rules_debug_log');
+    $settings['rules_debug'] = config_get('rules.settings','rules_debug');
   }
 
   if ($priority >= $settings['rules_log_errors']) {
@@ -248,7 +248,7 @@ function rules_log($msg, $args = array(), $priority = RulesLog::INFO, RulesPlugi
  *   The hook of the definitions to get from invoking hook_rules_{$hook}.
  */
 function rules_fetch_data($hook) {
-  $data = &drupal_static(__FUNCTION__, array());
+  $data = &backdrop_static(__FUNCTION__, array());
   static $discover = array(
     'action_info' => 'RulesActionHandlerInterface',
     'condition_info' => 'RulesConditionHandlerInterface',
@@ -270,7 +270,7 @@ function rules_fetch_data($hook) {
     if (isset($discover[$hook])) {
       $data[$hook] += rules_discover_plugins($discover[$hook]);
     }
-    drupal_alter('rules_'. $hook, $data[$hook]);
+    backdrop_alter('rules_'. $hook, $data[$hook]);
   }
   return $data[$hook];
 }
@@ -320,7 +320,7 @@ function rules_discover_plugins($class) {
  * Determines the module providing the given class.
  */
 function _rules_discover_module($class) {
-  $paths = &drupal_static(__FUNCTION__);
+  $paths = &backdrop_static(__FUNCTION__);
 
   if (!isset($paths)) {
     // Build up a map of modules keyed by their directory.
@@ -329,10 +329,10 @@ function _rules_discover_module($class) {
     }
   }
 
-  // Retrieve the class file and convert its absolute path to a regular Drupal
+  // Retrieve the class file and convert its absolute path to a regular Backdrop
   // path relative to the installation root.
   $reflection = new ReflectionClass($class);
-  $path = str_replace(realpath(DRUPAL_ROOT) . DIRECTORY_SEPARATOR, '', realpath(dirname($reflection->getFileName())));
+  $path = str_replace(realpath(BACKDROP_ROOT) . DIRECTORY_SEPARATOR, '', realpath(dirname($reflection->getFileName())));
   $path = DIRECTORY_SEPARATOR != '/' ? str_replace(DIRECTORY_SEPARATOR, '/', $path) : $path;
 
   // Go up the path until we match a module up.
@@ -347,17 +347,17 @@ function _rules_discover_module($class) {
  * Gets a rules cache entry.
  */
 function &rules_get_cache($cid = 'data') {
-  // Make use of the fast, advanced drupal static pattern.
-  static $drupal_static_fast;
-  if (!isset($drupal_static_fast)) {
-    $drupal_static_fast['cache'] = &drupal_static(__FUNCTION__, array());
+  // Make use of the fast, advanced backdrop static pattern.
+  static $backdrop_static_fast;
+  if (!isset($backdrop_static_fast)) {
+    $backdrop_static_fast['cache'] = &backdrop_static(__FUNCTION__, array());
   }
-  $cache = &$drupal_static_fast['cache'];
+  $cache = &$backdrop_static_fast['cache'];
 
   if (!isset($cache[$cid])) {
     // The main 'data' cache includes translated strings, so each language is
     // cached separately.
-    $cid_suffix = $cid == 'data' ? ':' . $GLOBALS['language']->language : '';
+    $cid_suffix = $cid == 'data' ? ':' . $GLOBALS['language']->langcode : '';
 
     if ($get = cache_get($cid . $cid_suffix, 'cache_rules')) {
       $cache[$cid] = $get->data;
@@ -423,7 +423,7 @@ function _rules_rebuild_cache(&$cache) {
     $item = new $info['class']();
     $item->rebuildCache($info, $cache);
   }
-  $cid_suffix = ':' . $GLOBALS['language']->language;
+  $cid_suffix = ':' . $GLOBALS['language']->langcode;
   cache_set('data' . $cid_suffix, $cache, 'cache_rules');
 }
 
@@ -447,7 +447,7 @@ function _rules_rebuild_component_cache() {
       $component = clone $component;
       $component->optimize();
       // Allow modules to alter the cached component.
-      drupal_alter('rules_component', $component->plugin, $component);
+      backdrop_alter('rules_component', $component->plugin, $component);
       rules_set_cache('comp_' . $component->name, $component);
     }
   }
@@ -464,7 +464,7 @@ function _rules_rebuild_component_cache() {
  * @see rules_get_cache()
  */
 function rules_set_cache($cid, $data) {
-  $cache = &drupal_static('rules_get_cache', array());
+  $cache = &backdrop_static('rules_get_cache', array());
   $cache[$cid] = $data;
   cache_set($cid, $data, 'cache_rules');
 }
@@ -481,9 +481,9 @@ function rules_flush_caches() {
  */
 function rules_clear_cache() {
   cache_clear_all('*', 'cache_rules', TRUE);
-  drupal_static_reset('rules_get_cache');
-  drupal_static_reset('rules_fetch_data');
-  drupal_static_reset('rules_config_update_dirty_flag');
+  backdrop_static_reset('rules_get_cache');
+  backdrop_static_reset('rules_fetch_data');
+  backdrop_static_reset('rules_config_update_dirty_flag');
   entity_get_controller('rules_config')->resetCache();
 }
 
@@ -517,6 +517,8 @@ function rules_import($export, &$error_msg = '') {
  */
 function &rules_wrap_data($data = NULL, $info, $force = FALSE) {
   // If the data is already wrapped, use the existing wrapper.
+  module_load_include('inc','rules','includes/extentity.property'); 
+  module_load_include('inc','rules','includes/extentity.functions'); 
   if ($data instanceof EntityMetadataWrapper) {
     return $data;
   }
@@ -861,6 +863,7 @@ function rules_hook_info() {
  *   An array of rule configurations indexed by their ids.
  */
 function rules_config_load_multiple($names = array(), $conditions = array()) {
+  module_load_include('inc','rules','includes/extentity.functions');
   return entity_load_multiple_by_name('rules_config', $names, $conditions);
 }
 
@@ -872,6 +875,7 @@ function rules_config_load_multiple($names = array(), $conditions = array()) {
  * @return RulesPlugin
  */
 function rules_config_load($name) {
+  module_load_include('inc','rules','includes/extentity.functions');
   return entity_load_single('rules_config', $name);
 }
 
@@ -929,7 +933,7 @@ function rules_config_update_dirty_flag($rules_config, $update = TRUE) {
   // Keep a log of already check configurations to avoid repetitive checks on
   // oftent used components.
   // @see rules_element_invoke_component_validate()
-  $checked = &drupal_static(__FUNCTION__, array());
+  $checked = &backdrop_static(__FUNCTION__, array());
   if (!empty($checked[$rules_config->name])) {
     return;
   }
@@ -1173,8 +1177,13 @@ function rules_path_clean_replacement_values(&$replacements, $data = array(), $o
 
 /**
  * Implements hook_theme().
+ * extended with items copied from Drupal's EntityAPI hook_theme
  */
 function rules_theme() {
+
+  $types = array_keys(entity_crud_get_info());
+  $pattern = '(' . implode('|', $types) . ')(\.|__)';
+  
   return array(
     'rules_elements' => array(
       'render element' => 'element',
@@ -1215,6 +1224,25 @@ function rules_theme() {
     'rules_settings_help' => array(
       'variables' => array('text' => '', 'heading' => ''),
       'file' => 'ui/ui.theme.inc',
+    ),
+	'entity_status' => array(
+      'variables' => array('status' => NULL, 'html' => TRUE),
+      'file' => 'theme/extentity.theme.inc',
+    ),
+    'entity' => array(
+      'render element' => 'elements',
+      'template' => 'entity',
+      'pattern' => $pattern,
+      'path' => backdrop_get_path('module', 'rules') . '/theme',
+      'file' => 'extentity.theme.inc',
+    ),
+    'entity_property' => array(
+      'render element' => 'elements',
+      'file' => 'theme/extentity.theme.inc',
+    ),
+    'entity_ui_overview_item' => array(
+      'variables' => array('label' => NULL, 'entity_type' => NULL, 'url' => FALSE, 'name' => FALSE),
+      'file' => 'includes/extentity.ui.inc'
     ),
   );
 }
@@ -1281,7 +1309,7 @@ function rules_get_title($text, $element) {
     $cache = rules_get_cache();
     $plugin = $element->plugin();
     $plugin = isset($cache['plugin_info'][$plugin]['label']) ? $cache['plugin_info'][$plugin]['label'] : $plugin;
-    $plugin = drupal_strtolower(drupal_substr($plugin, 0, 1)) . drupal_substr($plugin, 1);
+    $plugin = backdrop_strtolower(backdrop_substr($plugin, 0, 1)) . backdrop_substr($plugin, 1);
     return t($text, array('!label' => $element->label(), '!plugin' => $plugin));
   }
   // As fallback treat $element as simple string.
@@ -1299,7 +1327,7 @@ function rules_menu_add_element_title($array) {
   $cache = rules_get_cache();
   if (isset($cache['plugin_info'][$plugin_name]['class'])) {
     $info = $cache['plugin_info'][$plugin_name] + array('label' => $plugin_name);
-    $label = drupal_strtolower(drupal_substr($info['label'], 0, 1)) . drupal_substr($info['label'], 1);
+    $label = backdrop_strtolower(backdrop_substr($info['label'], 0, 1)) . backdrop_substr($info['label'], 1);
     return t('Add a new !plugin', array('!plugin' => $label));
   }
 }
@@ -1310,8 +1338,8 @@ function rules_menu_add_element_title($array) {
 function rules_debug_log_region() {
   // If there is no setting for the current theme use the default theme setting.
   global $theme_key;
-  $theme_default = variable_get('theme_default', 'bartik');
-  return variable_get('rules_debug_region_' . $theme_key, variable_get('rules_debug_region_' . $theme_default, 'help'));
+  $theme_default = config_get('rules.settings','theme_default');
+  return config_get('rules.settings','rules_debug_region_', config_get('rules.settings','rules_debug_region_', 'help'));
 }
 
 /**
@@ -1319,10 +1347,10 @@ function rules_debug_log_region() {
  */
 function rules_page_build(&$page) {
   // Invoke a the page redirect, in case the action has been executed.
-  // @see rules_action_drupal_goto()
-  if (isset($GLOBALS['_rules_action_drupal_goto_do'])) {
-    list($url, $force) = $GLOBALS['_rules_action_drupal_goto_do'];
-    drupal_goto($url);
+  // @see rules_action_backdrop_goto()
+  if (isset($GLOBALS['_rules_action_backdrop_goto_do'])) {
+    list($url, $force) = $GLOBALS['_rules_action_backdrop_goto_do'];
+    backdrop_goto($url);
   }
 
   if (isset($_SESSION['rules_debug'])) {
@@ -1353,7 +1381,7 @@ function rules_debug_log_pre_render($elements) {
     $elements[] = array('#markup' => $log);
     $elements['#theme_wrappers'] = array('rules_log');
     // Log the rules log to the system log if enabled.
-    if (variable_get('rules_debug_log', FALSE)) {
+    if (config_get('rules.settings','rules_debug_log')) {
       watchdog('rules', 'Rules debug information: !log', array('!log' => $log), WATCHDOG_NOTICE);
     }
   }
@@ -1361,17 +1389,17 @@ function rules_debug_log_pre_render($elements) {
 }
 
 /**
- * Implements hook_drupal_goto_alter().
+ * Implements hook_backdrop_goto_alter().
  *
- * @see rules_action_drupal_goto()
+ * @see rules_action_backdrop_goto()
  */
-function rules_drupal_goto_alter(&$path, &$options, &$http_response_code) {
+function rules_backdrop_goto_alter(&$path, &$options, &$http_response_code) {
   // Invoke a the page redirect, in case the action has been executed.
-  if (isset($GLOBALS['_rules_action_drupal_goto_do'])) {
-    list($url, $force) = $GLOBALS['_rules_action_drupal_goto_do'];
+  if (isset($GLOBALS['_rules_action_backdrop_goto_do'])) {
+    list($url, $force) = $GLOBALS['_rules_action_backdrop_goto_do'];
 
     if ($force || !isset($_GET['destination'])) {
-      $url = drupal_parse_url($url);
+      $url = backdrop_parse_url($url);
       $path = $url['path'];
       $options['query'] = $url['query'];
       $options['fragment'] = $url['fragment'];
@@ -1384,11 +1412,11 @@ function rules_drupal_goto_alter(&$path, &$options, &$http_response_code) {
  * Returns whether the debug log should be shown.
  */
 function rules_show_debug_output() {
-  if (variable_get('rules_debug', FALSE) == RulesLog::INFO && user_access('access rules debug')) {
+  if (config_get('rules.settings','rules_debug') == RulesLog::INFO && user_access('access rules debug')) {
     return TRUE;
   }
   // For performance avoid unnecessary auto-loading of the RulesLog class.
-  return variable_get('rules_debug', FALSE) == RulesLog::WARN && user_access('access rules debug') && class_exists('RulesLog', FALSE) && RulesLog::logger()->hasErrors();
+  return config_get('rules.settings','rules_debug') == RulesLog::WARN && user_access('access rules debug') && class_exists('RulesLog', FALSE) && RulesLog::logger()->hasErrors();
 }
 
 /**
@@ -1406,7 +1434,7 @@ function rules_exit() {
     }
   }
   // Log the rules log to the system log if enabled.
-  if (variable_get('rules_debug_log', FALSE) && $log = RulesLog::logger()->render()) {
+  if (config_get('rules.settings','rules_debug_log') && $log = RulesLog::logger()->render()) {
     watchdog('rules', 'Rules debug information: !log', array('!log' => $log), WATCHDOG_NOTICE);
   }
 }
@@ -1461,7 +1489,7 @@ function rules_modules_enabled($modules) {
           ->condition('id', $rules_config->id)
           ->execute();
         if ($rules_config->active) {
-          drupal_set_message(t('All dependencies for the Rules configuration %config are met again, so it has been re-activated.', array('%config' => $rules_config->label())));
+          backdrop_set_message(t('All dependencies for the Rules configuration %config are met again, so it has been re-activated.', array('%config' => $rules_config->label())));
         }
       }
       catch (RulesIntegrityException $e) {
@@ -1501,7 +1529,7 @@ function rules_modules_disabled($modules) {
         '1 Rules configuration requires some of the disabled modules to function and cannot be executed any more.',
         '@count Rules configuration require some of the disabled modules to function and cannot be executed any more.'
       );
-      drupal_set_message($message, 'warning');
+      backdrop_set_message($message, 'warning');
     }
   }
   rules_clear_cache();
@@ -1550,20 +1578,20 @@ function rules_rules_config_access($op, $rules_config = NULL, $account = NULL) {
 function rules_menu() {
   $items['admin/config/workflow/rules/upgrade'] = array(
     'title' => 'Upgrade',
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('rules_upgrade_form'),
     'access arguments' => array('administer rules'),
     'file' => 'includes/rules.upgrade.inc',
-    'file path' => drupal_get_path('module', 'rules'),
+    'file path' => backdrop_get_path('module', 'rules'),
     'type' => MENU_CALLBACK,
   );
   $items['admin/config/workflow/rules/upgrade/clear'] = array(
     'title' => 'Clear',
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('rules_upgrade_confirm_clear_form'),
     'access arguments' => array('administer rules'),
     'file' => 'includes/rules.upgrade.inc',
-    'file path' => drupal_get_path('module', 'rules'),
+    'file path' => backdrop_get_path('module', 'rules'),
     'type' => MENU_CALLBACK,
   );
   $items['admin/config/workflow/rules/autocomplete_tags'] = array(
@@ -1697,7 +1725,7 @@ function rules_entity_metadata_wrapper_all_properties_callback(EntityMetadataWra
  * Helper to enable or disable the invocation of rules events.
  *
  * Rules invocation is disabled by default, such that Rules does not operate
- * when Drupal is not fully bootstrapped. It gets enabled in rules_init() and
+ * when Backdrop is not fully bootstrapped. It gets enabled in rules_init() and
  * rules_enable().
  *
  * @param bool|NULL $enable
@@ -1714,3 +1742,151 @@ function rules_event_invocation_enabled($enable = NULL) {
   // Disable invocation if configured or if site runs in maintenance mode.
   return $invocation_enabled && !defined('MAINTENANCE_MODE');
 }
+
+/**
+ * Defines status codes used for exportable entities and copied here from EntityAPI
+ */
+/**
+ * A bit flag used to let us know if an entity has been customly defined.
+ */
+define('ENTITY_CUSTOM', 0x01);
+
+/**
+ * A bit flag used to let us know if an entity is a 'default' in code.
+ */
+define('ENTITY_IN_CODE', 0x02);
+
+/**
+ * A bit flag used to mark entities as overridden, e.g. they were originally
+ * definded in code and are saved now in the database. Same as
+ * (ENTITY_CUSTOM | ENTITY_IN_CODE).
+ */
+define('ENTITY_OVERRIDDEN', 0x03);
+
+/**
+ * A bit flag used to mark entities as fixed, thus not changeable for any
+ * user.
+ */
+define('ENTITY_FIXED', 0x04 | 0x02);
+
+/**
+ * Implements hook_config_info().
+ */
+function rules_config_info()
+{
+  $prefixes['rules.settings'] = array(
+    'label' => t('Rules settings'),
+    'group' => t('Configuration'),
+  );
+  return $prefixes;
+}
+
+/**
+ * Implements hook_autoload_info().
+ */
+function rules_autoload_info()
+{
+    return array(
+        'RulesFeaturesController' => 'rules.features.inc',
+        'RulesTestCase' => 'tests/rules.test',
+        'RulesTestDataCase' => 'tests/rules.test',
+        'RulesTriggerTestCase' => 'tests/rules.test',
+        'RulesIntegrationTestCase' => 'tests/rules.test',
+        'RulesEventDispatcherTestCase' => 'tests/rules.test',
+        'RulesInvocationEnabledTestCase' => 'tests/rules.test',
+        'FacesExtendableException' => 'includes/faces.inc',
+        'FacesExtender' => 'includes/faces.inc',
+        'FacesExtendable' => 'includes/faces.inc',
+        'RulesExtendable' => 'includes/rules.core.inc',
+        'RulesPlugin' => 'includes/rules.core.inc',
+        'RulesAbstractPlugin' => 'includes/rules.core.inc',
+        'RulesPluginHandlerBase' => 'includes/rules.core.inc',
+        'RulesConditionHandlerBase' => 'includes/rules.core.inc',
+        'RulesActionHandlerBase' => 'includes/rules.core.inc',
+        'RulesAbstractPluginDefaults' => 'includes/rules.core.inc',
+        'RulesRecursiveElementIterator' => 'includes/rules.core.inc',
+        'RulesContainerPlugin' => 'includes/rules.core.inc',
+        'RulesActionContainer' => 'includes/rules.core.inc',
+        'RulesConditionContainer' => 'includes/rules.core.inc',
+        'RulesLog' => 'includes/rules.core.inc',
+        'RulesException' => 'includes/rules.core.inc',
+        'RulesEvaluationException' => 'includes/rules.core.inc',
+        'RulesIntegrityException' => 'includes/rules.core.inc',
+        'RulesDependencyException' => 'includes/rules.core.inc',
+        'RulesEntityController' => 'includes/rules.core.inc',
+        'RulesEventHandlerBase' => 'includes/rules.event.inc',
+        'RulesEventDefaultHandler' => 'includes/rules.event.inc',
+        'RulesEventHandlerEntityBundle' => 'includes/rules.event.inc',
+        'RulesDataProcessor' => 'includes/rules.processor.inc',
+        'RulesDataInputEvaluator' => 'includes/rules.processor.inc',
+        'RulesAction' => 'includes/rules.plugins.inc',
+        'RulesCondition' => 'includes/rules.plugins.inc',
+        'Rule' => 'includes/rules.plugins.inc',
+        'RulesReactionRule' => 'includes/rules.plugins.inc',
+        'RulesAnd' => 'includes/rules.plugins.inc',
+        'RulesOr' => 'includes/rules.plugins.inc',
+        'RulesLoop' => 'includes/rules.plugins.inc',
+        'RulesActionSet' => 'includes/rules.plugins.inc',
+        'RulesRuleSet' => 'includes/rules.plugins.inc',
+        'RulesEventSet' => 'includes/rules.plugins.inc',
+        'RulesState' => 'includes/rules.state.inc',
+        'RulesData' => 'includes/rules.state.inc',
+        'RulesIdentifiableDataWrapper' => 'includes/rules.state.inc',
+        'RulesNodeConditionBase' => 'modules/node.eval.inc',
+        'RulesNodeConditionType' => 'modules/node.eval.inc',
+        'RulesNodeConditionPublished' => 'modules/node.eval.inc',
+        'RulesNodeConditionSticky' => 'modules/node.eval.inc',
+        'RulesNodeConditionPromoted' => 'modules/node.eval.inc',
+        'RulesNodeConditionBase' => 'modules/node.eval.inc',
+        'RulesNodeConditionType' => 'modules/node.eval.inc',
+        'RulesPHPEvaluator' => 'modules/php.eval.inc',
+        'RulesPHPDataProcessor' => 'modules/php.eval.inc',
+        'RulesDateInputEvaluator' => 'modules/rules_core.eval.inc',
+        'RulesURIInputEvaluator' => 'modules/rules_core.eval.inc',
+        'RulesDateOffsetProcessor' => 'modules/rules_core.eval.inc',
+        'RulesNumericOffsetProcessor' => 'modules/rules_core.eval.inc',
+        'RulesTaxonomyVocabularyWrapper' => 'modules/rules_core.eval.inc',
+        'RulesTokenEvaluator' => 'modules/system.eval.inc',
+        'RulesUIController' => 'ui/ui.controller.inc',
+        'RulesElementMap' => 'ui/ui.core.inc',
+        'RulesPluginUI' => 'ui/ui.core.inc',
+        'RulesAbstractPluginUI' => 'ui/ui.core.inc',
+        'RulesContainerPluginUI' => 'ui/ui.core.inc',
+        'RulesConditionContainerUI' => 'ui/ui.core.inc',
+        'RulesActionContainerUI' => 'ui/ui.core.inc',
+        'RulesUICategory' => 'ui/ui.core.inc',
+        'RulesDataUI' => 'ui/ui.data.inc',
+        'RulesDataUIText' => 'ui/ui.data.inc',
+        'RulesDataUITextToken' => 'ui/ui.data.inc',
+        'RulesDataUITextFormatted' => 'ui/ui.data.inc',
+        'RulesDataUIDecimal' => 'ui/ui.data.inc',
+        'RulesDataUIInteger' => 'ui/ui.data.inc',
+        'RulesDataUIIPAddress' => 'ui/ui.data.inc',
+        'RulesDataUIBoolean' => 'ui/ui.data.inc',
+        'RulesDataUIDate' => 'ui/ui.data.inc',
+        'RulesDataUIDuration' => 'ui/ui.data.inc',
+        'RulesDataUIURI' => 'ui/ui.data.inc',
+        'RulesDataUIListText' => 'ui/ui.data.inc',
+        'RulesDataUIListInteger' => 'ui/ui.data.inc',
+        'RulesDataUIListToken' => 'ui/ui.data.inc',
+        'RulesDataUIEntity' => 'ui/ui.data.inc',
+        'RulesDataUIEntityExportable' => 'ui/ui.data.inc',
+        'RulesDataUIBundleEntity' => 'ui/ui.data.inc',
+        'RulesDataUITaxonomyVocabulary' => 'ui/ui.data.inc',
+        'RulesDataUIListEntity' => 'ui/ui.data.inc',
+        'RulesRuleUI' => 'ui/ui.plugins.inc',
+        'RulesReactionRuleUI' => 'ui/ui.plugins.inc',
+        'EntityAPIControllerExportable' => 'includes/extentity.controller.inc',
+        'EntityAPIController' => 'includes/extentity.controller.inc',
+        'EntityBackdropWrapper' => 'includes/extentity.wrapper.inc',
+        'EntityStructureWrapper' => 'includes/extentity.wrapper.inc',
+        'EntityListWrapper' => 'includes/extentity.wrapper.inc',
+        'EntityMetadataWrapper' => 'includes/extentity.wrapper.inc',
+        'EntityDefaultFeaturesController' => 'includes/extentity.features.inc',
+        'EntityDefaultUIController' => 'includes/extentity.ui.inc',
+        'EntityContentUIController' => 'includes/extentity.ui.inc',
+        'EntityBundleableUIController' => 'includes/extentity.ui.inc',
+        'RulesPluginFeaturesIntegrationInterace' => 'rules.features.inc',
+    );
+}
+

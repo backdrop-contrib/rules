@@ -66,7 +66,7 @@ function rules_ui_form_rules_config_validate($form, &$form_state) {
  */
 function rules_ui_form_edit_rules_config_submit($form, &$form_state) {
   $form_state['rules_element']->form_submit($form, $form_state);
-  drupal_set_message(t('Your changes have been saved.'));
+  backdrop_set_message(t('Your changes have been saved.'));
   if (empty($form_state['redirect'])) {
     $form_state['redirect'] = RulesPluginUI::defaultRedirect($form_state['rules_element']);
   }
@@ -139,7 +139,7 @@ function rules_ui_form_execute_rules_config($form, &$form_state, $rules_config, 
     $form['#validate'] = array('rules_ui_form_rules_config_validate');
     return $form;
   }
-  drupal_not_found();
+  backdrop_not_found();
   exit;
 }
 
@@ -150,10 +150,10 @@ function rules_ui_form_execute_rules_config_submit($form, &$form_state) {
   $element = $form_state['rules_element'];
   $result = $element->execute();
   if ($element instanceof RulesActionInterface) {
-    drupal_set_message(t('Component %label has been executed.', array('%label' => $element->label())));
+    backdrop_set_message(t('Component %label has been executed.', array('%label' => $element->label())));
   }
   else {
-    drupal_set_message(t('Component %label evaluated to %result.', array('%label' => $element->label(), '%result' => $result ? 'true' : 'false')));
+    backdrop_set_message(t('Component %label evaluated to %result.', array('%label' => $element->label(), '%result' => $result ? 'true' : 'false')));
   }
 }
 
@@ -187,7 +187,7 @@ function rules_ui_form_rules_config_confirm_op($form, &$form_state, $rules_confi
     return confirm_form($form, $confirm_question, $base_path, $description, t('Confirm'), t('Cancel'));
   }
   else {
-    drupal_not_found();
+    backdrop_not_found();
     exit;
   }
 }
@@ -232,7 +232,7 @@ function rules_ui_confirm_operation_apply($op, $rules_config) {
 function rules_ui_form_rules_config_confirm_op_submit($form, &$form_state) {
   if ($form_state['values']['confirm']) {
     $msg = rules_ui_confirm_operation_apply($form_state['op'], $form_state['rules_config']);
-    drupal_set_message($msg);
+    backdrop_set_message($msg);
   }
 }
 
@@ -242,7 +242,7 @@ function rules_ui_form_rules_config_confirm_op_submit($form, &$form_state) {
 function rules_ui_add_element($form, &$form_state, $rules_config, $plugin_name, RulesContainerPlugin $parent, $base_path) {
   $cache = rules_get_cache();
   if (!isset($cache['plugin_info'][$plugin_name]['class'])) {
-    drupal_not_found();
+    menu_not_found();
     exit;
   }
   RulesPluginUI::$basePath = $base_path;
@@ -291,7 +291,7 @@ function rules_ui_add_element($form, &$form_state, $rules_config, $plugin_name, 
 /**
  * Add element submit callback.
  * Used for "abstract plugins" to create the initial element object with the
- * given implemenation name and rebuild the form.
+ * given implementation name and rebuild the form.
  */
 function rules_ui_add_element_submit($form, &$form_state) {
   $element = rules_plugin_factory($form_state['plugin'], $form_state['values']['element_name']);
@@ -344,7 +344,7 @@ function rules_ui_delete_element($form, &$form_state, $rules_config, $rules_elem
         '@removed-plugin' => $removed_plugin,
         '!url' => url(RulesPluginUI::path($form_state['rules_config']->name, 'edit', $e->element)),
       );
-      drupal_set_message(t('Deleting this @removed-plugin would break your configuration as some of its provided variables are utilized by the @plugin <a href="!url">%label</a>.', $args), 'warning');
+      backdrop_set_message(t('Deleting this @removed-plugin would break your configuration as some of its provided variables are utilized by the @plugin <a href="!url">%label</a>.', $args), 'warning');
     }
   }
 
@@ -386,7 +386,7 @@ function rules_ui_edit_element_validate($form, &$form_state) {
  */
 function rules_ui_edit_element_submit($form, &$form_state) {
   $form_state['rules_element']->form_submit($form, $form_state);
-  drupal_set_message(t('Your changes have been saved.'));
+  backdrop_set_message(t('Your changes have been saved.'));
   if (empty($form_state['redirect'])) {
     $form_state['redirect'] = RulesPluginUI::defaultRedirect($form_state['rules_element']);
   }
@@ -417,14 +417,14 @@ function rules_ui_add_event_page_submit($form, &$form_state) {
     }
     catch (RulesIntegrityException $e) {
       $warning = TRUE;
-      drupal_set_message(t('Added the event, but it does not provide all variables utilized.'), 'warning');
+      backdrop_set_message(t('Added the event, but it does not provide all variables utilized.'), 'warning');
     }
   }
   $rules_config->save();
   if (!isset($warning)) {
     $events = rules_fetch_data('event_info');
     $label = $events[$form_state['values']['event']]['label'];
-    drupal_set_message(t('Added event %event.', array('%event' => $label)));
+    backdrop_set_message(t('Added event %event.', array('%event' => $label)));
   }
 }
 
@@ -511,12 +511,12 @@ function rules_ui_remove_event_submit($form, &$form_state) {
     }
     catch (RulesIntegrityException $e) {
       $warning = TRUE;
-      drupal_set_message(t('Removed the event, but it had provided some variables which are now missing.'), 'warning');
+      backdrop_set_message(t('Removed the event, but it had provided some variables which are now missing.'), 'warning');
     }
   }
   $rules_config->save();
   if (!isset($warning)) {
-    drupal_set_message(t('Event %event has been removed.', array('%event' => $form_state['event_label'])));
+    backdrop_set_message(t('Event %event has been removed.', array('%event' => $form_state['event_label'])));
   }
   $form_state['redirect'] = RulesPluginUI::path($rules_config->name);
 }
@@ -573,7 +573,7 @@ function rules_ui_import_form_validate($form, &$form_state) {
   else {
     form_set_error('import', t('Import failed.'));
     if ($error_msg) {
-      drupal_set_message($error_msg, 'error');
+      backdrop_set_message($error_msg, 'error');
     }
   }
 }
@@ -592,7 +592,7 @@ function rules_ui_import_form_submit($form, &$form_state) {
   $rules_config->save();
   $vars = array('@entity' => t('Rules configuration'), '%label' => $rules_config->label());
   watchdog('rules_config', 'Imported @entity %label.', $vars);
-  drupal_set_message(t('Imported @entity %label.', $vars));
+  backdrop_set_message(t('Imported @entity %label.', $vars));
   $form_state['redirect'] = RulesPluginUI::$basePath;
 }
 
@@ -650,11 +650,11 @@ function rules_ui_form_data_selection_auto_completion($parameter, $form_build_id
         else {
           $text = check_plain($selector) . ' (' . check_plain($info['label']) . ')';
         }
-        $matches[$selector] = "<div" . drupal_attributes($attributes) . ">$text</div>";
+        $matches[$selector] = "<div" . backdrop_attributes($attributes) . ">$text</div>";
       }
     }
   }
-  drupal_json_output($matches);
+  backdrop_json_output($matches);
 }
 
 
@@ -929,8 +929,8 @@ function rules_form_after_build_restore_base_path($form, &$form_state) {
 function rules_autocomplete_tags($tags_typed = '') {
   // The user enters a comma-separated list of tags. We only autocomplete the
   // last tag.
-  $tags_typed = drupal_explode_tags($tags_typed);
-  $tag_last = drupal_strtolower(array_pop($tags_typed));
+  $tags_typed = backdrop_explode_tags($tags_typed);
+  $tag_last = backdrop_strtolower(array_pop($tags_typed));
 
   $tag_matches = array();
   if ($tag_last != '') {
@@ -949,7 +949,7 @@ function rules_autocomplete_tags($tags_typed = '') {
       ->execute()
       ->fetchCol('rt.tag');
 
-    $prefix = count($tags_typed) ? drupal_implode_tags($tags_typed) . ', ' : '';
+    $prefix = count($tags_typed) ? backdrop_implode_tags($tags_typed) . ', ' : '';
 
     foreach ($tags_return as $name) {
       $n = $name;
@@ -960,5 +960,5 @@ function rules_autocomplete_tags($tags_typed = '') {
       $tag_matches[$prefix . $n] = check_plain($name);
     }
   }
-  drupal_json_output($tag_matches);
+  backdrop_json_output($tag_matches);
 }

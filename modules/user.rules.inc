@@ -57,7 +57,7 @@ function rules_user_event_info() {
         ),
       ),
       'access callback' => 'rules_user_integration_access',
-      'help' => t("Note that if drupal's page cache is enabled, this event won't be generated for pages served from cache."),
+      'help' => t("Note that if backdrop's page cache is enabled, this event won't be generated for pages served from cache."),
     ),
     'user_delete' => array(
       'label' => t('After a user account has been deleted'),

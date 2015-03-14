@@ -325,21 +325,21 @@ class RulesTestEventHandler extends RulesEventDefaultHandler implements RulesEve
    * Implements RulesEventDispatcherInterface::startWatching().
    */
   public function startWatching() {
-    variable_set($this->variableName, TRUE);
+    config_set('rules.settings',$this->variableName, TRUE);
   }
 
   /**
    * Implements RulesEventDispatcherInterface::stopWatching().
    */
   public function stopWatching() {
-    variable_set($this->variableName, FALSE);
+    config_set('rules.settings',$this->variableName, FALSE);
   }
 
   /**
    * Implements RulesEventDispatcherInterface::isWatching().
    */
   public function isWatching() {
-    return (bool) variable_get($this->variableName);
+    return (bool) config_get('rules.settings',$this->variableName);
   }
 
 }

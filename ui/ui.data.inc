@@ -106,7 +106,7 @@ class RulesDataUI {
       $types = is_array($info['type']) ? $info['type'] : array($info['type']);
       $type_labels = array();
       foreach ($types as $type) {
-        $type_labels[] = drupal_ucfirst(isset($cache['data_info'][$type]['label']) ? $cache['data_info'][$type]['label'] : $type);
+        $type_labels[] = backdrop_ucfirst(isset($cache['data_info'][$type]['label']) ? $cache['data_info'][$type]['label'] : $type);
       }
     }
     $form['types_help']['#text'] = format_plural(count($type_labels), 'Select data of the type %types.', 'Select data of the types %types.', array('%types' => implode(', ', $type_labels)));

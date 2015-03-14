@@ -5,20 +5,12 @@
  * Rules tests.
  */
 
-class RulesTestCase extends DrupalWebTestCase {
-
-  static function getInfo() {
-    return array(
-      'name' => 'Rules Engine tests',
-      'description' => 'Test using the rules API to create and evaluate rules.',
-      'group' => 'Rules',
-    );
-  }
+class RulesTestCase extends BackdropWebTestCase {
 
   function setUp() {
     parent::setUp('rules', 'rules_test');
     RulesLog::logger()->clear();
-    variable_set('rules_debug_log', 1);
+    config_set('rules.settings','rules_debug_log', 1);
   }
 
   /**
@@ -28,7 +20,7 @@ class RulesTestCase extends DrupalWebTestCase {
     $placeholders = array();
     foreach ($strings as $key => $string) {
       $key = !is_numeric($key) ? $key : $string;
-      $placeholders['%' . $key] = drupal_placeholder($string);
+      $placeholders['%' . $key] = backdrop_placeholder($string);
     }
     return strtr($text, $placeholders);
   }
@@ -125,7 +117,7 @@ class RulesTestCase extends DrupalWebTestCase {
     $component = rules_config_load('rules_test_alias');
 
     $this->assertTrue($component->dirty, 'Component has been marked as dirty');
-    $node = $this->drupalCreateNode();
+    $node = $this->backdropCreateNode();
     $result = rules_invoke_component('rules_test_alias', $node);
     $this->assertTrue($result === FALSE, 'Unable to execute a dirty component.');
 
@@ -202,8 +194,8 @@ class RulesTestCase extends DrupalWebTestCase {
          ->condition('rules_condition_content_is_type', array('type' => array('page', 'story')))
          ->action('rules_node_publish_action', array('node:select' => 'node_unchanged'));
 
-    $node1 = $this->drupalCreateNode(array('status' => 0, 'type' => 'page'));
-    $node2 = $this->drupalCreateNode(array('status' => 0, 'type' => 'page'));
+    $node1 = $this->backdropCreateNode(array('status' => 0, 'type' => 'page'));
+    $node2 = $this->backdropCreateNode(array('status' => 0, 'type' => 'page'));
     $rule->integrityCheck();
     $rule->execute($node1, $node2);
     $this->assertEqual($node2->status, 1, 'Action executed correctly on node2.');
@@ -223,7 +215,7 @@ class RulesTestCase extends DrupalWebTestCase {
     $parameters = $action->parameterInfo();
     $this->assertTrue($parameters['node'], 'Action parameter needs a value.');
 
-    $node = $this->drupalCreateNode();
+    $node = $this->backdropCreateNode();
     $action->execute($node);
     $log = RulesLog::logger()->get();
     $last = array_pop($log);
@@ -301,7 +293,7 @@ class RulesTestCase extends DrupalWebTestCase {
   function testActionSaving() {
     // Test saving a parameter.
     $action = rules_action('rules_node_publish_action_save');
-    $node = $this->drupalCreateNode(array('status' => 0, 'type' => 'page'));
+    $node = $this->backdropCreateNode(array('status' => 0, 'type' => 'page'));
     $action->executeByArgs(array('node' => $node));
 
     $this->assertEqual($node->status, 1, 'Action executed correctly on node.');
@@ -329,7 +321,7 @@ class RulesTestCase extends DrupalWebTestCase {
     $rule->integrityCheck();
     $rule->execute();
 
-    $node = $this->drupalGetNodeByTitle($title);
+    $node = $this->backdropGetNodeByTitle($title);
     $this->assertTrue(!empty($node) && $node->body[LANGUAGE_NONE][0]['value'] == 'body', 'Saved a provided variable');
     RulesLog::logger()->checkLog();
   }
@@ -338,7 +330,7 @@ class RulesTestCase extends DrupalWebTestCase {
    * Test adding a variable and optional parameters.
    */
   function testVariableAdding() {
-    $node = $this->drupalCreateNode();
+    $node = $this->backdropCreateNode();
     $rule = rule(array('nid' => array('type' => 'integer')));
     $rule->condition('rules_test_condition_true')
          ->action('rules_action_load_node')
@@ -353,7 +345,7 @@ class RulesTestCase extends DrupalWebTestCase {
 
 
     // Test adding a variable with a custom variable name.
-    $node = $this->drupalCreateNode();
+    $node = $this->backdropCreateNode();
     $rule = rule(array('nid' => array('type' => 'integer')));
     $rule->action('rules_action_load_node', array('node_loaded:var' => 'node'))
          ->action('rules_action_delete_node')
@@ -368,9 +360,9 @@ class RulesTestCase extends DrupalWebTestCase {
    */
   function testRuleComponentAccess() {
     // Create a normal user.
-    $normal_user = $this->drupalCreateUser();
+    $normal_user = $this->backdropCreateUser();
     // Create a role for granting access to the rule component.
-    $this->normal_role = $this->drupalCreateRole(array(), 'test_role');
+    $this->normal_role = $this->backdropCreateRole(array(), 'test_role');
     $normal_user->roles[$this->normal_role] = 'test_role';
     user_save($normal_user, array('roles' => $normal_user->roles));
     // Create an 'action set' rule component making use of a permission.
@@ -429,15 +421,15 @@ class RulesTestCase extends DrupalWebTestCase {
    */
   function testDataSelectors() {
     $body[LANGUAGE_NONE][0] = array('value' => '<b>The body & nothing.</b>');
-    $node = $this->drupalCreateNode(array('body' => $body, 'type' => 'page', 'summary' => ''));
+    $node = $this->backdropCreateNode(array('body' => $body, 'type' => 'page', 'summary' => ''));
 
     $rule = rule(array('nid' => array('type' => 'integer')));
     $rule->action('rules_action_load_node')
-         ->action('drupal_message', array('message:select' => 'node_loaded:body:value'))
+         ->action('backdrop_message', array('message:select' => 'node_loaded:body:value'))
          ->execute($node->nid);
 
     RulesLog::logger()->checkLog();
-    $msg = drupal_get_messages('status');
+    $msg = backdrop_get_messages('status');
     $last_msg = array_pop($msg['status']);
     $wrapper = entity_metadata_wrapper('node', $node);
     $this->assertEqual($last_msg, $wrapper->body->value->value(array('sanitize' => TRUE)), 'Data selector for getting parameter applied.');
@@ -512,17 +504,17 @@ class RulesTestCase extends DrupalWebTestCase {
     $set = rules_rule_set(array(
       'node' => array('type' => 'node', 'label' => 'node'),
     ));
-    $set->rule(rule()->action('drupal_message', array('message:select' => 'node:title')))
+    $set->rule(rule()->action('backdrop_message', array('message:select' => 'node:title')))
         ->rule(rule()->condition('rules_condition_content_is_published')
-                     ->action('drupal_message', array('message' => 'Node is published.'))
+                     ->action('backdrop_message', array('message' => 'Node is published.'))
                );
     $set->integrityCheck()->save('rules_test_set_1');
 
-    $node = $this->drupalCreateNode(array('title' => 'The title.', 'status' => 1));
+    $node = $this->backdropCreateNode(array('title' => 'The title.', 'status' => 1));
     // Execute.
     rules_invoke_component('rules_test_set_1', $node);
 
-    $msg = drupal_get_messages();
+    $msg = backdrop_get_messages();
     $this->assertEqual($msg['status'][0], 'The title.', 'First rule evaluated.');
     $this->assertEqual($msg['status'][1], 'Node is published.', 'Second rule evaluated.');
 
@@ -560,7 +552,7 @@ class RulesTestCase extends DrupalWebTestCase {
     $rule->action('component_rules_test_set_2', array('node1:select' => 'node2'));
     $rule->action('node_make_sticky', array('node:select' => 'node2'));
 
-    $node = $this->drupalCreateNode(array('title' => 'The title.', 'status' => 1, 'sticky' => 0));
+    $node = $this->backdropCreateNode(array('title' => 'The title.', 'status' => 1, 'sticky' => 0));
     $rule->execute($node);
 
     $node = node_load($node->nid, NULL, TRUE);
@@ -623,7 +615,7 @@ class RulesTestCase extends DrupalWebTestCase {
     // Make sure the integrity check doesn't throw an exception.
     $rule->integrityCheck();
     // Test the rule.
-    $node = $this->drupalCreateNode(array('type' => 'page', 'sticky' => 0));
+    $node = $this->backdropCreateNode(array('type' => 'page', 'sticky' => 0));
     $rule->execute($node);
     $this->assertTrue($node->sticky, 'Rule with asserted metadata executed.');
 
@@ -681,21 +673,21 @@ class RulesTestCase extends DrupalWebTestCase {
   function testLoops() {
     // Test passing the list parameter as argument to ensure that is working
     // generally for plugin container too.
-    drupal_get_messages(NULL, TRUE);
+    backdrop_get_messages(NULL, TRUE);
     $loop = rules_loop();
-    $loop->action('drupal_message', array('message' => 'test'));
+    $loop->action('backdrop_message', array('message' => 'test'));
     $arg_info = $loop->parameterInfo();
     $this->assert($arg_info['list']['type'] == 'list', 'Argument info contains list.');
     $loop->execute(array(1, 2));
 
     // Ensure the action has been executed twice, once for each list item.
-    $msg = drupal_get_messages();
+    $msg = backdrop_get_messages();
     $this->assert($msg['status'][0] == 'test' && $msg['status'][1], 'Loop has been properly executed');
 
     // Now test looping over nodes.
-    $node1 = $this->drupalCreateNode(array('type' => 'page', 'sticky' => 0));
-    $node2 = $this->drupalCreateNode(array('type' => 'page', 'sticky' => 0));
-    $node3 = $this->drupalCreateNode(array('type' => 'page', 'sticky' => 0));
+    $node1 = $this->backdropCreateNode(array('type' => 'page', 'sticky' => 0));
+    $node2 = $this->backdropCreateNode(array('type' => 'page', 'sticky' => 0));
+    $node3 = $this->backdropCreateNode(array('type' => 'page', 'sticky' => 0));
 
     $rule = rule(array(
       'list' => array(
@@ -707,7 +699,7 @@ class RulesTestCase extends DrupalWebTestCase {
     $loop->action('data_set', array('data:select' => 'node:sticky', 'value' => TRUE));
     $rule->action($loop);
     // Test using a list with data selectors, just output the last nodes type.
-    $rule->action('drupal_message', array('message:select' => 'list:2:type'));
+    $rule->action('backdrop_message', array('message:select' => 'list:2:type'));
 
     $rule->execute(array($node1->nid, $node2->nid, $node3->nid));
     $text = RulesLog::logger()->render();
@@ -731,7 +723,7 @@ class RulesTestCase extends DrupalWebTestCase {
    * Test returning provided variables.
    */
   function testReturningVariables() {
-    $node = $this->drupalCreateNode();
+    $node = $this->backdropCreateNode();
     $action = rules_action('entity_fetch', array('type' => 'node', 'id' => $node->nid));
     list($node2) = $action->execute();
     $this->assertTrue($node2->nid == $node->nid, 'Action returned a variable.');
@@ -774,15 +766,15 @@ class RulesTestCase extends DrupalWebTestCase {
    * Tests using input evaluators.
    */
   function testInputEvaluators() {
-    $node = $this->drupalCreateNode(array('title' => '<b>The body & nothing.</b>', 'type' => 'page'));
+    $node = $this->backdropCreateNode(array('title' => '<b>The body & nothing.</b>', 'type' => 'page'));
 
     $rule = rule(array('nid' => array('type' => 'integer')));
     $rule->action('rules_action_load_node')
-         ->action('drupal_message', array('message' => 'Title: [node_loaded:title]'))
+         ->action('backdrop_message', array('message' => 'Title: [node_loaded:title]'))
          ->execute($node->nid);
 
     RulesLog::logger()->checkLog();
-    $msg = drupal_get_messages();
+    $msg = backdrop_get_messages();
     $this->assertEqual(array_pop($msg['status']), 'Title: ' . check_plain('<b>The body & nothing.</b>'), 'Token input evaluator applied.');
 
     // Test token replacements on a list of text values.
@@ -802,7 +794,7 @@ class RulesTestCase extends DrupalWebTestCase {
     $rule = rule(array('nid' => array('type' => 'integer')));
     $rule->name = "rules_export_test";
     $rule->action('rules_action_load_node')
-         ->action('drupal_message', array('message' => 'Title: [node_loaded:title]'));
+         ->action('backdrop_message', array('message' => 'Title: [node_loaded:title]'));
 
     $export =
 '{ "rules_export_test" : {
@@ -811,7 +803,7 @@ class RulesTestCase extends DrupalWebTestCase {
     "USES VARIABLES" : { "nid" : { "type" : "integer" } },
     "DO" : [
       { "rules_action_load_node" : { "PROVIDE" : { "node_loaded" : { "node_loaded" : "Loaded content" } } } },
-      { "drupal_message" : { "message" : "Title: [node_loaded:title]" } }
+      { "backdrop_message" : { "message" : "Title: [node_loaded:title]" } }
     ]
   }
 }';
@@ -844,7 +836,7 @@ class RulesTestCase extends DrupalWebTestCase {
         }
       },
       { "RULE" : {
-          "DO" : [ { "drupal_message" : { "message" : "hi" } } ],
+          "DO" : [ { "backdrop_message" : { "message" : "hi" } } ],
           "LABEL" : "Test Rule 2"
         }
       }
@@ -857,7 +849,7 @@ class RulesTestCase extends DrupalWebTestCase {
     $this->assertEqual($export, $set->export(), 'Export of imported rule set equals original export.');
 
     // Try executing the imported rule set.
-    $node = $this->drupalCreateNode();
+    $node = $this->backdropCreateNode();
     $set->execute($node);
     $this->assertEqual($node->title, 'test', 'Imported rule set has been executed.');
     RulesLog::logger()->checkLog();
@@ -907,7 +899,7 @@ class RulesTestCase extends DrupalWebTestCase {
     $rule->integrityCheck();
 
     // Test the rule.
-    $node = $this->drupalCreateNode(array('type' => 'page', 'sticky' => 0));
+    $node = $this->backdropCreateNode(array('type' => 'page', 'sticky' => 0));
     $rule->execute($node);
     $this->assertTrue($node->title == 'foo', 'Action with named parameters has been correctly executed.');
     RulesLog::logger()->checkLog();
@@ -918,11 +910,11 @@ class RulesTestCase extends DrupalWebTestCase {
    */
   function testAbortOnNULLValues() {
     $rule = rule(array('node' => array('type' => 'node')));
-    $rule->action('drupal_message', array('message:select' => 'node:log'));
+    $rule->action('backdrop_message', array('message:select' => 'node:log'));
     $rule->integrityCheck();
 
     // Test the rule.
-    $node = $this->drupalCreateNode();
+    $node = $this->backdropCreateNode();
     $node->log = NULL;
     $rule->execute($node);
 
@@ -935,7 +927,7 @@ class RulesTestCase extends DrupalWebTestCase {
 /**
  * Test rules data wrappers.
  */
-class RulesTestDataCase extends DrupalWebTestCase {
+class RulesTestDataCase extends BackdropWebTestCase {
 
   static function getInfo() {
     return array(
@@ -947,7 +939,7 @@ class RulesTestDataCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('rules', 'rules_test');
-    variable_set('rules_debug_log', 1);
+    config_set('rules.settings','rules_debug_log', 1);
     // Make sure we don't ran over issues with the node_load static cache.
     entity_get_controller('node')->resetCache();
   }
@@ -956,7 +948,7 @@ class RulesTestDataCase extends DrupalWebTestCase {
    * Tests intelligently saving data.
    */
   function testDataSaving() {
-    $node = $this->drupalCreateNode();
+    $node = $this->backdropCreateNode();
     $state = new RulesState(rule());
     $state->addVariable('node', $node, array('type' => 'node'));
     $wrapper = $state->get('node');
@@ -964,9 +956,9 @@ class RulesTestDataCase extends DrupalWebTestCase {
     $wrapper->set($node);
     $state->saveChanges('node', $wrapper, FALSE);
 
-    $this->assertFalse($this->drupalGetNodeByTitle('test'), 'Changes have not been saved.');
+    $this->assertFalse($this->backdropGetNodeByTitle('test'), 'Changes have not been saved.');
     $state->saveChanges('node', $wrapper, TRUE);
-    $this->assertTrue($this->drupalGetNodeByTitle('test'), 'Changes have been saved.');
+    $this->assertTrue($this->backdropGetNodeByTitle('test'), 'Changes have been saved.');
 
     // Test skipping saving.
     $state->addVariable('node2', $node, array(
@@ -977,14 +969,14 @@ class RulesTestDataCase extends DrupalWebTestCase {
     $node->title = 'test2';
     $wrapper->set($node);
     $state->saveChanges('node2', $wrapper, TRUE);
-    $this->assertFalse($this->drupalGetNodeByTitle('test2'), 'Changes have not been saved.');
+    $this->assertFalse($this->backdropGetNodeByTitle('test2'), 'Changes have not been saved.');
 
     // Try saving a non-entity wrapper, which should result in saving the
     // parent entity containing the property.
     $wrapper = $state->get('node');
     $wrapper->title->set('test3');
     $state->saveChanges('node:title', $wrapper, TRUE);
-    $this->assertTrue($this->drupalGetNodeByTitle('test3'), 'Parent entity has been saved.');
+    $this->assertTrue($this->backdropGetNodeByTitle('test3'), 'Parent entity has been saved.');
   }
 
   /**
@@ -1013,7 +1005,7 @@ class RulesTestDataCase extends DrupalWebTestCase {
   function testCustomWrapperClasses() {
     // Test loading a vocabulary by name, which is done by a custom wrapper.
     $set = rules_action_set(array('vocab' => array('type' => 'taxonomy_vocabulary')), array('vocab'));
-    $set->action('drupal_message', array('message:select' => 'vocab:name'));
+    $set->action('backdrop_message', array('message:select' => 'vocab:name'));
     $set->integrityCheck();
     list($vocab) = $set->execute('tags');
     $this->assertTrue($vocab->machine_name == 'tags', 'Loaded vocabulary by name.');
@@ -1041,7 +1033,7 @@ class RulesTestDataCase extends DrupalWebTestCase {
    * Makes sure the RulesIdentifiableDataWrapper is working correctly.
    */
   function testRulesIdentifiableDataWrapper() {
-    $node = $this->drupalCreateNode();
+    $node = $this->backdropCreateNode();
     $wrapper = new RulesTestTypeWrapper('rules_test_type', $node);
     $this->assertTrue($wrapper->value() == $node, 'Data correctly wrapped.');
 
@@ -1067,7 +1059,7 @@ class RulesTestDataCase extends DrupalWebTestCase {
 
     // Test saving a savable custom, identifiable wrapper.
     $action = rules_action('test_type_save');
-    $node = $this->drupalCreateNode(array('status' => 0, 'type' => 'page'));
+    $node = $this->backdropCreateNode(array('status' => 0, 'type' => 'page'));
     $node->status = 1;
     $action->execute($node);
 
@@ -1080,7 +1072,7 @@ class RulesTestDataCase extends DrupalWebTestCase {
 /**
  * Test triggering rules.
  */
-class RulesTriggerTestCase extends DrupalWebTestCase {
+class RulesTriggerTestCase extends BackdropWebTestCase {
 
   static function getInfo() {
     return array(
@@ -1093,7 +1085,7 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp('rules', 'rules_test');
     RulesLog::logger()->clear();
-    variable_set('rules_debug_log', 1);
+    config_set('rules.settings','rules_debug_log', 1);
   }
 
   protected function createTestRule($action = TRUE, $event = 'node_presave') {
@@ -1133,7 +1125,7 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
    * Tests creating and triggering a basic reaction rule.
    */
   function testBasicReactionRule() {
-    $node = $this->drupalCreateNode(array('type' => 'page'));
+    $node = $this->backdropCreateNode(array('type' => 'page'));
     $rule = $this->createTestRule();
     $rule->integrityCheck()->save();
     // Test the basics of the event set work right.
@@ -1154,7 +1146,7 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
    * Test a rule using a handler to load a variable.
    */
   function testVariableHandler() {
-    $node = $this->drupalCreateNode(array('type' => 'page', 'sticky' => 0, 'status' => 0));
+    $node = $this->backdropCreateNode(array('type' => 'page', 'sticky' => 0, 'status' => 0));
     $rule = $this->createTestRule(FALSE, 'node_update');
     $rule->action('rules_node_publish_action_save', array('node:select' => 'node_unchanged'));
     // Test without recursion prevention to make sure recursive invocations
@@ -1192,7 +1184,7 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
     $rule->integrityCheck()->save();
 
     // On insert it's not possible to get the unchanged node during presave.
-    $node = $this->drupalCreateNode(array('type' => 'page', 'sticky' => 0, 'status' => 0));
+    $node = $this->backdropCreateNode(array('type' => 'page', 'sticky' => 0, 'status' => 0));
 
     //debug(RulesLog::logger()->render());
     $text = RulesTestCase::t('Unable to load variable %node_unchanged, aborting.', array('node_unchanged'));
@@ -1209,7 +1201,7 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
     $rule->integrityCheck()->save();
 
     // Now trigger the rule.
-    $node = $this->drupalCreateNode(array('type' => 'page', 'sticky' => 0, 'status' => 0));
+    $node = $this->backdropCreateNode(array('type' => 'page', 'sticky' => 0, 'status' => 0));
     node_save($node);
 
     $text = RulesTestCase::t('Not evaluating reaction rule %label to prevent recursion.', array('label' => $rule->name));
@@ -1231,7 +1223,7 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
     $rule->integrityCheck()->save();
 
     // Create rule2 - which triggers rule1 on another node.
-    $node2 = $this->drupalCreateNode(array('type' => 'page', 'sticky' => 0, 'status' => 0));
+    $node2 = $this->backdropCreateNode(array('type' => 'page', 'sticky' => 0, 'status' => 0));
     $rule2 = $this->createTestRule(FALSE, 'node_update');
     $rule2->action('rules_action_load_node', array('nid' => $node2->nid))
           ->action('rules_node_make_sticky_action', array('node:select' => 'node_loaded'));
@@ -1239,7 +1231,7 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
     $rule2->save();
 
     // Now trigger both rules by generating the event.
-    $node = $this->drupalCreateNode(array('type' => 'page', 'sticky' => 0, 'status' => 0));
+    $node = $this->backdropCreateNode(array('type' => 'page', 'sticky' => 0, 'status' => 0));
     node_save($node);
 
     //debug(RulesLog::logger()->render());
@@ -1263,13 +1255,13 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
     $rule->save();
 
     // Create a node that triggers the rule.
-    $node = $this->drupalCreateNode(array('type' => 'page', 'sticky' => 0, 'status' => 0));
+    $node = $this->backdropCreateNode(array('type' => 'page', 'sticky' => 0, 'status' => 0));
     // Clear messages.
-    drupal_get_messages();
+    backdrop_get_messages();
     // Let event node_update occur.
     node_save($node);
 
-    $msg = drupal_get_messages();
+    $msg = backdrop_get_messages();
     $this->assertEqual($msg['status'][0], 'A node has been updated.', 'Default rule has been triggered.');
   }
 
@@ -1283,9 +1275,9 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
       ->action('node_publish', array('node:select' => 'node'));
     $rule->integrityCheck()->save();
 
-    $node = $this->drupalCreateNode(array('type' => 'page', 'status' => 0));
+    $node = $this->backdropCreateNode(array('type' => 'page', 'status' => 0));
     $this->assertEqual($node->status, 0, 'Rule has not been triggered.');
-    $node = $this->drupalCreateNode(array('type' => 'article', 'status' => 0));
+    $node = $this->backdropCreateNode(array('type' => 'article', 'status' => 0));
     $this->assertEqual($node->status, 1, 'Rule has been triggered.');
     RulesLog::logger()->checkLog();
 
@@ -1304,12 +1296,12 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
 /**
  * Tests provided module integration.
  */
-class RulesIntegrationTestCase extends DrupalWebTestCase {
+class RulesIntegrationTestCase extends BackdropWebTestCase {
 
   static function getInfo() {
     return array(
       'name' => 'Rules Core Integration',
-      'description' => 'Tests provided integration for drupal core.',
+      'description' => 'Tests provided integration for backdrop core.',
       'group' => 'Rules',
     );
   }
@@ -1317,7 +1309,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp('rules', 'rules_test', 'php', 'path');
     RulesLog::logger()->clear();
-    variable_set('rules_debug_log', 1);
+    config_set('rules.settings','rules_debug_log', 1);
   }
 
   /**
@@ -1394,7 +1386,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     $rule->action('data_set', array('data:select' => 'node:title', 'value' => 'bar'));
     $rule->integrityCheck();
 
-    $node = $this->drupalCreateNode(array('title' => 'foo'));
+    $node = $this->backdropCreateNode(array('title' => 'foo'));
     $rule->execute($node);
     $this->assertEqual($node->title, 'bar', "Data comparision using IN operation evaluates to TRUE.");
 
@@ -1407,13 +1399,13 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
 
     // Data is empty condition evaluates to TRUE
     // for node with empty title, action sets title to 'bar'.
-    $node = $this->drupalCreateNode(array('title' => '', 'type' => 'article'));
+    $node = $this->backdropCreateNode(array('title' => '', 'type' => 'article'));
     $rule->execute($node);
     $this->assertEqual($node->title, 'bar', "Data is empty condition evaluates to TRUE for node with empty title, action sets title to 'bar'.");
 
     // Data is empty condition evaluates to FALSE
     // for node with title 'foo', action is not executed.
-    $node = $this->drupalCreateNode(array('title' => 'foo', 'type' => 'article'));
+    $node = $this->backdropCreateNode(array('title' => 'foo', 'type' => 'article'));
     $rule->execute($node);
     $this->assertEqual($node->title, 'foo', "Data is empty condition evaluates to FALSE for node with title 'foo', action is not executed.");
 
@@ -1424,7 +1416,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     $rule->condition('data_is_empty', array('data:select' => 'node:field-tags:0:parent'));
     $rule->action('data_set', array('data:select' => 'node:title', 'value' => 'bar'));
     $rule->integrityCheck();
-    $node = $this->drupalCreateNode(array('title' => 'foo', 'type' => 'article'));
+    $node = $this->backdropCreateNode(array('title' => 'foo', 'type' => 'article'));
     $rule->execute($node);
     $this->assertEqual($node->title, 'bar', "Data is empty condition evaluates to TRUE for not existing data structures");
 
@@ -1503,8 +1495,8 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
   function testEntityIntegration() {
     global $user;
 
-    $page = $this->drupalCreateNode(array('type' => 'page'));
-    $article = $this->drupalCreateNode(array('type' => 'article'));
+    $page = $this->backdropCreateNode(array('type' => 'page'));
+    $article = $this->backdropCreateNode(array('type' => 'article'));
 
     $result = rules_condition('entity_field_access')
       ->execute(entity_metadata_wrapper('node', $article), 'field_tags');
@@ -1540,7 +1532,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     $this->assertEqual($term_wrapped->getIdentifier(), $article->field_tags[LANGUAGE_NONE][0]['tid'], 'Entity is of bundle condition has been met.');
 
     // Test again using an entity variable.
-    $article = $this->drupalCreateNode(array('type' => 'article'));
+    $article = $this->backdropCreateNode(array('type' => 'article'));
     $rule = rule(array(
       'entity' => array('type' => 'entity'),
     ));
@@ -1568,7 +1560,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     $pos = ($pos !== FALSE) ? strpos($text, RulesTestCase::t('Saved %entity_created of type %node.', array('entity_created', 'node')), $pos) : FALSE;
     $this->assertTrue($pos !== FALSE, 'Data has been created and saved.');
 
-    $node = $this->drupalCreateNode(array('type' => 'page', 'sticky' => 0, 'status' => 0));
+    $node = $this->backdropCreateNode(array('type' => 'page', 'sticky' => 0, 'status' => 0));
     $rule = rule();
     $rule->action('entity_fetch', array('type' => 'node', 'id' => $node->nid, 'entity_fetched:var' => 'node'));
     $rule->action('entity_save', array('data:select' => 'node', 'immediate' => TRUE));
@@ -1623,7 +1615,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
 
 
     // Test the entity_query action.
-    $node = $this->drupalCreateNode(array('type' => 'page', 'title' => 'foo2'));
+    $node = $this->backdropCreateNode(array('type' => 'page', 'title' => 'foo2'));
     $rule = rule();
     $rule->action('entity_query', array('type' => 'node', 'property' => 'title', 'value' => 'foo2'))
          ->action('data_set', array('data:select' => 'entity_fetched:0:title', 'value' => 'bar'));
@@ -1649,7 +1641,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     taxonomy_term_save($term2);
 
     $tags[LANGUAGE_NONE][0]['tid'] = $term->tid;
-    $node = $this->drupalCreateNode(array('title' => 'foo', 'type' => 'article', 'field_tags' => $tags));
+    $node = $this->backdropCreateNode(array('title' => 'foo', 'type' => 'article', 'field_tags' => $tags));
 
     // Test assigning and remove a term from an article.
     $rule = rule(array('node' => array('type' => 'node', 'bundle' => 'article')));
@@ -1662,7 +1654,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     $this->assertEqual(array_values($node->field_tags[LANGUAGE_NONE]), array(0 => array('tid' => $term2->tid)), 'Term removed and added from a node.');
 
     // Test using the taxonomy term reference field on a term object.
-    $field_name = drupal_strtolower($this->randomName() . '_field_name');
+    $field_name = backdrop_strtolower($this->randomName() . '_field_name');
     $field = field_create_field(array(
       'field_name' => $field_name,
       'type' => 'taxonomy_term_reference',
@@ -1741,7 +1733,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
       array('node_make_unsticky', 'node_is_sticky', 'node_make_sticky', 'sticky'),
       array('node_unpromote', 'node_is_promoted', 'node_promote', 'promote'),
     );
-    $node = $this->drupalCreateNode(array('type' => 'page', 'status' => 1, 'sticky' => 1, 'promote' => 1));
+    $node = $this->backdropCreateNode(array('type' => 'page', 'status' => 1, 'sticky' => 1, 'promote' => 1));
 
     foreach ($tests as $info) {
       list($action1, $condition, $action2, $property) = $info;
@@ -1771,7 +1763,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     $rule->event('node_insert')
          ->action('data_set', array('data:select' => 'node:title', 'value' => $rand));
     $rule->save('test');
-    $node = $this->drupalCreateNode();
+    $node = $this->backdropCreateNode();
     $node = node_load($node->nid);
     $this->assertEqual($node->title, $rand, 'Node title is correct.');
     RulesLog::logger()->checkLog();
@@ -1781,8 +1773,8 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
    * Test integration for the user module.
    */
   function testUserIntegration() {
-    $rid = $this->drupalCreateRole(array('administer nodes'), 'foo');
-    $user = $this->drupalCreateUser();
+    $rid = $this->backdropCreateRole(array('administer nodes'), 'foo');
+    $user = $this->backdropCreateUser();
 
     // Test assigning a role with the list_add action.
     $rule = rule(array('user' => array('type' => 'user')));
@@ -1830,22 +1822,22 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
    * Test integration for the php module.
    */
   function testPHPIntegration() {
-    $node = $this->drupalCreateNode(array('title' => 'foo'));
+    $node = $this->backdropCreateNode(array('title' => 'foo'));
     $rule = rule(array('var_name' => array('type' => 'node')));
     $rule->condition('php_eval', array('code' => 'return TRUE;'))
-         ->action('php_eval', array('code' => 'drupal_set_message("Executed-" . $var_name->title);'))
-         ->action('drupal_message', array('message' => 'Title: <?php echo $var_name->title; ?> Token: [var_name:title]'));
+         ->action('php_eval', array('code' => 'backdrop_set_message("Executed-" . $var_name->title);'))
+         ->action('backdrop_message', array('message' => 'Title: <?php echo $var_name->title; ?> Token: [var_name:title]'));
 
     $rule->execute($node);
     $rule->access();
     RulesLog::logger()->checkLog();
-    $msg = drupal_get_messages();
+    $msg = backdrop_get_messages();
     $this->assertEqual(array_pop($msg['status']), "Title: foo Token: foo", 'PHP input evaluation has been applied.');
     $this->assertEqual(array_pop($msg['status']), "Executed-foo", 'PHP code condition and action have been evaluated.');
 
     // Test PHP data processor
     $rule = rule(array('var_name' => array('type' => 'node')));
-    $rule->action('drupal_message', array(
+    $rule->action('backdrop_message', array(
       'message:select' => 'var_name:title',
       'message:process' => array(
         'php' => array('code' => 'return "Title: $value";')
@@ -1854,7 +1846,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     $rule->execute($node);
     $rule->access();
     RulesLog::logger()->checkLog();
-    $msg = drupal_get_messages();
+    $msg = backdrop_get_messages();
     $this->assertEqual(array_pop($msg['status']), "Title: foo", 'PHP data processor has been applied.');
   }
 
@@ -1863,7 +1855,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
    */
   function testRulesCoreIntegration() {
     // Make sure the date input evaluator evaluates properly using strtotime().
-    $node = $this->drupalCreateNode(array('title' => 'foo'));
+    $node = $this->backdropCreateNode(array('title' => 'foo'));
     $rule = rule(array('node' => array('type' => 'node')));
     $rule->action('data_set', array('data:select' => 'node:created', 'value' => '+1 day'));
 
@@ -1940,25 +1932,25 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     $condition = rules_condition('data_is', array('data:select' => 'site:current-user:name', 'value' => '[site:current-user:name]'));
     $this->assertTrue($condition->execute(), 'Replaced the token for the current user\'s name.');
 
-    // Test breadcrumbs and drupal set message.
+    // Test breadcrumbs and backdrop set message.
     $rule = rules_reaction_rule();
     $rule->event('init')
          ->action('breadcrumb_set', array('titles' => array('foo'), 'paths' => array('bar')))
-         ->action('drupal_message', array('message' => 'A message.'));
+         ->action('backdrop_message', array('message' => 'A message.'));
     $rule->save('test');
 
-    $this->drupalGet('node');
+    $this->backdropGet('node');
     $this->assertLink('foo', 0, 'Breadcrumb has been set.');
-    $this->assertText('A message.', 'Drupal message has been shown.');
+    $this->assertText('A message.', 'Backdrop message has been shown.');
 
     // Test the page redirect.
-    $node = $this->drupalCreateNode();
+    $node = $this->backdropCreateNode();
     $rule = rules_reaction_rule();
     $rule->event('node_view')
          ->action('redirect', array('url' => 'user'));
     $rule->save('test2');
 
-    $this->drupalGet('node/' . $node->nid);
+    $this->backdropGet('node/' . $node->nid);
     $this->assertEqual($this->getUrl(), url('user', array('absolute' => TRUE)), 'Redirect has been issued.');
 
     // Also test using a url including a fragment.
@@ -1966,7 +1958,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     $actions[0]->settings['url'] = 'user#fragment';
     $rule->save();
 
-    $this->drupalGet('node/' . $node->nid);
+    $this->backdropGet('node/' . $node->nid);
     $this->assertEqual($this->getUrl(), url('user', array('absolute' => TRUE, 'fragment' => 'fragment')), 'Redirect has been issued.');
 
 
@@ -1974,29 +1966,29 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     $settings = array('to' => 'mail@example.com', 'subject' => 'subject', 'message' => 'hello.');
     rules_action('mail', $settings)->execute();
     $this->assertMail('to', 'mail@example.com', 'Mail has been sent.');
-    $this->assertMail('from', variable_get('site_mail', ini_get('sendmail_from')), 'Default from address has been used');
+    $this->assertMail('from', config_get('rules.settings','site_mail'), 'Default from address has been used');
 
     rules_action('mail', $settings + array('from' => 'sender@example.com'))->execute();
     $this->assertMail('from', 'sender@example.com', 'Specified from address has been used');
 
     // Test sending mail to all users of a role. First make sure there is a
     // custom role and a user for it.
-    $user = $this->drupalCreateUser(array('administer nodes'));
+    $user = $this->backdropCreateUser(array('administer nodes'));
     $roles = $user->roles;
     // Remove the authenticate role so we only use the new role created by
-    // drupalCreateUser().
-    unset($roles[DRUPAL_AUTHENTICATED_RID]);
+    // backdropCreateUser().
+    unset($roles[BACKDROP_AUTHENTICATED_RID]);
     rules_action('mail_to_users_of_role', $settings + array('roles' => array_keys($roles)))->execute();
     $this->assertMail('to', $user->mail, 'Mail to users of a role has been sent.');
 
     // Test reacting on new log entries and make sure the log entry is usable.
     $rule = rules_reaction_rule();
     $rule->event('watchdog');
-    $rule->action('drupal_message', array('message:select' => 'log_entry:message'));
+    $rule->action('backdrop_message', array('message:select' => 'log_entry:message'));
     $rule->integrityCheck()->save('test_watchdog');
 
     watchdog('php', 'test %message', array('%message' => 'message'));
-    $msg = drupal_get_messages();
+    $msg = backdrop_get_messages();
     $this->assertEqual(array_pop($msg['status']), t('test %message', array('%message' => 'message')), 'Watchdog event occurred and log entry properties can be used.');
   }
 
@@ -2015,7 +2007,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     $this->assertTrue($has_alias, 'System path has an alias.');
 
     // Test node alias action.
-    $node = $this->drupalCreateNode();
+    $node = $this->backdropCreateNode();
     rules_action('node_path_alias')->execute($node, 'test');
     $path = path_load("node/$node->nid");
     $this->assertTrue($path['alias'] == 'test', 'Node URL alias has been created.');
@@ -2036,7 +2028,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
 /**
  * Test event dispatcher functionality.
  */
-class RulesEventDispatcherTestCase extends DrupalWebTestCase {
+class RulesEventDispatcherTestCase extends BackdropWebTestCase {
 
   static function getInfo() {
     return array(
@@ -2103,7 +2095,7 @@ class RulesEventDispatcherTestCase extends DrupalWebTestCase {
 /**
  * Test early bootstrap Rules invocation.
  */
-class RulesInvocationEnabledTestCase extends DrupalWebTestCase {
+class RulesInvocationEnabledTestCase extends BackdropWebTestCase {
 
   /**
    * {@inheritdoc}
@@ -2130,17 +2122,17 @@ class RulesInvocationEnabledTestCase extends DrupalWebTestCase {
    */
   public function testInvocationOnNodeMenuLoading() {
     // Create a test node.
-    $node = $this->drupalCreateNode(array('title' => 'Test'));
+    $node = $this->backdropCreateNode(array('title' => 'Test'));
     // Enable Rules logging on the INFO level so that entries are written to
     // dblog.
-    variable_set('rules_log_errors', RulesLog::INFO);
+    config_set('rules.settings','rules_log_errors', RulesLog::INFO);
     // Create an empty rule that will fire in our node load hook.
     $rule = rules_reaction_rule();
     $rule->event('rules_test_event');
     $rule->save('test_rule');
 
     // Visit the node page which should trigger the load hook.
-    $this->drupalGet('node/' . $node->nid);
+    $this->backdropGet('node/' . $node->nid);
     $result = db_query("SELECT * FROM {watchdog} WHERE type = 'rules' AND message = 'Reacting on event %label.'")->fetch();
     $this->assertFalse(empty($result), 'Rules event was triggered and logged.');
   }

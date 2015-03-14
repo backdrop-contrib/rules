@@ -114,7 +114,7 @@ class RulesReactionRuleUI extends RulesRuleUI {
           'delete_event' => array(
             'title' => t('delete'),
             'href' => RulesPluginUI::path($this->rule->name, 'delete/event/' . $event_name),
-            'query' => drupal_get_destination(),
+            'query' => backdrop_get_destination(),
           ),
         ),
       );
@@ -135,7 +135,7 @@ class RulesReactionRuleUI extends RulesRuleUI {
     $cell['data']['#links']['add_event'] = array(
       'title' => t('Add event'),
       'href' => RulesPluginUI::path($this->rule->name, 'add/event'),
-      'query' => drupal_get_destination(),
+      'query' => backdrop_get_destination(),
     );
     $form['events']['table']['#rows'][] = array('data' => array($cell), 'class' => array('rules-elements-add'));
 

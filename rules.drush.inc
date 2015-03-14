@@ -18,7 +18,7 @@ function rules_drush_command() {
 
   $items['rules-list'] = array(
     'description' => "List all the active and inactive rules for your site.",
-    'drupal dependencies' => array('rules'),
+    'backdrop dependencies' => array('rules'),
     'aliases' => array('rules'),
   );
   $items['rules-enable'] = array(
@@ -26,7 +26,7 @@ function rules_drush_command() {
     'arguments' => array(
       'rule' => 'Rule name to enable.',
     ),
-    'drupal dependencies' => array('rules'),
+    'backdrop dependencies' => array('rules'),
     'aliases' => array('re'),
   );
   $items['rules-disable'] = array(
@@ -34,7 +34,7 @@ function rules_drush_command() {
     'arguments' => array(
       'rule' => 'Rule name to export.',
     ),
-    'drupal dependencies' => array('rules'),
+    'backdrop dependencies' => array('rules'),
     'aliases' => array('rd'),
   );
 

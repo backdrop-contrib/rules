@@ -36,6 +36,7 @@ function rules_rules_core_file_info() {
  * @see rules_core_modules()
  */
 function rules_rules_core_data_info() {
+  module_load_include('inc', 'rules', 'includes/extentity.property');
   $return = array(
     'text' => array(
       'label' => t('text'),
@@ -165,11 +166,13 @@ function rules_rules_core_data_info_alter(&$data_info) {
     if (!entity_property_list_extract_type($type)) {
       $list_type = "list<$type>";
       if (!isset($data_info[$list_type])) {
-        $data_info[$list_type] = array(
-          'label' => t('list of @type_label items', array('@type_label' => $info['label'])),
-          'wrap' => TRUE,
-          'group' => t('List', array(), array('context' => 'data_types')),
-        );
+	    if(isset($info['label'])){
+          $data_info[$list_type] = array(
+            'label' => t('list of @type_label items', array('@type_label' => $info['label'])),
+            'wrap' => TRUE,
+            'group' => t('List', array(), array('context' => 'data_types')),
+          );
+		}
         if (isset($info['parent']) && $info['parent'] == 'entity') {
           $data_info[$list_type]['ui class'] = 'RulesDataUIListEntity';
         }
@@ -238,7 +241,7 @@ function rules_rules_core_condition_info() {
   $items = array();
   foreach (rules_get_components(FALSE, 'condition') as $name => $config) {
     $items['component_' . $name] = $defaults + array(
-      'label' => $config->plugin() . ': ' . drupal_ucfirst($config->label()),
+      'label' => $config->plugin() . ': ' . backdrop_ucfirst($config->label()),
       'parameter' => $config->parameterInfo(),
     );
     $items['component_' . $name]['#config_name'] = $name;
@@ -262,7 +265,7 @@ function rules_rules_core_action_info() {
   $items = array();
   foreach (rules_get_components(FALSE, 'action') as $name => $config) {
     $items['component_' . $name] = $defaults + array(
-      'label' => $config->plugin() . ': ' . drupal_ucfirst($config->label()),
+      'label' => $config->plugin() . ': ' . backdrop_ucfirst($config->label()),
       'parameter' => $config->parameterInfo(),
       'provides' => $config->providesVariables(),
     );

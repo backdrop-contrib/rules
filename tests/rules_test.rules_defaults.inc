@@ -15,7 +15,7 @@ function rules_test_default_rules_configuration() {
   $rule->event('node_update')
        ->condition(rules_condition('data_is', array('data:select' => 'node:status', 'value' => TRUE))->negate())
        ->condition('data_is', array('data:select' => 'node:type', 'value' => 'page'))
-       ->action('drupal_message', array('message' => 'A node has been updated.'));
+       ->action('backdrop_message', array('message' => 'A node has been updated.'));
 
   $configs['rules_test_default_1'] = $rule;
 
@@ -105,7 +105,7 @@ function _rules_export_get_test_export() {
           "PROVIDE" : { "variable_added" : { "level" : "Error level" } }
         }
       },
-      { "drupal_message" : {
+      { "backdrop_message" : {
           "message" : "fein, [comment:node:title] has been made sticky!",
           "type" : [ "level" ]
         }
@@ -113,7 +113,7 @@ function _rules_export_get_test_export() {
       { "LOOP" : {
           "USING" : { "list" : [ "site:current-user:roles" ] },
           "ITEM" : { "current_role" : "Current role" },
-          "DO" : [ { "drupal_message" : { "message" : [ "current-role" ] } } ]
+          "DO" : [ { "backdrop_message" : { "message" : [ "current-role" ] } } ]
         }
       }
     ]

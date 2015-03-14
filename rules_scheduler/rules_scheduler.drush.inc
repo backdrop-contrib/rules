@@ -16,7 +16,7 @@ function rules_scheduler_drush_command() {
     'options' => array(
       'claim' => 'Optionally claim tasks from the queue to work on. Any value set will override the default time spent on this queue.',
     ),
-    'drupal dependencies' => array('rules', 'rules_scheduler'),
+    'backdrop dependencies' => array('rules', 'rules_scheduler'),
     'aliases' => array('rusch'),
     'examples' => array(
       'drush rusch' => 'Add scheduled tasks to the queue.',
@@ -48,7 +48,7 @@ function drush_rules_scheduler_tasks() {
   if (rules_scheduler_queue_tasks()) {
     // hook_exit() is not invoked for drush runs, so register it as shutdown
     // callback for logging the rules log to the watchdog.
-    drupal_register_shutdown_function('rules_exit');
+    backdrop_register_shutdown_function('rules_exit');
     // Clear the log before running tasks via the queue to avoid logging
     // unrelated logs from previous operations.
     RulesLog::logger()->clear();
@@ -60,14 +60,14 @@ function drush_rules_scheduler_tasks() {
     // Fetch the queue information and let other modules alter it.
     $queue_name = 'rules_scheduler_tasks';
     $info = module_invoke('rules_scheduler', 'cron_queue_info');
-    drupal_alter('cron_queue_info', $info);
+    backdrop_alter('cron_queue_info', $info);
 
     $function = $info[$queue_name]['worker callback'];
     // The drush option can override the default process time.
     $time = is_numeric($claim) ? (int) $claim : $info[$queue_name]['time'];
     $end = time() + $time;
     // Claim items and process the queue.
-    $queue = DrupalQueue::get($queue_name);
+    $queue = BackdropQueue::get($queue_name);
     $claimed = 0;
     while (time() < $end && ($item = $queue->claimItem())) {
       $function($item->data);

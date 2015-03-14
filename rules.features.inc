@@ -30,7 +30,7 @@ class RulesFeaturesController extends EntityDefaultFeaturesController {
     $pipe = parent::export($data, $export, $module_name);
     foreach (entity_load_multiple_by_name($this->type, $data) as $name => $rules_config) {
       // Add in the dependencies.
-      $export['dependencies'] += drupal_map_assoc($rules_config->dependencies());
+      $export['dependencies'] += backdrop_map_assoc($rules_config->dependencies());
       // Add in plugin / element specific additions.
       $iterator = new RecursiveIteratorIterator($rules_config, RecursiveIteratorIterator::SELF_FIRST);
       foreach ($iterator as $element) {
