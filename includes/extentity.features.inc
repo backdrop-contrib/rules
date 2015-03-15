@@ -142,7 +142,8 @@ class EntityDefaultFeaturesController {
  * Implements of hook_features_api().
  */
 function entity_features_api() {
-  $items = array();
+    module_load_include('inc','rules','includes/extentity.functions');
+    $items = array();
   foreach (entity_crud_get_info() as $type => $info) {
     if (!empty($info['exportable']) && $controller = entity_features_get_controller($type)) {
       $items += $controller->api();

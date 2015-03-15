@@ -1180,8 +1180,8 @@ function rules_path_clean_replacement_values(&$replacements, $data = array(), $o
  * extended with items copied from Drupal's EntityAPI hook_theme
  */
 function rules_theme() {
-
-  $types = array_keys(entity_crud_get_info());
+    module_load_include('inc','rules','includes/extentity.functions');
+    $types = array_keys(entity_crud_get_info());
   $pattern = '(' . implode('|', $types) . ')(\.|__)';
   
   return array(
