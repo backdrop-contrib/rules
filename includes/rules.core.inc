@@ -931,7 +931,7 @@ abstract class RulesPlugin extends RulesExtendable {
       $langcode = LANGUAGE_NONE;
     }
     elseif (!isset($langcode)) {
-      $langcode = $GLOBALS['language']->language;
+      $langcode = $GLOBALS['language']->langcode;
     }
 
     if (!empty($this->settings[$name . ':select'])) {

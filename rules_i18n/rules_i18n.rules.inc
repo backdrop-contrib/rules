@@ -165,7 +165,7 @@ class RulesI18nStringEvaluator extends RulesDataInputEvaluator {
    * so disable that for i18n.
    */
   public function evaluate($value, $options, RulesState $state) {
-    $langcode = isset($options['language']) ? $options['language']->language : NULL;
+    $langcode = isset($options['language']) ? $options['language']->langcode : NULL;
     if (is_array($value)) {
       foreach ($value as $key => $text) {
         $value[$key] = i18n_string($options['i18n context'] . ':' . $key, $text, array('langcode' => $langcode, 'sanitize' => FALSE));

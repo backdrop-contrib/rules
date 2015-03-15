@@ -27,7 +27,7 @@ function entity_get_property_info($entity_type = NULL) {
 
   // hook_entity_property_info() includes translated strings, so each language
   // is cached separately.
-  $langcode = $GLOBALS['language']->language;
+  $langcode = $GLOBALS['language']->langcode;
 
   if (empty($info)) {
     if ($cache = cache_get("entity_property_info:$langcode")) {
@@ -382,7 +382,7 @@ function entity_property_verbatim_get($data, array $options, $name, $type, $info
     // Incorporate i18n_string translations. We may rely on the entity class
     // here as its usage is required by the i18n integration.
     if (isset($options['language']) && !empty($info['i18n string'])) {
-      return $data->getTranslation($name, $options['language']->language);
+      return $data->getTranslation($name, $options['language']->langcode);
     }
     else {
       return $data->$name;

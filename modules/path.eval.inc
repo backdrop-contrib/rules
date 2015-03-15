@@ -38,7 +38,7 @@ function rules_action_path_alias($source, $alias, $langcode = LANGUAGE_NONE) {
  * Action Implementation: Set the URL alias for a node.
  */
 function rules_action_node_path_alias($node, $alias) {
-  $langcode = isset($node->language) ? $node->language : LANGUAGE_NONE;
+  $langcode = isset($node->langcode) ? $node->langcode : LANGUAGE_NONE;
   // Only set the alias if the alias is not taken yet.
   if (($path = path_load(array('alias' => $alias, 'language' => $langcode))) && (empty($node->path['pid']) || $node->path['pid'] != $path['pid'])) {
     rules_log('The configured alias %alias already exists. Aborting.', array('%alias' => $alias));
