@@ -183,7 +183,7 @@ function theme_rules_data_selector_help($variables) {
   );
   // Make it manually collapsible as we cannot use #collapsible without the
   // FAPI element processor.
-  $render['#attached']['js'][] = 'misc/collapse.js';
+  $render['#attached']['js'][] = 'core/misc/collapse.js';
   $render['#attributes']['class'][] = 'collapsible';
   $render['#attributes']['class'][] = 'collapsed';
 
