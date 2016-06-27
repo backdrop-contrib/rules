@@ -35,7 +35,7 @@ class RulesFeaturesController extends EntityDefaultFeaturesController {
       $iterator = new RecursiveIteratorIterator($rules_config, RecursiveIteratorIterator::SELF_FIRST);
       foreach ($iterator as $element) {
         if ($element->facesAs('RulesPluginFeaturesIntegrationInterace')) {
-          // Directly use __call() so we cann pass $export by reference.
+          // Directly use __call() so we can pass $export by reference.
           $element->__call('features_export', array(&$export, &$pipe, $module_name));
         }
       }
@@ -63,7 +63,7 @@ function rules_features_abstract_default_features_export(&$export, &$pipe, $modu
  * @see hook_rules_plugin_info()
  * @see hook_rules_action_info()
  */
-interface RulesPluginFeaturesIntegrationInterace {
+interface RulesPluginFeaturesIntegrationInterface {
 
   /**
    * Allows customizing the features export for a given rule element.
