@@ -7,6 +7,14 @@
 
 class RulesTestCase extends BackdropWebTestCase {
 
+  static function getInfo() {
+    return array(
+      'name' => 'Rules Engine tests',
+      'description' => 'Test using the rules API to create and evaluate rules.',
+      'group' => 'Rules',
+    );
+  }
+
   function setUp() {
     parent::setUp('rules', 'rules_test');
     RulesLog::logger()->clear();
@@ -1773,37 +1781,37 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
    * Test integration for the user module.
    */
   function testUserIntegration() {
-    $rid = $this->backdropCreateRole(array('administer nodes'), 'foo');
+    $role = $this->backdropCreateRole(array('administer nodes'), 'foo');
     $user = $this->backdropCreateUser();
 
     // Test assigning a role with the list_add action.
     $rule = rule(array('user' => array('type' => 'user')));
-    $rule->action('list_add', array('list:select' => 'user:roles', 'item' => $rid));
+    $rule->action('list_add', array('list:select' => 'user:roles', 'item' => $role));
     $rule->execute($user);
-    $this->assertTrue(isset($user->roles[$rid]), 'Role assigned to user.');
+    $this->assertTrue(isset($user->roles[$role]), 'Role assigned to user.');
 
     // Test removing a role with the list_remove action.
     $rule = rule(array('user' => array('type' => 'user')));
-    $rule->action('list_remove', array('list:select' => 'user:roles', 'item' => $rid));
+    $rule->action('list_remove', array('list:select' => 'user:roles', 'item' => $role));
     $rule->execute($user);
-    $this->assertTrue(!isset($user->roles[$rid]), 'Role removed from user.');
+    $this->assertTrue(!isset($user->roles[$role]), 'Role removed from user.');
 
     // Test assigning a role with user_add_role action.
     $rule = rule(array('user' => array('type' => 'user')));
-    $rule->action('user_add_role', array('account:select' => 'user', 'roles' => array($rid)));
+    $rule->action('user_add_role', array('account:select' => 'user', 'roles' => array($role)));
     $rule->execute($user);
 
     $user = user_load($user->uid, TRUE);
-    $result = rules_condition('user_has_role', array('roles' => array($rid)))->execute($user);
+    $result = rules_condition('user_has_role', array('roles' => array($role)))->execute($user);
     $this->assertTrue($result, 'Role assigned to user.');
 
     // Test removing a role with the user_remove_role action.
     $rule = rule(array('user' => array('type' => 'user')));
-    $rule->action('user_remove_role', array('account:select' => 'user', 'roles' => array($rid)));
+    $rule->action('user_remove_role', array('account:select' => 'user', 'roles' => array($role)));
     $rule->execute($user);
 
     $user = user_load($user->uid, TRUE);
-    $result = rules_condition('user_has_role', array('roles' => array($rid)))->execute($user);
+    $result = rules_condition('user_has_role', array('roles' => array($role)))->execute($user);
     $this->assertFalse($result, 'Role removed from user.');
 
     // Test user blocking.
