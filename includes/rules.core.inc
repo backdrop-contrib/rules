@@ -29,7 +29,7 @@ class RulesEntityController extends EntityAPIControllerExportable {
 
   /**
    * Overridden.
-   * @see DefaultEntityController::attachLoad()
+   * @see BackdropDefaultEntityController::attachLoad()
    */
   protected function attachLoad(&$queried_entities, $revision_id = FALSE) {
     // Retrieve stdClass records and turn them in rules objects stored in 'data'
@@ -108,7 +108,7 @@ class RulesEntityController extends EntityAPIControllerExportable {
    *   RulesPlugin::export() method, or the PHP export as usual PHP array.
    */
   public function import($export, &$error_msg = '') {
-    $export = is_array($export) ? $export : _json_decode($export);
+    $export = is_array($export) ? $export : backdrop_json_decode($export);
     if (!is_array($export)) {
       $error_msg = t('Unable to parse the pasted export.');
       return FALSE;
@@ -1124,8 +1124,7 @@ abstract class RulesPlugin extends RulesExtendable {
         elseif ($this->plugin == 'reaction rule') {
           // Clear event sets cached for evaluation.
           cache_clear_all('event_', 'cache_rules', TRUE);
-          // Clear event whitelist for rebuild.
-          cache_clear_all('rules_event_whitelist', 'cache_rules', TRUE);
+          variable_del('rules_event_whitelist');
         }
         backdrop_static_reset('rules_get_cache');
         backdrop_static_reset('rules_config_update_dirty_flag');
@@ -1203,7 +1202,6 @@ abstract class RulesPlugin extends RulesExtendable {
       }
     }
     elseif (isset($this->id)) {
-	print('rcinc1207');
       entity_get_controller('rules_config')->delete(array($this->name));
       rules_clear_cache();
     }
@@ -1783,7 +1781,7 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
         $dirs += $result;
       }
       foreach ($dirs as $module => $directory) {
-        foreach (glob(_get_path('module', $module) . "/$directory/*.{inc,php}", GLOB_BRACE) as $filename) {
+        foreach (glob(backdrop_get_path('module', $module) . "/$directory/*.{inc,php}", GLOB_BRACE) as $filename) {
           include_once $filename;
         }
       }
@@ -1806,7 +1804,6 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
   }
 
   protected function getFileName($function, $includes) {
-    module_load_include('inc','rules','tests/rules_test.test');
     $reflector = new ReflectionFunction($function);
     // On windows the path contains backslashes instead of slashes, fix that.
     $file = str_replace('\\', '/', $reflector->getFileName());
@@ -2749,7 +2746,7 @@ class RulesEvaluationException extends RulesException {
         rules_clear_cache();
       }
     }
-    // @todo fix __decode_exception() to use __toString() and override it.
+    // @todo fix _backdrop_decode_exception() to use __toString() and override it.
     $this->message = t($this->msg, $this->args);
   }
 }
@@ -2793,7 +2790,7 @@ class RulesDependencyException extends RulesIntegrityException {}
  *   The default to return if no special plugin can be found.
  */
 function _rules_import_get_plugin($key, $default = 'action') {
-  $map = &_static(__FUNCTION__);
+  $map = &backdrop_static(__FUNCTION__);
   if (!isset($map)) {
     $cache = rules_get_cache();
     foreach ($cache['plugin_info'] as $name => $info) {
