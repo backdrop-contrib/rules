@@ -14,16 +14,16 @@
 function rules_condition_user_has_role($account, $roles, $operation = 'AND') {
   switch ($operation) {
     case 'OR':
-      foreach ($roles as $rid) {
-        if (isset($account->roles[$rid])) {
+      foreach ($roles as $role) {
+        if (isset($account->roles[$role])) {
           return TRUE;
         }
       }
       return FALSE;
 
     case 'AND':
-      foreach ($roles as $rid) {
-        if (!isset($account->roles[$rid])) {
+      foreach ($roles as $role) {
+        if (!isset($account->roles[$role])) {
           return FALSE;
         }
       }
@@ -46,8 +46,8 @@ function rules_action_user_add_role($account, $roles) {
     // Get role list (minus the anonymous)
     $role_list = user_roles(TRUE);
 
-    foreach ($roles as $rid) {
-      $account->roles[$rid] = $role_list[$rid];
+    foreach ($roles as $role) {
+      $account->roles[$role] = $role_list[$role];
     }
     if (!empty($account->is_new) && $account->uid) {
       // user_save() inserts roles after invoking hook_user_insert() anyway, so
@@ -65,10 +65,10 @@ function rules_action_user_add_role($account, $roles) {
  */
 function rules_action_user_remove_role($account, $roles) {
   if ($account->uid || !empty($account->is_new)) {
-    foreach ($roles as $rid) {
+    foreach ($roles as $role) {
       // If the user has this role, remove it.
-      if (isset($account->roles[$rid])) {
-        unset($account->roles[$rid]);
+      if (isset($account->roles[$role])) {
+        unset($account->roles[$role]);
       }
     }
     if (!empty($account->is_new) && $account->uid) {
