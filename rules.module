@@ -212,9 +212,9 @@ function rules_log($msg, $args = array(), $priority = RulesLog::INFO, RulesPlugi
 
   // Statically cache the variable settings as this is called very often.
   if (!isset($settings)) {
-    $settings['rules_log_errors'] = config_get('rules.settings','rules_log_errors');
-    $settings['rules_debug_log'] = config_get('rules.settings','rules_debug_log');
-    $settings['rules_debug'] = config_get('rules.settings','rules_debug');
+    $settings['rules_log_errors'] = config_get('rules.settings', 'rules_log_errors');
+    $settings['rules_debug_log'] = config_get('rules.settings', 'rules_debug_log');
+    $settings['rules_debug'] = config_get('rules.settings', 'rules_debug');
   }
 
   if ($priority >= $settings['rules_log_errors']) {
@@ -270,7 +270,7 @@ function rules_fetch_data($hook) {
     if (isset($discover[$hook])) {
       $data[$hook] += rules_discover_plugins($discover[$hook]);
     }
-    backdrop_alter('rules_'. $hook, $data[$hook]);
+    backdrop_alter('rules_' . $hook, $data[$hook]);
   }
   return $data[$hook];
 }
@@ -415,7 +415,7 @@ function &rules_get_cache($cid = 'data') {
  * @see entity_defaults_rebuild()
  */
 function _rules_rebuild_cache(&$cache) {
-  foreach(array('data_info', 'plugin_info') as $hook) {
+  foreach (array('data_info', 'plugin_info') as $hook) {
     $cache[$hook] = rules_fetch_data($hook);
   }
   foreach ($cache['plugin_info'] as $name => &$info) {
@@ -517,8 +517,8 @@ function rules_import($export, &$error_msg = '') {
  */
 function &rules_wrap_data($data = NULL, $info, $force = FALSE) {
   // If the data is already wrapped, use the existing wrapper.
-  module_load_include('inc','rules','includes/extentity.property'); 
-  module_load_include('inc','rules','includes/extentity.functions'); 
+  module_load_include('inc', 'rules', 'includes/extentity.property');
+  module_load_include('inc', 'rules', 'includes/extentity.functions');
   if ($data instanceof EntityMetadataWrapper) {
     return $data;
   }
@@ -587,9 +587,11 @@ function rules_unwrap_data(array $data, $info = array()) {
             throw new RulesEvaluationException('The variable or parameter %name is empty.', array('%name' => $key));
           }
         }
-      }
-      catch (EntityMetadataWrapperException $e) {
-        throw new RulesEvaluationException('Unable to get the data value for the variable or parameter %name. Error: !error', array('%name' => $key, '!error' => $e->getMessage()));
+      } catch (EntityMetadataWrapperException $e) {
+        throw new RulesEvaluationException('Unable to get the data value for the variable or parameter %name. Error: !error', array(
+          '%name' => $key,
+          '!error' => $e->getMessage()
+        ));
       }
     }
   }
@@ -682,7 +684,7 @@ function rules_rules_plugin_info() {
     'condition' => array(
       'class' => 'RulesCondition',
       'embeddable' => 'RulesConditionContainer',
-      'extenders' => array (
+      'extenders' => array(
         'RulesPluginImplInterface' => array(
           'class' => 'RulesAbstractPluginDefaults',
         ),
@@ -699,7 +701,7 @@ function rules_rules_plugin_info() {
     'action' => array(
       'class' => 'RulesAction',
       'embeddable' => 'RulesActionContainer',
-      'extenders' => array (
+      'extenders' => array(
         'RulesPluginImplInterface' => array(
           'class' => 'RulesAbstractPluginDefaults',
         ),
@@ -827,7 +829,17 @@ function rules_entity_info() {
  * Implementation of hook_hook_info().
  */
 function rules_hook_info() {
-  foreach(array('plugin_info', 'rules_directory', 'data_info', 'condition_info', 'action_info', 'event_info', 'file_info', 'evaluator_info', 'data_processor_info') as $hook) {
+  foreach (array(
+             'plugin_info',
+             'rules_directory',
+             'data_info',
+             'condition_info',
+             'action_info',
+             'event_info',
+             'file_info',
+             'evaluator_info',
+             'data_processor_info'
+           ) as $hook) {
     $hooks['rules_' . $hook] = array(
       'group' => 'rules',
     );
@@ -863,7 +875,7 @@ function rules_hook_info() {
  *   An array of rule configurations indexed by their ids.
  */
 function rules_config_load_multiple($names = array(), $conditions = array()) {
-  module_load_include('inc','rules','includes/extentity.functions');
+  module_load_include('inc', 'rules', 'includes/extentity.functions');
   return entity_load_multiple_by_name('rules_config', $names, $conditions);
 }
 
@@ -875,7 +887,7 @@ function rules_config_load_multiple($names = array(), $conditions = array()) {
  * @return RulesPlugin
  */
 function rules_config_load($name) {
-  module_load_include('inc','rules','includes/extentity.functions');
+  module_load_include('inc', 'rules', 'includes/extentity.functions');
   return entity_load_single('rules_config', $name);
 }
 
@@ -946,14 +958,22 @@ function rules_config_update_dirty_flag($rules_config, $update = TRUE) {
     $rules_config->dirty = FALSE;
     $rules_config->integrityCheck();
     if ($was_dirty) {
-      $variables = array('%label' => $rules_config->label(), '%name' => $rules_config->name, '@plugin' => $rules_config->plugin());
+      $variables = array(
+        '%label' => $rules_config->label(),
+        '%name' => $rules_config->name,
+        '@plugin' => $rules_config->plugin()
+      );
       watchdog('rules', 'The @plugin %label (%name) was marked dirty, but passes the integrity check now and is active again.', $variables, WATCHDOG_INFO);
     }
-  }
-  catch (RulesIntegrityException $e) {
+  } catch (RulesIntegrityException $e) {
     $rules_config->dirty = TRUE;
     if (!$was_dirty) {
-      $variables = array('%label' => $rules_config->label(), '%name' => $rules_config->name, '!message' => $e->getMessage(), '@plugin' => $rules_config->plugin());
+      $variables = array(
+        '%label' => $rules_config->label(),
+        '%name' => $rules_config->name,
+        '!message' => $e->getMessage(),
+        '@plugin' => $rules_config->plugin()
+      );
       watchdog('rules', 'The @plugin %label (%name) fails the integrity check and cannot be executed. Error: !message', $variables, WATCHDOG_ERROR);
     }
   }
@@ -1014,9 +1034,9 @@ function rules_invoke_all() {
  * @param ...
  *   Pass parameters for the variables provided by this event, as defined in
  *   hook_rules_event_info(). Example given:
- *   @code
+ * @code
  *     rules_invoke_event('node_view', $node, $view_mode);
- *   @endcode
+ * @endcode
  *
  * @see rules_invoke_event_by_args()
  */
@@ -1045,9 +1065,9 @@ function rules_invoke_event() {
  *   names or a numerically indexed array, in which case the ordering of the
  *   passed parameters has to match the order of the specified variables.
  *   Example given:
- *   @code
+ * @code
  *     rules_invoke_event_by_args('node_view', array('node' => $node, 'view_mode' => $view_mode));
- *   @endcode
+ * @endcode
  *
  * @see rules_invoke_event()
  */
@@ -1180,10 +1200,10 @@ function rules_path_clean_replacement_values(&$replacements, $data = array(), $o
  * extended with items copied from Drupal's EntityAPI hook_theme
  */
 function rules_theme() {
-    module_load_include('inc','rules','includes/extentity.functions');
-    $types = array_keys(entity_crud_get_info());
+  module_load_include('inc', 'rules', 'includes/extentity.functions');
+  $types = array_keys(entity_crud_get_info());
   $pattern = '(' . implode('|', $types) . ')(\.|__)';
-  
+
   return array(
     'rules_elements' => array(
       'render element' => 'element',
@@ -1225,7 +1245,7 @@ function rules_theme() {
       'variables' => array('text' => '', 'heading' => ''),
       'file' => 'ui/ui.theme.inc',
     ),
-	'entity_status' => array(
+    'entity_status' => array(
       'variables' => array('status' => NULL, 'html' => TRUE),
       'file' => 'theme/extentity.theme.inc',
     ),
@@ -1241,7 +1261,12 @@ function rules_theme() {
       'file' => 'theme/extentity.theme.inc',
     ),
     'entity_ui_overview_item' => array(
-      'variables' => array('label' => NULL, 'entity_type' => NULL, 'url' => FALSE, 'name' => FALSE),
+      'variables' => array(
+        'label' => NULL,
+        'entity_type' => NULL,
+        'url' => FALSE,
+        'name' => FALSE
+      ),
       'file' => 'includes/extentity.ui.inc'
     ),
   );
@@ -1284,7 +1309,10 @@ function rules_permissions_by_component(array $components = array()) {
     $perms += array(
       "use Rules component $component->name" => array(
         'title' => t('Use Rules component %component', array('%component' => $component->label())),
-        'description' => t('Controls access for using the component %component via the provided action or condition. <a href="@component-edit-url">Edit this component.</a>', array('%component' => $component->label(), '@component-edit-url' => url(RulesPluginUI::path($component->name)))),
+        'description' => t('Controls access for using the component %component via the provided action or condition. <a href="@component-edit-url">Edit this component.</a>', array(
+          '%component' => $component->label(),
+          '@component-edit-url' => url(RulesPluginUI::path($component->name))
+        )),
       ),
     );
   }
@@ -1338,8 +1366,8 @@ function rules_menu_add_element_title($array) {
 function rules_debug_log_region() {
   // If there is no setting for the current theme use the default theme setting.
   global $theme_key;
-  $theme_default = config_get('rules.settings','theme_default');
-  return config_get('rules.settings','rules_debug_region_', config_get('rules.settings','rules_debug_region_', 'help'));
+  $theme_default = config_get('rules.settings', 'theme_default');
+  return config_get('rules.settings', 'rules_debug_region_', config_get('rules.settings', 'rules_debug_region_', 'help'));
 }
 
 /**
@@ -1381,7 +1409,7 @@ function rules_debug_log_pre_render($elements) {
     $elements[] = array('#markup' => $log);
     $elements['#theme_wrappers'] = array('rules_log');
     // Log the rules log to the system log if enabled.
-    if (config_get('rules.settings','rules_debug_log')) {
+    if (config_get('rules.settings', 'rules_debug_log')) {
       watchdog('rules', 'Rules debug information: !log', array('!log' => $log), WATCHDOG_NOTICE);
     }
   }
@@ -1412,11 +1440,12 @@ function rules_backdrop_goto_alter(&$path, &$options, &$http_response_code) {
  * Returns whether the debug log should be shown.
  */
 function rules_show_debug_output() {
-  if (config_get('rules.settings','rules_debug') == RulesLog::INFO && user_access('access rules debug')) {
+  if (config_get('rules.settings', 'rules_debug') == RulesLog::INFO && user_access('access rules debug')) {
     return TRUE;
   }
   // For performance avoid unnecessary auto-loading of the RulesLog class.
-  return config_get('rules.settings','rules_debug') == RulesLog::WARN && user_access('access rules debug') && class_exists('RulesLog', FALSE) && RulesLog::logger()->hasErrors();
+  return config_get('rules.settings', 'rules_debug') == RulesLog::WARN && user_access('access rules debug') && class_exists('RulesLog', FALSE) && RulesLog::logger()
+    ->hasErrors();
 }
 
 /**
@@ -1434,7 +1463,9 @@ function rules_exit() {
     }
   }
   // Log the rules log to the system log if enabled.
-  if (config_get('rules.settings','rules_debug_log') && $log = RulesLog::logger()->render()) {
+  if (config_get('rules.settings', 'rules_debug_log') && $log = RulesLog::logger()
+      ->render()
+  ) {
     watchdog('rules', 'Rules debug information: !log', array('!log' => $log), WATCHDOG_NOTICE);
   }
 }
@@ -1449,7 +1480,10 @@ function rules_element_info() {
     '#tree' => TRUE,
     '#default_value' => 0,
     '#value_callback' => 'rules_ui_element_duration_value',
-    '#process' => array('rules_ui_element_duration_process', 'ajax_process_form'),
+    '#process' => array(
+      'rules_ui_element_duration_process',
+      'ajax_process_form'
+    ),
     '#after_build' => array('rules_ui_element_duration_after_build'),
     '#pre_render' => array('form_pre_render_conditional_form_element'),
   );
@@ -1471,8 +1505,8 @@ function rules_modules_enabled($modules) {
   $query = db_select('rules_dependencies', 'rd');
   $query->join('rules_config', 'rc', 'rd.id = rc.id');
   $query->fields('rd', array('id'))
-        ->condition('rd.module', $modules, 'IN')
-        ->condition('rc.dirty', 1);
+    ->condition('rd.module', $modules, 'IN')
+    ->condition('rc.dirty', 1);
   $ids = $query->execute()->fetchCol();
 
   // If there are some configurations that might work again, re-check all dirty
@@ -1491,8 +1525,7 @@ function rules_modules_enabled($modules) {
         if ($rules_config->active) {
           backdrop_set_message(t('All dependencies for the Rules configuration %config are met again, so it has been re-activated.', array('%config' => $rules_config->label())));
         }
-      }
-      catch (RulesIntegrityException $e) {
+      } catch (RulesIntegrityException $e) {
         // The rule is still dirty, so do nothing.
       }
     }
@@ -1508,9 +1541,9 @@ function rules_modules_disabled($modules) {
   $query = db_select('rules_dependencies', 'rd');
   $query->join('rules_config', 'rc', 'rd.id = rc.id');
   $query->fields('rd', array('id'))
-        ->distinct()
-        ->condition('rd.module', $modules, 'IN')
-        ->condition('rc.dirty', 0);
+    ->distinct()
+    ->condition('rd.module', $modules, 'IN')
+    ->condition('rc.dirty', 0);
   $ids = $query->execute()->fetchCol();
 
   if (!empty($ids)) {
@@ -1616,17 +1649,17 @@ function rules_menu() {
  */
 function rules_external_help($topic = NULL) {
   $help = array(
-    'rules' =>                'http://drupal.org/node/298480',
-    'terminology' =>          'http://drupal.org/node/1299990',
+    'rules' => 'http://drupal.org/node/298480',
+    'terminology' => 'http://drupal.org/node/1299990',
     'condition-components' => 'http://drupal.org/node/1300034',
-    'data-selection' =>       'http://drupal.org/node/1300042',
-    'chained-tokens' =>       'http://drupal.org/node/1300042',
-    'loops' =>                'http://drupal.org/node/1300058',
-    'components' =>           'http://drupal.org/node/1300024',
-    'component-types' =>      'http://drupal.org/node/1300024',
-    'variables' =>            'http://drupal.org/node/1300024',
-    'scheduler' =>            'http://drupal.org/node/1300068',
-    'coding' =>               'http://drupal.org/node/878720',
+    'data-selection' => 'http://drupal.org/node/1300042',
+    'chained-tokens' => 'http://drupal.org/node/1300042',
+    'loops' => 'http://drupal.org/node/1300058',
+    'components' => 'http://drupal.org/node/1300024',
+    'component-types' => 'http://drupal.org/node/1300024',
+    'variables' => 'http://drupal.org/node/1300024',
+    'scheduler' => 'http://drupal.org/node/1300068',
+    'coding' => 'http://drupal.org/node/878720',
   );
 
   if (isset($topic)) {
@@ -1665,7 +1698,15 @@ function rules_token_info() {
   $cache = rules_get_cache();
   $data_info = $cache['data_info'];
 
-  $types = array('text', 'integer', 'uri', 'token', 'decimal', 'date', 'duration');
+  $types = array(
+    'text',
+    'integer',
+    'uri',
+    'token',
+    'decimal',
+    'date',
+    'duration'
+  );
 
   foreach ($types as $type) {
     $token_type = $data_info[$type]['token type'];
@@ -1772,8 +1813,7 @@ define('ENTITY_FIXED', 0x04 | 0x02);
 /**
  * Implements hook_config_info().
  */
-function rules_config_info()
-{
+function rules_config_info() {
   $prefixes['rules.settings'] = array(
     'label' => t('Rules settings'),
     'group' => t('Configuration'),
@@ -1784,109 +1824,128 @@ function rules_config_info()
 /**
  * Implements hook_autoload_info().
  */
-function rules_autoload_info()
-{
-    return array(
-        'RulesFeaturesController' => 'rules.features.inc',
-        'RulesTestCase' => 'tests/rules.test',
-        'RulesTestDataCase' => 'tests/rules.test',
-        'RulesTriggerTestCase' => 'tests/rules.test',
-        'RulesIntegrationTestCase' => 'tests/rules.test',
-        'RulesEventDispatcherTestCase' => 'tests/rules.test',
-        'RulesInvocationEnabledTestCase' => 'tests/rules.test',
-        'FacesExtendableException' => 'includes/faces.inc',
-        'FacesExtender' => 'includes/faces.inc',
-        'FacesExtendable' => 'includes/faces.inc',
-        'RulesExtendable' => 'includes/rules.core.inc',
-        'RulesPlugin' => 'includes/rules.core.inc',
-        'RulesAbstractPlugin' => 'includes/rules.core.inc',
-        'RulesPluginHandlerBase' => 'includes/rules.core.inc',
-        'RulesConditionHandlerBase' => 'includes/rules.core.inc',
-        'RulesActionHandlerBase' => 'includes/rules.core.inc',
-        'RulesAbstractPluginDefaults' => 'includes/rules.core.inc',
-        'RulesRecursiveElementIterator' => 'includes/rules.core.inc',
-        'RulesContainerPlugin' => 'includes/rules.core.inc',
-        'RulesActionContainer' => 'includes/rules.core.inc',
-        'RulesConditionContainer' => 'includes/rules.core.inc',
-        'RulesLog' => 'includes/rules.core.inc',
-        'RulesException' => 'includes/rules.core.inc',
-        'RulesEvaluationException' => 'includes/rules.core.inc',
-        'RulesIntegrityException' => 'includes/rules.core.inc',
-        'RulesDependencyException' => 'includes/rules.core.inc',
-        'RulesEntityController' => 'includes/rules.core.inc',
-        'RulesEventHandlerBase' => 'includes/rules.event.inc',
-        'RulesEventDefaultHandler' => 'includes/rules.event.inc',
-        'RulesEventHandlerEntityBundle' => 'includes/rules.event.inc',
-        'RulesDataProcessor' => 'includes/rules.processor.inc',
-        'RulesDataInputEvaluator' => 'includes/rules.processor.inc',
-        'RulesAction' => 'includes/rules.plugins.inc',
-        'RulesCondition' => 'includes/rules.plugins.inc',
-        'Rule' => 'includes/rules.plugins.inc',
-        'RulesReactionRule' => 'includes/rules.plugins.inc',
-        'RulesAnd' => 'includes/rules.plugins.inc',
-        'RulesOr' => 'includes/rules.plugins.inc',
-        'RulesLoop' => 'includes/rules.plugins.inc',
-        'RulesActionSet' => 'includes/rules.plugins.inc',
-        'RulesRuleSet' => 'includes/rules.plugins.inc',
-        'RulesEventSet' => 'includes/rules.plugins.inc',
-        'RulesState' => 'includes/rules.state.inc',
-        'RulesData' => 'includes/rules.state.inc',
-        'RulesIdentifiableDataWrapper' => 'includes/rules.state.inc',
-        'RulesNodeConditionBase' => 'modules/node.eval.inc',
-        'RulesNodeConditionType' => 'modules/node.eval.inc',
-        'RulesNodeConditionPublished' => 'modules/node.eval.inc',
-        'RulesNodeConditionSticky' => 'modules/node.eval.inc',
-        'RulesNodeConditionPromoted' => 'modules/node.eval.inc',
-        'RulesNodeConditionBase' => 'modules/node.eval.inc',
-        'RulesNodeConditionType' => 'modules/node.eval.inc',
-        'RulesPHPEvaluator' => 'modules/php.eval.inc',
-        'RulesPHPDataProcessor' => 'modules/php.eval.inc',
-        'RulesDateInputEvaluator' => 'modules/rules_core.eval.inc',
-        'RulesURIInputEvaluator' => 'modules/rules_core.eval.inc',
-        'RulesDateOffsetProcessor' => 'modules/rules_core.eval.inc',
-        'RulesNumericOffsetProcessor' => 'modules/rules_core.eval.inc',
-        'RulesTaxonomyVocabularyWrapper' => 'modules/rules_core.eval.inc',
-        'RulesTokenEvaluator' => 'modules/system.eval.inc',
-        'RulesUIController' => 'ui/ui.controller.inc',
-        'RulesElementMap' => 'ui/ui.core.inc',
-        'RulesPluginUI' => 'ui/ui.core.inc',
-        'RulesAbstractPluginUI' => 'ui/ui.core.inc',
-        'RulesContainerPluginUI' => 'ui/ui.core.inc',
-        'RulesConditionContainerUI' => 'ui/ui.core.inc',
-        'RulesActionContainerUI' => 'ui/ui.core.inc',
-        'RulesUICategory' => 'ui/ui.core.inc',
-        'RulesDataUI' => 'ui/ui.data.inc',
-        'RulesDataUIText' => 'ui/ui.data.inc',
-        'RulesDataUITextToken' => 'ui/ui.data.inc',
-        'RulesDataUITextFormatted' => 'ui/ui.data.inc',
-        'RulesDataUIDecimal' => 'ui/ui.data.inc',
-        'RulesDataUIInteger' => 'ui/ui.data.inc',
-        'RulesDataUIIPAddress' => 'ui/ui.data.inc',
-        'RulesDataUIBoolean' => 'ui/ui.data.inc',
-        'RulesDataUIDate' => 'ui/ui.data.inc',
-        'RulesDataUIDuration' => 'ui/ui.data.inc',
-        'RulesDataUIURI' => 'ui/ui.data.inc',
-        'RulesDataUIListText' => 'ui/ui.data.inc',
-        'RulesDataUIListInteger' => 'ui/ui.data.inc',
-        'RulesDataUIListToken' => 'ui/ui.data.inc',
-        'RulesDataUIEntity' => 'ui/ui.data.inc',
-        'RulesDataUIEntityExportable' => 'ui/ui.data.inc',
-        'RulesDataUIBundleEntity' => 'ui/ui.data.inc',
-        'RulesDataUITaxonomyVocabulary' => 'ui/ui.data.inc',
-        'RulesDataUIListEntity' => 'ui/ui.data.inc',
-        'RulesRuleUI' => 'ui/ui.plugins.inc',
-        'RulesReactionRuleUI' => 'ui/ui.plugins.inc',
-        'EntityAPIControllerExportable' => 'includes/extentity.controller.inc',
-        'EntityAPIController' => 'includes/extentity.controller.inc',
-        'EntityBackdropWrapper' => 'includes/extentity.wrapper.inc',
-        'EntityStructureWrapper' => 'includes/extentity.wrapper.inc',
-        'EntityListWrapper' => 'includes/extentity.wrapper.inc',
-        'EntityMetadataWrapper' => 'includes/extentity.wrapper.inc',
-        'EntityDefaultFeaturesController' => 'includes/extentity.features.inc',
-        'EntityDefaultUIController' => 'includes/extentity.ui.inc',
-        'EntityContentUIController' => 'includes/extentity.ui.inc',
-        'EntityBundleableUIController' => 'includes/extentity.ui.inc',
-        'RulesPluginFeaturesIntegrationInterace' => 'rules.features.inc',
-    );
+function rules_autoload_info() {
+  return array(
+    'EntityAPIControllerExportable' => 'includes/extentity.controller.inc',
+    'EntityAPIController' => 'includes/extentity.controller.inc',
+    'EntityBackdropWrapper' => 'includes/extentity.wrapper.inc',
+    'EntityBundleableUIController' => 'includes/extentity.ui.inc',
+    'EntityContentUIController' => 'includes/extentity.ui.inc',
+    'EntityDefaultFeaturesController' => 'includes/extentity.features.inc',
+    'EntityDefaultUIController' => 'includes/extentity.ui.inc',
+    'EntityListWrapper' => 'includes/extentity.wrapper.inc',
+    'EntityMetadataWrapper' => 'includes/extentity.wrapper.inc',
+    'EntityMetadataWrapperException' => 'includes/extentity.wrapper.inc',
+    'EntityMetadataWrapperIterator' => 'includes/extentity.wrapper.inc',
+    'EntityMetadataArrayObject' => 'includes/extentity.wrapper.inc',
+    'EntityStructureWrapper' => 'includes/extentity.wrapper.inc',
+    'EntityValueWrapper' => 'includes/extentity.wrapper.inc',
+
+    'FacesExtendableException' => 'includes/faces.inc',
+    'FacesExtender' => 'includes/faces.inc',
+    'FacesExtendable' => 'includes/faces.inc',
+
+    'Rule' => 'includes/rules.plugins.inc',
+    'RulesAbstractPlugin' => 'includes/rules.core.inc',
+    'RulesAbstractPluginDefaults' => 'includes/rules.core.inc',
+    'RulesAbstractPluginUI' => 'ui/ui.core.inc',
+    'RulesAction' => 'includes/rules.plugins.inc',
+    'RulesActionHandlerBase' => 'includes/rules.core.inc',
+    'RulesActionContainer' => 'includes/rules.core.inc',
+    'RulesActionContainerUI' => 'ui/ui.core.inc',
+    'RulesActionSet' => 'includes/rules.plugins.inc',
+    'RulesActionInterface' => 'includes/rules.core.inc',
+    'RulesActionHandlerInterface' => 'includes/rules.core.inc',
+    'RulesAnd' => 'includes/rules.plugins.inc',
+    'RulesCommentEventHandler' => 'modules/comment.rules.inc',
+    'RulesCondition' => 'includes/rules.plugins.inc',
+    'RulesConditionContainer' => 'includes/rules.core.inc',
+    'RulesConditionContainerUI' => 'ui/ui.core.inc',
+    'RulesConditionHandlerBase' => 'includes/rules.core.inc',
+    'RulesConditionInterface' => 'includes/rules.core.inc',
+    'RulesConditionHandlerInterface' => 'includes/rules.core.inc',
+    'RulesContainerPlugin' => 'includes/rules.core.inc',
+    'RulesContainerPluginUI' => 'ui/ui.core.inc',
+    'RulesData' => 'includes/rules.state.inc',
+    'RulesDataProcessor' => 'includes/rules.processor.inc',
+    'RulesDataInputEvaluator' => 'includes/rules.processor.inc',
+    'RulesDataUI' => 'ui/ui.data.inc',
+    'RulesDataUIText' => 'ui/ui.data.inc',
+    'RulesDataUITextToken' => 'ui/ui.data.inc',
+    'RulesDataUITextFormatted' => 'ui/ui.data.inc',
+    'RulesDataUIDecimal' => 'ui/ui.data.inc',
+    'RulesDataUIInteger' => 'ui/ui.data.inc',
+    'RulesDataUIIPAddress' => 'ui/ui.data.inc',
+    'RulesDataUIBoolean' => 'ui/ui.data.inc',
+    'RulesDataUIDate' => 'ui/ui.data.inc',
+    'RulesDataUIDuration' => 'ui/ui.data.inc',
+    'RulesDataUIURI' => 'ui/ui.data.inc',
+    'RulesDataUIListText' => 'ui/ui.data.inc',
+    'RulesDataUIListInteger' => 'ui/ui.data.inc',
+    'RulesDataUIListToken' => 'ui/ui.data.inc',
+    'RulesDataUIEntity' => 'ui/ui.data.inc',
+    'RulesDataUIEntityExportable' => 'ui/ui.data.inc',
+    'RulesDataUIBundleEntity' => 'ui/ui.data.inc',
+    'RulesDataUITaxonomyVocabulary' => 'ui/ui.data.inc',
+    'RulesDataUIListEntity' => 'ui/ui.data.inc',
+    'RulesDateOffsetProcessor' => 'modules/rules_core.eval.inc',
+    'RulesDateInputEvaluator' => 'modules/rules_core.eval.inc',
+    'RulesDependencyException' => 'includes/rules.core.inc',
+    'RulesElementMap' => 'ui/ui.core.inc',
+    'RulesEntityController' => 'includes/rules.core.inc',
+    'RulesEvaluationException' => 'includes/rules.core.inc',
+    'RulesEventHandlerBase' => 'includes/rules.event.inc',
+    'RulesEventDefaultHandler' => 'includes/rules.event.inc',
+    'RulesEventHandlerEntityBundle' => 'includes/rules.event.inc',
+    'RulesEventSet' => 'includes/rules.plugins.inc',
+    'RulesException' => 'includes/rules.core.inc',
+    'RulesExtendable' => 'includes/rules.core.inc',
+    'RulesFeaturesController' => 'rules.features.inc',
+    'RulesIdentifiableDataWrapper' => 'includes/rules.state.inc',
+    'RulesIntegrityException' => 'includes/rules.core.inc',
+    'RulesLog' => 'includes/rules.core.inc',
+    'RulesLoop' => 'includes/rules.plugins.inc',
+    'RulesLoopUI' => 'ui/ui.plugins.inc',
+    'RulesNodeConditionBase' => 'modules/node.eval.inc',
+    'RulesNodeConditionType' => 'modules/node.eval.inc',
+    'RulesNodeConditionPublished' => 'modules/node.eval.inc',
+    'RulesNodeConditionSticky' => 'modules/node.eval.inc',
+    'RulesNodeConditionPromoted' => 'modules/node.eval.inc',
+    'RulesNodeConditionBase' => 'modules/node.eval.inc',
+    'RulesNodeConditionType' => 'modules/node.eval.inc',
+    'RulesNodeEventHandler' => 'modules/node.rules.inc',
+    'RulesNumericOffsetProcessor' => 'modules/rules_core.eval.inc',
+    'RulesOptimizationInterface' => 'includes/rules.core.inc',
+    'RulesOr' => 'includes/rules.plugins.inc',
+    'RulesPHPEvaluator' => 'modules/php.eval.inc',
+    'RulesPHPDataProcessor' => 'modules/php.eval.inc',
+    'RulesPlugin' => 'includes/rules.core.inc',
+    'RulesPluginUI' => 'ui/ui.core.inc',
+    'RulesPluginHandlerBase' => 'includes/rules.core.inc',
+    'RulesPluginHandlerInterface' => 'includes/rules.core.inc',
+    'RulesPluginFeaturesIntegrationInterface' => 'rules.features.inc',
+    'RulesPluginImplInterface' => 'includes/rules.core.inc',
+    'RulesReactionRule' => 'includes/rules.plugins.inc',
+    'RulesReactionRuleUI' => 'ui/ui.plugins.inc',
+    'RulesRecursiveElementIterator' => 'includes/rules.core.inc',
+    'RulesRuleSet' => 'includes/rules.plugins.inc',
+    'RulesRuleSetUI' => 'ui/ui.plugins.inc',
+    'RulesRuleUI' => 'ui/ui.plugins.inc',
+    'RulesState' => 'includes/rules.state.inc',
+    'RulesTaxonomyEventHandler' => 'modules/taxonomy.rules.inc',
+    'RulesTaxonomyVocabularyWrapper' => 'modules/rules_core.eval.inc',
+    'RulesTokenEvaluator' => 'modules/system.eval.inc',
+    'RulesTriggerableInterface' => 'includes/rules.core.inc',
+    'RulesUICategory' => 'ui/ui.core.inc',
+    'RulesUIController' => 'ui/ui.controller.inc',
+    'RulesURIInputEvaluator' => 'modules/rules_core.eval.inc',
+
+    'RulesTestCase' => 'tests/rules.test',
+    'RulesTestDataCase' => 'tests/rules.test',
+    'RulesTriggerTestCase' => 'tests/rules.test',
+    'RulesIntegrationTestCase' => 'tests/rules.test',
+    'RulesInvocationEnabledTestCase' => 'tests/rules.test',
+    'RulesEventDispatcherTestCase' => 'tests/rules.test'
+  );
 }
 
