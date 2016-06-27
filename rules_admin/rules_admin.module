@@ -132,11 +132,3 @@ function rules_admin_system_info_alter(&$info, $file, $type) {
     $info['configure'] = 'admin/config/workflow/rules/schedule';
   }
 }
-
-/**
- * Implements hook_autoload_info().
- */
-function rules_i18n_autoload_info()
-{
-  return array();
-}

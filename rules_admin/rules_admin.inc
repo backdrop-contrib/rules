@@ -206,19 +206,28 @@ function rules_admin_settings($form, &$form_state) {
     '#description' => t('Debug information is only shown when rules are evaluated and is visible for users having the permission <a href="!url">%link</a>.', array('%link' => t('Access the Rules debug log'), '!url' => url('admin/people/permissions', array('fragment' => 'module-rules')))),
   );
 
+  $form['debug']['regions'] = array(
+    '#type' => 'container',
+    '#states' => array(
+      // Hide the regions settings when the debug log is disabled.
+      'invisible' => array(
+        'input[name="rules_debug"]' => array('value' => '0'),
+      ),
+    ),
+  );
 
   $theme_default = config_get('rules.settings','theme_default');
   $admin_theme = config_get('rules.settings','admin_theme');
 
-    // Add a submit button
-    $form['actions']['#type'] = 'actions';
-    $form['actions']['submit'] = array(
-        '#type' => 'submit',
-        '#value' => t('Save configuration'),
-    );
+  // Add a submit button
+  $form['actions']['#type'] = 'actions';
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save configuration'),
+  );
 
-    // Return the form!
-    return $form;
+  // Return the form!
+  return $form;
 }
 
 
