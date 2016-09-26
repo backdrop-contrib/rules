@@ -1,6 +1,8 @@
 # Rules
 
-This module is a port to Backdrop of the Drupal contributed module Rules.
+This module is an incomplete port to Backdrop of the Drupal 
+contributed module Rules version 7.x-2.9
+
 The Rules module allows site administrators to define conditionally executed
 actions based on occurring events (known as reactive or ECA rules).
 
