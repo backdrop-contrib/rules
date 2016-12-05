@@ -391,7 +391,7 @@ class EntityAPIController extends DefaultEntityController implements EntityAPICo
       $this->resetCache($ids);
 
       foreach ($entities as $id => $entity) {
-        $this->invoke('delete', $entity);
+        // $this->invoke('delete', $entity);
       }
       // Ignore slave server temporarily.
       db_ignore_slave();
@@ -417,7 +417,7 @@ class EntityAPIController extends DefaultEntityController implements EntityAPICo
         ->condition($this->revisionKey, $revision_id)
         ->execute();
 
-      $this->invoke('revision_delete', $entity_revision);
+      // $this->invoke('revision_delete', $entity_revision);
       return TRUE;
     }
     return FALSE;
@@ -440,14 +440,14 @@ class EntityAPIController extends DefaultEntityController implements EntityAPICo
         $entity->original = entity_load_unchanged($this->entityType, $entity->{$this->idKey});
       }
       $entity->is_new = !empty($entity->is_new) || empty($entity->{$this->idKey});
-      $this->invoke('presave', $entity);
+      // $this->invoke('presave', $entity);
 
       if ($entity->is_new) {
         $return = backdrop_write_record($this->entityInfo['base table'], $entity);
         if ($this->revisionKey) {
           $this->saveRevision($entity);
         }
-        $this->invoke('insert', $entity);
+        // $this->invoke('insert', $entity);
       }
       else {
         // Update the base table if the entity doesn't have revisions or
@@ -459,7 +459,7 @@ class EntityAPIController extends DefaultEntityController implements EntityAPICo
           $return = $this->saveRevision($entity);
         }
         $this->resetCache(array($entity->{$this->idKey}));
-        $this->invoke('update', $entity);
+        // $this->invoke('update', $entity);
 
         // Field API always saves as default revision, so if the revision saved
         // is not default we have to restore the field values of the default
