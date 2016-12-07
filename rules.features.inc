@@ -34,7 +34,7 @@ class RulesFeaturesController extends EntityDefaultFeaturesController {
       // Add in plugin / element specific additions.
       $iterator = new RecursiveIteratorIterator($rules_config, RecursiveIteratorIterator::SELF_FIRST);
       foreach ($iterator as $element) {
-        if ($element->facesAs('RulesPluginFeaturesIntegrationInterace')) {
+        if ($element->facesAs('RulesPluginFeaturesIntegrationInterface')) {
           // Directly use __call() so we can pass $export by reference.
           $element->__call('features_export', array(&$export, &$pipe, $module_name));
         }
@@ -49,7 +49,7 @@ class RulesFeaturesController extends EntityDefaultFeaturesController {
  * Actions / conditions may override this with their own implementation, which
  * actually does something.
  *
- * @see RulesPluginFeaturesIntegrationInterace
+ * @see RulesPluginFeaturesIntegrationInterface
  */
 function rules_features_abstract_default_features_export(&$export, &$pipe, $module_name = '', $element) {
 
