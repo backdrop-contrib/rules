@@ -1124,7 +1124,8 @@ abstract class RulesPlugin extends RulesExtendable {
         elseif ($this->plugin == 'reaction rule') {
           // Clear event sets cached for evaluation.
           cache_clear_all('event_', 'cache_rules', TRUE);
-          variable_del('rules_event_whitelist');
+          // Clear event whitelist for rebuild.
+          cache_clear_all('rules_event_whitelist', 'cache_rules', TRUE);
         }
         backdrop_static_reset('rules_get_cache');
         backdrop_static_reset('rules_config_update_dirty_flag');
@@ -1804,6 +1805,7 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
   }
 
   protected function getFileName($function, $includes) {
+    module_load_include('inc','rules','tests/rules_test.test');
     $reflector = new ReflectionFunction($function);
     // On windows the path contains backslashes instead of slashes, fix that.
     $file = str_replace('\\', '/', $reflector->getFileName());

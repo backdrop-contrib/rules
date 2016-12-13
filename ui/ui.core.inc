@@ -541,21 +541,21 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
       '#markup' => $component_permission[$component_permission_name]['title'],
     );
     $options[$component_permission_name] = '';
-    foreach ($role_names as $role => $name) {
-      if (isset($role_permissions[$role][$component_permission_name])) {
-        $status[$role][] = $component_permission_name;
+    foreach ($role_names as $rid => $name) {
+      if (isset($role_permissions[$rid][$component_permission_name])) {
+        $status[$rid][] = $component_permission_name;
       }
     }
 
     // Build the checkboxes for each role.
-    foreach ($role_names as $role => $name) {
-      $form['checkboxes'][$role] = array(
+    foreach ($role_names as $rid => $name) {
+      $form['checkboxes'][$rid] = array(
         '#type' => 'checkboxes',
         '#options' => $options,
-        '#default_value' => isset($status[$role]) ? $status[$role] : array(),
-        '#attributes' => array('class' => array('rid-' . $role)),
+        '#default_value' => isset($status[$rid]) ? $status[$rid] : array(),
+        '#attributes' => array('class' => array('rid-' . $rid)),
       );
-      $form['role_names'][$role] = array('#markup' => check_plain($name), '#tree' => TRUE);
+      $form['role_names'][$rid] = array('#markup' => check_plain($name), '#tree' => TRUE);
     }
 
     // Attach the default permissions page JavaScript.
