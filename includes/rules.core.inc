@@ -14,7 +14,7 @@ require_once dirname(__FILE__) . '/faces.inc';
 /**
  * Make sure loaded rule configs are instantiated right.
  */
-class RulesEntityController extends EntityAPIControllerExportable {
+class RulesEntityController extends EMWControllerExportable {
 
   /**
    * Overridden.

@@ -1,44 +1,6 @@
 <?php
 
 /**
- * Determines whether for the given entity type a given operation is available.
- *
- * @param $entity_type
- *   The type of the entity.
- * @param $op
- *   One of 'create', 'view', 'save', 'delete', 'revision delete', 'access' or
- *   'form'.
- *
- * @return boolean
- *   Whether the entity type supports the given operation.
- */
-function entity_type_supports($entity_type, $op) {
-  $info = entity_get_info($entity_type);
-  $keys = array(
-    'view' => 'view callback',
-    'create' => 'creation callback',
-    'delete' => 'deletion callback',
-    'revision delete' => 'revision deletion callback',
-    'save' => 'save callback',
-    'access' => 'access callback',
-    'form' => 'form callback'
-  );
-  if (isset($info[$keys[$op]])) {
-    return TRUE;
-  }
-  if ($op == 'revision delete') {
-    return in_array('EntityAPIControllerInterface', class_implements($info['controller class']));
-  }
-  if ($op == 'form') {
-    return (bool) entity_ui_controller($entity_type);
-  }
-  if ($op != 'access') {
-    return in_array('EntityAPIControllerInterface', class_implements($info['controller class']));
-  }
-  return FALSE;
-}
-
-/**
  * Menu loader function: load an entity from its path.
  *
  * This can be used to load entities of all types in menu paths:
@@ -65,105 +27,6 @@ function entity_object_load($entity_id, $entity_type) {
   return reset($entities);
 }
 
-/**
- * Page callback to show links to add an entity of a specific bundle.
- *
- * Entity modules that provide a further description to their bundles may wish
- * to implement their own version of this to show these.
- *
- * @param $entity_type
- *   The type of the entity.
- */
-function entity_ui_bundle_add_page($entity_type) {
-  // Set the title, as we're a MENU_LOCAL_ACTION and hence just get tab titles.
-  module_load_include('inc', 'rules', 'includes/extentity.ui');
-  backdrop_set_title(entity_ui_get_action_title('add', $entity_type));
-
-  // Get entity info for our bundles.
-  $info = entity_get_info($entity_type);
-  $items = array();
-  foreach ($info['bundles'] as $bundle_name => $bundle_info) {
-    // Create an empty entity with just the bundle set to check for access.
-    $dummy_entity = entity_create($entity_type, array(
-      $info['entity keys']['bundle'] => $bundle_name,
-    ));
-    // If modules use a uid, they can default to the current-user
-    // in their create() method on the storage controller.
-    if (entity_access('create', $entity_type, $dummy_entity, $account = NULL)) {
-      $add_path = $info['admin ui']['path'] . '/add/' . $bundle_name;
-      $items[] = l(t('Add @label', array('@label' => $bundle_info['label'])), $add_path);
-    }
-  }
-  return theme('item_list', array('items' => $items));
-}
-
-/**
- * Page callback to add an entity of a specific bundle.
- *
- * @param $entity_type
- *   The type of the entity.
- * @param $bundle_name
- *   The bundle machine name.
- */
-function entity_ui_get_bundle_add_form($entity_type, $bundle_name) {
-  $info = entity_get_info($entity_type);
-  $bundle_key = $info['entity keys']['bundle'];
-
-  // Make a stub entity of the right bundle to pass to the entity_ui_get_form().
-  $values = array(
-    $bundle_key => $bundle_name,
-  );
-  $entity = entity_create($entity_type, $values);
-
-  return entity_ui_get_form($entity_type, $entity, 'add');
-}
-
-/**
- * Page callback for viewing an entity.
- *
- * @param Entity $entity
- *   The entity to be rendered.
- *
- * @return array
- *   A renderable array of the entity in full view mode.
- */
-function entity_ui_entity_page_view($entity) {
-  module_load_include('inc', 'rules', 'includes/extentity.ui');
-  return $entity->view('full', NULL, TRUE);
-}
-
-/**
- * Gets the page title for the passed operation.
- */
-function entity_ui_get_page_title($op, $entity_type, $entity = NULL) {
-  if (isset($entity)) {
-    module_load_include('inc', 'rules', 'includes/extentity.ui');
-    $label = entity_label($entity_type, $entity);
-    list(, , $bundle) = entity_extract_ids($entity_type, $entity);
-  }
-  else {
-    $info = entity_get_info($entity_type);
-    $label = $info['label'];
-    $bundle = NULL;
-  }
-
-  switch ($op) {
-    case 'view':
-      return $label;
-    case 'edit':
-      return t('Edit @label', array('@label' => $label));
-    case 'clone':
-      return t('Clone @label', array('@label' => $label));
-    case 'revert':
-      return t('Revert @label', array('@label' => $label));
-    case 'delete':
-      return t('Delete @label', array('@label' => $label));
-    case 'export':
-      return t('Export @label', array('@label' => $label));
-  }
-
-  return entity_ui_get_action_title($op, $entity_type, $bundle);
-}
 
 /**
  * A wrapper around entity_load() to load a single entity by name or numeric id.
@@ -469,105 +332,6 @@ function entity_build_content($entity_type, $entity, $view_mode = 'full', $langc
   }
 }
 
-/**
- * Returns the entity identifier, i.e. the entities name or numeric id.
- *
- * Unlike entity_extract_ids() this function returns the name of the entity
- * instead of the numeric id, in case the entity type has specified a name key.
- *
- * @param $entity_type
- *   The type of the entity.
- * @param $entity
- *   An entity object.
- *
- * @see entity_extract_ids()
- */
-function entity_id($entity_type, $entity) {
-  if (method_exists($entity, 'identifier')) {
-    return $entity->identifier();
-  }
-  $info = entity_get_info($entity_type);
-  $key = isset($info['entity keys']['name']) ? $info['entity keys']['name'] : $info['entity keys']['id'];
-  return isset($entity->$key) ? $entity->$key : NULL;
-}
-
-/**
- * Generate an array for rendering the given entities.
- *
- * Entities being viewed, are generally expected to be fully-loaded entity
- * objects, thus have their name or id key set. However, it is possible to
- * view a single entity without any id, e.g. for generating a preview during
- * creation.
- *
- * @param $entity_type
- *   The type of the entity.
- * @param $entities
- *   An array of entities to render.
- * @param $view_mode
- *   A view mode as used by this entity type, e.g. 'full', 'teaser'...
- * @param $langcode
- *   (optional) A language code to use for rendering. Defaults to the global
- *   content language of the current request.
- * @param $page
- *   (optional) If set will control if the entity is rendered: if TRUE
- *   the entity will be rendered without its title, so that it can be embeded
- *   in another context. If FALSE the entity will be displayed with its title
- *   in a mode suitable for lists.
- *   If unset, the page mode will be enabled if the current path is the URI
- *   of the entity, as returned by entity_uri().
- *   This parameter is only supported for entities which controller is a
- *   EntityAPIControllerInterface.
- * @return
- *   The renderable array, keyed by the entity type and by entity identifiers,
- *   for which the entity name is used if existing - see entity_id(). If there
- *   is no information on how to view an entity, FALSE is returned.
- */
-function entity_view($entity_type, $entities, $view_mode = 'full', $langcode = NULL, $page = NULL) {
-  $info = entity_get_info($entity_type);
-  if (isset($info['view callback'])) {
-    $entities = entity_key_array_by_property($entities, $info['entity keys']['id']);
-    return $info['view callback']($entities, $view_mode, $langcode, $entity_type);
-  }
-  elseif (in_array('EntityAPIControllerInterface', class_implements($info['controller class']))) {
-  print('efi532');
-    return entity_get_controller($entity_type)->view($entities, $view_mode, $langcode, $page);
-  }
-  return FALSE;
-}
-
-/**
- * Determines whether the given user can perform actions on an entity.
- *
- * For create operations, the pattern is to create an entity and then
- * check if the user has create access.
- *
- * @code
- * $node = entity_create('node', array('type' => 'page'));
- * $access = entity_access('create', 'node', $node, $account);
- * @endcode
- *
- * @param $op
- *   The operation being performed. One of 'view', 'update', 'create' or
- *   'delete'.
- * @param $entity_type
- *   The entity type of the entity to check for.
- * @param $entity
- *   Optionally an entity to check access for. If no entity is given, it will be
- *   determined whether access is allowed for all entities of the given type.
- * @param $account
- *   The user to check for. Leave it to NULL to check for the global user.
- *
- * @return boolean
- *   Whether access is allowed or not. If the entity type does not specify any
- *   access information, NULL is returned.
- *
- * @see entity_type_supports()
- */
-function entity_access($op, $entity_type, $entity = NULL, $account = NULL) {
-  if (($info = entity_get_info()) && isset($info[$entity_type]['access callback'])) {
-    return $info[$entity_type]['access callback']($op, $entity, $account, $entity_type);
-  }
-}
 
 /**
  * Gets the edit form for any entity.
@@ -599,44 +363,6 @@ function entity_form($entity_type, $entity) {
     return entity_metadata_form_entity_ui($entity, $entity_type);
   }
   return FALSE;
-}
-
-/**
- * Converts an array of entities to be keyed by the values of a given property.
- *
- * @param array $entities
- *   The array of entities to convert.
- * @param $property
- *   The name of entity property, by which the array should be keyed. To get
- *   reasonable results, the property has to have unique values.
- *
- * @return array
- *   The same entities in the same order, but keyed by their $property values.
- */
-function entity_key_array_by_property(array $entities, $property) {
-  $ret = array();
-  foreach ($entities as $entity) {
-    $key = isset($entity->$property) ? $entity->$property : NULL;
-    $ret[$key] = $entity;
-  }
-  return $ret;
-}
-
-/**
- * Get the entity info for the entity types provided via the entity CRUD API.
- *
- * @return
- *  An array in the same format as entity_get_info(), containing the entities
- *  whose controller class implements the EntityAPIControllerInterface.
- */
-function entity_crud_get_info() {
-  $types = array();
-  foreach (entity_get_info() as $type => $info) {
-    if (isset($info['controller class']) && in_array('EntityAPIControllerInterface', class_implements($info['controller class']))) {
-      $types[$type] = $info;
-    }
-  }
-  return $types;
 }
 
 /**
@@ -920,34 +646,6 @@ function entity_exportable_schema_fields($module_col = 'module', $status_col = '
 
 
 /**
- * Determines the UI controller class for a given entity type.
- *
- * @return EntityDefaultUIController
- *   If a type is given, the controller for the given entity type. Else an array
- *   of all enabled UI controllers keyed by entity type is returned.
- */
-function entity_ui_controller($type = NULL) {
-  $static = &backdrop_static(__FUNCTION__);
-
-  if (!isset($type)) {
-    // Invoke the function for each type to ensure we have fully populated the
-    // static variable.
-    foreach (entity_get_info() as $entity_type => $info) {
-      entity_ui_controller($entity_type);
-    }
-    return array_filter($static);
-  }
-
-  if (!isset($static[$type])) {
-    $info = entity_get_info($type);
-    $class = isset($info['admin ui']['controller class']) ? $info['admin ui']['controller class'] : 'EntityDefaultUIController';
-    $static[$type] = (isset($info['admin ui']['path']) && $class) ? new $class($type, $info) : FALSE;
-  }
-
-  return $static[$type];
-}
-
-/**
  * Implements hook_menu().
  *
  * @see EntityDefaultUIController::hook_menu()
@@ -961,37 +659,6 @@ function entity_menu() {
 }
 
 
-
-
-/**
- * Gets the page/menu title for local action operations.
- *
- * @param $op
- *  The current operation. One of 'add' or 'import'.
- * @param $entity_type
- *  The entity type.
- * @param $bundle_name
- *  (Optional) The name of the bundle. May be NULL if the bundle name is not
- *  relevant to the current page. If the entity type has only one bundle, or no
- *  bundles, this will be the same as the entity type.
- */
-function entity_ui_get_action_title($op, $entity_type, $bundle_name = NULL) {
-  $info = entity_get_info($entity_type);
-  switch ($op) {
-    case 'add':
-      if (isset($bundle_name) && $bundle_name != $entity_type) {
-        return t('Add @bundle_name @entity_type', array(
-          '@bundle_name' => backdrop_strtolower($info['bundles'][$bundle_name]['label']),
-          '@entity_type' => backdrop_strtolower($info['label']),
-        ));
-      }
-      else {
-        return t('Add @entity_type', array('@entity_type' => backdrop_strtolower($info['label'])));
-      }
-    case 'import':
-      return t('Import @entity_type', array('@entity_type' => backdrop_strtolower($info['label'])));
-  }
-}
 
 /**
  * Gets the extra field controller class for a given entity type.
@@ -1012,57 +679,6 @@ function entity_get_extra_fields_controller($type = NULL) {
   return $static[$type];
 }
 
-/**
- * Returns a property wrapper for the given data.
- *
- * If an entity is wrapped, the wrapper can be used to retrieve further wrappers
- * for the entitity properties. For that the wrapper support chaining, e.g. you
- * can use a node wrapper to get the node authors mail address:
- *
- * @code
- *   echo $wrappedNode->author->mail->value();
- * @endcode
- *
- * @param $type
- *   The type of the passed data.
- * @param $data
- *   The data to wrap. It may be set to NULL, so the wrapper can be used
- *   without any data for getting information about properties.
- * @param $info
- *   (optional) Specify additional information for the passed data:
- *    - langcode: (optional) If the data is language specific, its langauge
- *      code. Defaults to NULL, what means language neutral.
- *    - bundle: (optional) If an entity is wrapped but not passed, use this key
- *      to specify the bundle to return a wrapper for.
- *    - property info: (optional) May be used to use a wrapper with an arbitrary
- *      data structure (type 'struct'). Use this key for specifying info about
- *      properties in the same structure as used by hook_entity_property_info().
- *    - property info alter: (optional) A callback for altering the property
- *      info before it is utilized by the wrapper.
- *    - property defaults: (optional) An array of defaults for the info of
- *      each property of the wrapped data item.
- * @return EntityMetadataWrapper
- *   Dependend on the passed data the right wrapper is returned.
- */
-function entity_metadata_wrapper($type, $data = NULL, array $info = array()) {
-  if ($type == 'entity' || (($entity_info = entity_get_info()) && isset($entity_info[$type]))) {
-    // If the passed entity is the global $user, we load the user object by only
-    // passing on the user id. The global user is not a fully loaded entity.
-    if ($type == 'user' && is_object($data) && $data == $GLOBALS['user']) {
-      $data = $data->uid;
-    }
-    return new EntityBackdropWrapper($type, $data, $info);
-  }
-  elseif ($type == 'list' || entity_property_list_extract_type($type)) {
-    return new EntityListWrapper($type, $data, $info);
-  }
-  elseif (isset($info['property info'])) {
-    return new EntityStructureWrapper($type, $data, $info);
-  }
-  else {
-    return new EntityValueWrapper($type, $data, $info);
-  }
-}
 
 /**
  * Returns a metadata wrapper for accessing site-wide properties.

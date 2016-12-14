@@ -403,7 +403,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
    * Adds the configuration settings form (label, tags, description, ..).
    */
   public function settingsForm(&$form, &$form_state) {
-  module_load_include('inc', 'rules', 'includes/extentity.functions');
+	  module_load_include('inc', 'rules', 'includes/entity.functions');
     $form_values = RulesPluginUI::getFormStateValues($form, $form_state);
     // Add the settings in a separate fieldset below.
     $form['settings'] = array(

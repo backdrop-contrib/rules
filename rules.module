@@ -517,8 +517,6 @@ function rules_import($export, &$error_msg = '') {
  */
 function &rules_wrap_data($data = NULL, $info, $force = FALSE) {
   // If the data is already wrapped, use the existing wrapper.
-  module_load_include('inc', 'rules', 'includes/extentity.property');
-  module_load_include('inc', 'rules', 'includes/extentity.functions');
   if ($data instanceof EntityMetadataWrapper) {
     return $data;
   }
@@ -875,7 +873,7 @@ function rules_hook_info() {
  *   An array of rule configurations indexed by their ids.
  */
 function rules_config_load_multiple($names = array(), $conditions = array()) {
-  module_load_include('inc', 'rules', 'includes/extentity.functions');
+  module_load_include('inc', 'rules', 'includes/entity.functions');
   return entity_load_multiple_by_name('rules_config', $names, $conditions);
 }
 
@@ -887,7 +885,7 @@ function rules_config_load_multiple($names = array(), $conditions = array()) {
  * @return RulesPlugin
  */
 function rules_config_load($name) {
-  module_load_include('inc', 'rules', 'includes/extentity.functions');
+  module_load_include('inc', 'rules', 'includes/entity.functions');
   return entity_load_single('rules_config', $name);
 }
 
@@ -1197,13 +1195,8 @@ function rules_path_clean_replacement_values(&$replacements, $data = array(), $o
 
 /**
  * Implements hook_theme().
- * extended with items copied from Drupal's EntityAPI hook_theme
  */
 function rules_theme() {
-  module_load_include('inc', 'rules', 'includes/extentity.functions');
-  $types = array_keys(entity_crud_get_info());
-  $pattern = '(' . implode('|', $types) . ')(\.|__)';
-
   return array(
     'rules_elements' => array(
       'render element' => 'element',
@@ -1244,30 +1237,6 @@ function rules_theme() {
     'rules_settings_help' => array(
       'variables' => array('text' => '', 'heading' => ''),
       'file' => 'ui/ui.theme.inc',
-    ),
-    'entity_status' => array(
-      'variables' => array('status' => NULL, 'html' => TRUE),
-      'file' => 'theme/extentity.theme.inc',
-    ),
-    'entity' => array(
-      'render element' => 'elements',
-      'template' => 'entity',
-      'pattern' => $pattern,
-      'path' => backdrop_get_path('module', 'rules') . '/theme',
-      'file' => 'extentity.theme.inc',
-    ),
-    'entity_property' => array(
-      'render element' => 'elements',
-      'file' => 'theme/extentity.theme.inc',
-    ),
-    'entity_ui_overview_item' => array(
-      'variables' => array(
-        'label' => NULL,
-        'entity_type' => NULL,
-        'url' => FALSE,
-        'name' => FALSE
-      ),
-      'file' => 'includes/extentity.ui.inc'
     ),
   );
 }
@@ -1785,32 +1754,6 @@ function rules_event_invocation_enabled($enable = NULL) {
 }
 
 /**
- * Defines status codes used for exportable entities and copied here from EntityAPI
- */
-/**
- * A bit flag used to let us know if an entity has been customly defined.
- */
-define('ENTITY_CUSTOM', 0x01);
-
-/**
- * A bit flag used to let us know if an entity is a 'default' in code.
- */
-define('ENTITY_IN_CODE', 0x02);
-
-/**
- * A bit flag used to mark entities as overridden, e.g. they were originally
- * definded in code and are saved now in the database. Same as
- * (ENTITY_CUSTOM | ENTITY_IN_CODE).
- */
-define('ENTITY_OVERRIDDEN', 0x03);
-
-/**
- * A bit flag used to mark entities as fixed, thus not changeable for any
- * user.
- */
-define('ENTITY_FIXED', 0x04 | 0x02);
-
-/**
  * Implements hook_config_info().
  */
 function rules_config_info() {
@@ -1826,25 +1769,9 @@ function rules_config_info() {
  */
 function rules_autoload_info() {
   return array(
-    'EntityAPIControllerExportable' => 'includes/extentity.controller.inc',
-    'EntityAPIController' => 'includes/extentity.controller.inc',
-    'EntityBackdropWrapper' => 'includes/extentity.wrapper.inc',
-    'EntityBundleableUIController' => 'includes/extentity.ui.inc',
-    'EntityContentUIController' => 'includes/extentity.ui.inc',
-    'EntityDefaultFeaturesController' => 'includes/extentity.features.inc',
-    'EntityDefaultUIController' => 'includes/extentity.ui.inc',
-    'EntityListWrapper' => 'includes/extentity.wrapper.inc',
-    'EntityMetadataWrapper' => 'includes/extentity.wrapper.inc',
-    'EntityMetadataWrapperException' => 'includes/extentity.wrapper.inc',
-    'EntityMetadataWrapperIterator' => 'includes/extentity.wrapper.inc',
-    'EntityMetadataArrayObject' => 'includes/extentity.wrapper.inc',
-    'EntityStructureWrapper' => 'includes/extentity.wrapper.inc',
-    'EntityValueWrapper' => 'includes/extentity.wrapper.inc',
-
     'FacesExtendableException' => 'includes/faces.inc',
     'FacesExtender' => 'includes/faces.inc',
     'FacesExtendable' => 'includes/faces.inc',
-
     'Rule' => 'includes/rules.plugins.inc',
     'RulesAbstractPlugin' => 'includes/rules.core.inc',
     'RulesAbstractPluginDefaults' => 'includes/rules.core.inc',
