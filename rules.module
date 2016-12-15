@@ -1873,7 +1873,8 @@ function rules_autoload_info() {
     'RulesTriggerTestCase' => 'tests/rules.test',
     'RulesIntegrationTestCase' => 'tests/rules.test',
     'RulesInvocationEnabledTestCase' => 'tests/rules.test',
-    'RulesEventDispatcherTestCase' => 'tests/rules.test'
+    'RulesEventDispatcherTestCase' => 'tests/rules.test',
+    'EntityDefaultFeaturesController' => 'includes/entity.features.inc',
   );
 }
 
