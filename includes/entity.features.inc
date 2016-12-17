@@ -55,7 +55,7 @@ class EntityDefaultFeaturesController {
         'default_hook' => isset($this->info['export']['default hook']) ? $this->info['export']['default hook'] : 'default_' . $this->type,
         // Use the provided component callbacks making use of the controller.
         'base' => 'entity',
-        'file' => backdrop_get_path('module', 'entity') . '/extentity.features.inc',
+        'file' => backdrop_get_path('module', 'entity') . '/entity.features.inc',
       ),
     );
   }
@@ -142,7 +142,7 @@ class EntityDefaultFeaturesController {
  * Implements of hook_features_api().
  */
 function entity_features_api() {
-    module_load_include('inc','rules','includes/extentity.functions');
+    module_load_include('inc','rules','includes/entity.functions');
     $items = array();
   foreach (entity_crud_get_info() as $type => $info) {
     if (!empty($info['exportable']) && $controller = entity_features_get_controller($type)) {

@@ -152,7 +152,6 @@ class RulesDataUI {
   public static function renderOptionsLabel($value, $name, $info, RulesPlugin $element) {
     if (!empty($info['options list'])) {
       $element->call('loadBasicInclude');
-      module_load_include('inc','rules','includes/extentity.property');
       $options = entity_property_options_flatten(call_user_func($info['options list'], $element, $name));
       if (!is_array($value) && isset($options[$value])) {
         $value = $options[$value];

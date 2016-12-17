@@ -36,7 +36,6 @@ function rules_rules_core_file_info() {
  * @see rules_core_modules()
  */
 function rules_rules_core_data_info() {
-  module_load_include('inc', 'rules', 'includes/extentity.property');
   $return = array(
     'text' => array(
       'label' => t('text'),
