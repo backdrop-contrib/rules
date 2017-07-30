@@ -51,33 +51,6 @@ function entity_load_single($entity_type, $id) {
   return reset($entities);
 }
 
-/**
- * A wrapper around entity_load() to return entities keyed by name key if existing.
- *
- * @param $entity_type
- *   The entity type to load, e.g. node or user.
- * @param $names
- *   An array of entity names or ids, or FALSE to load all entities.
- * @param $conditions
- *   (deprecated) An associative array of conditions on the base table, where
- *   the keys are the database fields and the values are the values those
- *   fields must have. Instead, it is preferable to use EntityFieldQuery to
- *   retrieve a list of entity IDs loadable by this function.
- *
- * @return
- *   An array of entity objects indexed by their names (or ids if the entity
- *   type has no name key).
- *
- * @see entity_load()
- */
-function entity_load_multiple_by_name($entity_type, $names = FALSE, $conditions = array()) {
-  $entities = entity_load($entity_type, $names, $conditions);
-  $info = entity_get_info($entity_type);
-  if (!isset($info['entity keys']['name'])) {
-    return $entities;
-  }
-  return entity_key_array_by_property($entities, $info['entity keys']['name']);
-}
 
 /**
  * Permanently save an entity.
@@ -300,37 +273,6 @@ function entity_type_is_fieldable($entity_type) {
   return !empty($info['fieldable']);
 }
 
-/**
- * Builds a structured array representing the entity's content.
- *
- * The content built for the entity will vary depending on the $view_mode
- * parameter.
- *
- * Note: Currently, this only works for entity types provided with the entity
- * CRUD API.
- *
- * @param $entity_type
- *   The type of the entity.
- * @param $entity
- *   An entity object.
- * @param $view_mode
- *   A view mode as used by this entity type, e.g. 'full', 'teaser'...
- * @param $langcode
- *   (optional) A language code to use for rendering. Defaults to the global
- *   content language of the current request.
- * @return
- *   The renderable array.
- */
-function entity_build_content($entity_type, $entity, $view_mode = 'full', $langcode = NULL) {
-  $info = entity_get_info($entity_type);
-  if (method_exists($entity, 'buildContent')) {
-    return $entity->buildContent($view_mode, $langcode);
-  }
-  elseif (in_array('EntityAPIControllerInterface', class_implements($info['controller class']))) {
-  print('efi464');
-    return entity_get_controller($entity_type)->buildContent($entity, $view_mode, $langcode);
-  }
-}
 
 
 /**
