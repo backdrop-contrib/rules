@@ -686,11 +686,6 @@ function rules_rules_plugin_info() {
         'RulesPluginImplInterface' => array(
           'class' => 'RulesAbstractPluginDefaults',
         ),
-        'RulesPluginFeaturesIntegrationInterface' => array(
-          'methods' => array(
-            'features_export' => 'rules_features_abstract_default_features_export',
-          ),
-        ),
         'RulesPluginUIInterface' => array(
           'class' => 'RulesAbstractPluginUI',
         ),
@@ -702,11 +697,6 @@ function rules_rules_plugin_info() {
       'extenders' => array(
         'RulesPluginImplInterface' => array(
           'class' => 'RulesAbstractPluginDefaults',
-        ),
-        'RulesPluginFeaturesIntegrationInterface' => array(
-          'methods' => array(
-            'features_export' => 'rules_features_abstract_default_features_export',
-          ),
         ),
         'RulesPluginUIInterface' => array(
           'class' => 'RulesAbstractPluginUI',
@@ -818,7 +808,6 @@ function rules_entity_info() {
         'default hook' => 'default_rules_configuration',
       ),
       'access callback' => 'rules_config_access',
-      'features controller class' => 'RulesFeaturesController',
     ),
   );
 }
@@ -1827,7 +1816,6 @@ function rules_autoload_info() {
     'RulesEventSet' => 'includes/rules.plugins.inc',
     'RulesException' => 'includes/rules.core.inc',
     'RulesExtendable' => 'includes/rules.core.inc',
-    'RulesFeaturesController' => 'rules.features.inc',
     'RulesIdentifiableDataWrapper' => 'includes/rules.state.inc',
     'RulesIntegrityException' => 'includes/rules.core.inc',
     'RulesLog' => 'includes/rules.core.inc',
@@ -1851,7 +1839,6 @@ function rules_autoload_info() {
     'RulesPluginUIInterface' => 'ui/ui.core.inc',
     'RulesPluginHandlerBase' => 'includes/rules.core.inc',
     'RulesPluginHandlerInterface' => 'includes/rules.core.inc',
-    'RulesPluginFeaturesIntegrationInterface' => 'rules.features.inc',
     'RulesPluginImplInterface' => 'includes/rules.core.inc',
     'RulesReactionRule' => 'includes/rules.plugins.inc',
     'RulesReactionRuleUI' => 'ui/ui.plugins.inc',
@@ -1874,7 +1861,6 @@ function rules_autoload_info() {
     'RulesIntegrationTestCase' => 'tests/rules.test',
     'RulesInvocationEnabledTestCase' => 'tests/rules.test',
     'RulesEventDispatcherTestCase' => 'tests/rules.test',
-    'EntityDefaultFeaturesController' => 'includes/entity.features.inc',
   );
 }
 
