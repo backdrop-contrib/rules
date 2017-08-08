@@ -559,7 +559,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
     }
 
     // Attach the default permissions page JavaScript.
-    $form['#attached']['js'][] = backdrop_get_path('module', 'user') . '/user.permissions.js';
+    $form['#attached']['js'][] = backdrop_get_path('module', 'user') . '/js/user.permissions.js';
 
     return $form;
   }
