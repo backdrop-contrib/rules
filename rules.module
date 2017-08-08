@@ -791,6 +791,7 @@ function rules_entity_info() {
   return array(
     'rules_config' => array(
       'label' => t('Rules configuration'),
+      'entity class' => 'RulesConfigEntity',
       'controller class' => 'RulesEntityController',
       'base table' => 'rules_config',
       'fieldable' => TRUE,
