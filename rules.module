@@ -473,6 +473,14 @@ function rules_set_cache($cid, $data) {
  * Implements hook_flush_caches().
  */
 function rules_flush_caches() {
+  entity_property_info_cache_clear();
+  // Re-build defaults in code, however skip it on the admin modules page. In
+  // case of enabling or disabling modules we already rebuild defaults in
+  // rules_modules_enabled() and rules_modules_disabled(), so we do not need
+  // to do it again.
+  if (current_path() != 'admin/modules/list/confirm') {
+    entity_defaults_rebuild();
+  }
   return array('cache_rules');
 }
 
@@ -1458,6 +1466,7 @@ function rules_element_info() {
  * Implements hook_modules_enabled().
  */
 function rules_modules_enabled($modules) {
+  _entity_defaults_rebuild('rules_config');
   // Re-enable Rules configurations that are dirty, because they require one of
   // the enabled the modules.
   $query = db_select('rules_dependencies', 'rd');
@@ -1524,6 +1533,8 @@ function rules_modules_disabled($modules) {
     }
   }
   rules_clear_cache();
+
+  _entity_defaults_rebuild('rules_config');
 }
 
 /**
