@@ -1754,6 +1754,37 @@ function rules_event_invocation_enabled($enable = NULL) {
 }
 
 /**
+ * Returns some parameter info suiting for the specified entity type.
+ */
+function rules_entity_events_variables($type, $label, $update = FALSE) {
+  $args = array(
+    $type => array('type' => $type, 'label' => $label),
+  );
+  if ($update) {
+    $args += array(
+      $type . '_unchanged' => array(
+        'type' => $type,
+        'label' => t('unchanged entity'),
+        'handler' => 'rules_events_entity_unchanged',
+      ),
+    );
+  }
+  return $args;
+}
+
+/**
+ * Rules entity integration access callback.
+ */
+function rules_entity_integration_event_access($type, $event_name) {
+  // Cut of _insert/_update/.. from the event name.
+  $entity_type = substr($event_name, 0, strrpos($event_name, '_'));
+
+  $result = entity_access('view', $entity_type);
+  // If no access callback is given, just grant access for viewing.
+  return isset($result) ? $result : TRUE;
+}
+
+/**
  * Implements hook_config_info().
  */
 function rules_config_info() {
@@ -1865,6 +1896,8 @@ function rules_autoload_info() {
     'RulesUICategory' => 'ui/ui.core.inc',
     'RulesUIController' => 'ui/ui.controller.inc',
     'RulesURIInputEvaluator' => 'modules/rules_core.eval.inc',
+
+    'RulesEntityEventController' => 'includes/rules.entity.inc',
 
     'RulesTestCase' => 'tests/rules.test',
     'RulesTestDataCase' => 'tests/rules.test',

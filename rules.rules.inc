@@ -82,7 +82,18 @@ function rules_rules_condition_info() {
  * Implements hook_rules_event_info().
  */
 function rules_rules_event_info() {
-  return _rules_rules_collect_items('event_info');
+  $items = array();
+  foreach (entity_crud_get_info() as $type => $info) {
+    // By default we enable the controller only for non-configuration.
+    $configuration = !empty($info['configuration']) || !empty($info['exportable']);
+    $info += array('rules controller class' => $configuration ? FALSE : 'RulesEntityEventController');
+    if ($info['rules controller class']) {
+      $controller = new $info['rules controller class']($type);
+      $items += $controller->eventInfo();
+    }
+  }
+
+  return array_merge(_rules_rules_collect_items('event_info'), $items);
 }
 
 /**
