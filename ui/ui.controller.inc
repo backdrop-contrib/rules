@@ -273,7 +273,7 @@ class RulesUIController {
     }
 
     $row[] = array('data' => array(
-      '#theme' => 'entity_status',
+      '#theme' => 'entity_ui_entity_status',
       '#status' => $config->status,
     ));
 

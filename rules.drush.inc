@@ -76,7 +76,7 @@ function drush_rules_list() {
         $rule->label,
         implode(', ', $events),
         $rule->active ? dt('Enabled') : dt('Disabled'),
-        $rule->status ? theme('entity_status', array('status' => $rule->status, 'html' => FALSE)) : '',
+        $rule->status ? theme('entity_ui_entity_status', array('status' => $rule->status, 'html' => FALSE)) : '',
       );
     }
   }
