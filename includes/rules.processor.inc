@@ -98,7 +98,9 @@ abstract class RulesDataProcessor {
 
     if (!isset($items[$hook]['all'])) {
       $items[$hook]['all'] = rules_fetch_data($hook);
-      uasort($items[$hook]['all'], array(__CLASS__, '_item_sort'));
+      if (isset($items[$hook]['all'])) {
+        uasort($items[$hook]['all'], array(__CLASS__, '_item_sort'));
+      }
     }
     // Data processing isn't supported for multiple types.
     if (isset($param_info) && is_array($param_info['type'])) {
