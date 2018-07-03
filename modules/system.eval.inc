@@ -102,13 +102,13 @@ function rules_action_mail_to_users_of_role($roles, $subject, $message, $from = 
   $from = !empty($from) ? str_replace(array("\r", "\n"), '', $from) : NULL;
 
   // All authenticated users, which is everybody.
-  if (in_array(BACKDROP_AUTHENTICATED_RID, $roles)) {
+  if (in_array(BACKDROP_AUTHENTICATED_ROLE, $roles)) {
     $result = db_query('SELECT mail FROM {users} WHERE uid > 0');
   }
   else {
     $rids = implode(',', $roles);
     // Avoid sending emails to members of two or more target role groups.
-    $result = db_query('SELECT DISTINCT u.mail FROM {users} u INNER JOIN {users_roles} r ON u.uid = r.uid WHERE r.role IN ('. $rids .')');
+    $result = db_query("SELECT DISTINCT u.mail FROM {users} u INNER JOIN {users_roles} r ON u.uid = r.uid WHERE r.role IN ('. $rids .')");
   }
 
   // Now, actually send the mails.
