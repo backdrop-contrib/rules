@@ -1258,6 +1258,7 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
   function testDefaultRule() {
     $rule = rules_config_load('rules_test_default_1');
     $this->assertTrue($rule->status & ENTITY_IN_CODE && !($rule->status & ENTITY_IN_DB), 'Default rule can be loaded and has the right status.');
+    $this->assertTrue($rule->tags == array('Admin', 'Tag2'), 'Default rule has correct tags.');
     // Enable.
     $rule->active = TRUE;
     $rule->save();
