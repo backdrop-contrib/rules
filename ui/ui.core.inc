@@ -320,7 +320,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
     }
 
     // Add a link for switching the input mode when JS is enabled and a button
-    // to switch it without javascript, in case switching is possible.
+    // to switch it without JavaScript, in case switching is possible.
     if ($supports_input_mode && empty($info['restriction'])) {
       $value = $mode == 'selector' ? t('Switch to the direct input mode') : t('Switch to data selection');
 
