@@ -90,7 +90,6 @@ function rules_scheduler_delete_task($form, &$form_state, $task) {
   else {
     $msg = t('This task executes component %label and will be executed on %date. The action cannot be undone.', array(
       '%label' => $config->label(),
-      '%id' => $task['identifier'],
       '%date' => format_date($task['date']),
     ));
   }
