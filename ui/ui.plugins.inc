@@ -94,7 +94,7 @@ class RulesReactionRuleUI extends RulesRuleUI {
     $form['events']['table'] = array(
       '#theme' => 'table',
       '#caption' => 'Events',
-      '#header' => array('Event', 'Operations'),
+      '#header' => array(t('Event'), t('Operations')),
       '#empty' => t('None'),
     );
     $form['events']['table']['#attributes']['class'][] = 'rules-elements-table';
