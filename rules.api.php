@@ -866,6 +866,8 @@ function hook_rules_config_execute($config) {
 function hook_default_rules_configuration() {
   $rule = rules_reaction_rule();
   $rule->label = 'example default rule';
+  // Add rules tags.
+  $rule->tags = array('Admin', 'Tag2');
   $rule->active = FALSE;
   $rule->event('node_update')
        ->condition(rules_condition('data_is', array('data:select' => 'node:status', 'value' => TRUE))->negate())
@@ -873,6 +875,7 @@ function hook_default_rules_configuration() {
        ->action('drupal_message', array('message' => 'A node has been updated.'));
 
   $configs['rules_test_default_1'] = $rule;
+
   return $configs;
 }
 
