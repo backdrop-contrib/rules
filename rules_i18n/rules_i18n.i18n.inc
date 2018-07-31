@@ -11,7 +11,7 @@
 class RulesI18nStringController extends EntityDefaultI18nStringController {
 
   /**
-   * Overriden to customize i18n object info.
+   * Overridden to customize i18n object info.
    *
    * @see EntityDefaultI18nStringController::hook_object_info()
    */
@@ -22,7 +22,7 @@ class RulesI18nStringController extends EntityDefaultI18nStringController {
   }
 
   /**
-   * Overriden to customize the used menu wildcard.
+   * Overridden to customize the used menu wildcard.
    */
   protected function menuWildcard() {
     return '%rules_config';

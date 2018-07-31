@@ -147,12 +147,12 @@ if (!class_exists('FacesExtendable', FALSE)) {
 
     /**
      * Returns whether the object can face as the given interface, thus it
-     * returns TRUE if this oject has been extended by an appropriate
+     * returns TRUE if this object has been extended by an appropriate
      * implementation.
      *
      * @param $interface
-     *   Optional. A interface to test for. If it's omitted, all interfaces that
-     *   the object can be faced as are returned.
+     *   Optional. An interface to test for. If it's omitted, all interfaces
+     *   that the object can be faced as are returned.
      * @return
      *   Whether the object can face as the interface or an array of interface
      *   names.
@@ -235,7 +235,7 @@ if (!class_exists('FacesExtendable', FALSE)) {
      * Override the implementation of an extended method.
      *
      * @param $methods
-     *   An array of methods of the interface, that should be overriden, where
+     *   An array of methods of the interface, that should be overridden, where
      *   the keys are methods to override and the values the callback functions
      *   to use.
      * @param $includes

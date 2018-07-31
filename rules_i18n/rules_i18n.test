@@ -139,7 +139,7 @@ class RulesI18nTestCase extends DrupalWebTestCase {
     $messages = drupal_get_messages();
     $this->assertEqual($messages['status'][0], 'text-de', 'Text has been successfully translated.');
 
-    // Enable the PHP module and make sure PHP in translations is not evaluted.
+    // Enable the PHP module and make sure PHP in translations is not evaluated.
     module_enable(array('php'));
     i18n_string_textgroup('rules')->update_translation("rules_config:{$set->name}:$id:text", 'de', 'text <?php echo "eval";?>');
 

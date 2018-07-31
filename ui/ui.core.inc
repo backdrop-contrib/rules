@@ -257,7 +257,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
       );
     }
     if (!empty($form['provides'])) {
-      $help = '<div class="description">' . t('Adjust the names and labels of provided variables, but note that renaming of already utilizied variables invalidates the existing uses.') . '</div>';
+      $help = '<div class="description">' . t('Adjust the names and labels of provided variables, but note that renaming of already utilized variables invalidates the existing uses.') . '</div>';
       $form['provides'] += array(
         '#tree' => TRUE,
         '#prefix' => '<h4 class="rules-form-heading">' . t('Provided variables') . '</h4>' . $help,
@@ -457,7 +457,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
         $description = t('The variables used by the component. They can not be edited for configurations that are provided in code.');
       }
       else {
-        $description = t('Variables are normally input <em>parameters</em> for the component – data that should be available for the component to act on. Additionaly, action components may <em>provide</em> variables back to the caller. Each variable must have a specified data type, a label and a unique machine readable name containing only lowercase alphanumeric characters and underscores. See <a href="@url">the online documentation</a> for more information about variables.',
+        $description = t('Variables are normally input <em>parameters</em> for the component – data that should be available for the component to act on. Additionally, action components may <em>provide</em> variables back to the caller. Each variable must have a specified data type, a label and a unique machine readable name containing only lowercase alphanumeric characters and underscores. See <a href="@url">the online documentation</a> for more information about variables.',
           array('@url' => rules_external_help('variables'))
         );
       }
@@ -669,7 +669,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
    * Returns the name of class for the given data type.
    *
    * @param $data_type
-   *   The name of the data typ
+   *   The name of the data type
    * @param $parameter_info
    *   (optional) An array of info about the to be configured parameter. If
    *   given, this array is complemented with data type defaults also.
@@ -945,7 +945,7 @@ class RulesContainerPluginUI extends RulesPluginUI {
     );
     $form['elements']['#attributes']['class'][] = 'rules-container-plugin';
 
-    // Recurse over all element childrens or use the provided iterator.
+    // Recurse over all element children or use the provided iterator.
     $iterator = isset($iterator) ? $iterator : $this->element->elements();
     $root_depth = $this->element->depth();
     foreach ($iterator as $key => $child) {
@@ -965,7 +965,7 @@ class RulesContainerPluginUI extends RulesPluginUI {
       );
       $form['elements'][$id]['parent_id'] = array(
         '#type' => 'hidden',
-        // If another iterator is passed in, the childs parent may not equal
+        // If another iterator is passed in, the child parent may not equal
         // the current element. Thus ask the child for its parent.
         '#default_value' => $child->parentElement()->elementId(),
       );
@@ -1219,7 +1219,7 @@ class RulesUICategory {
     $ungrouped = array();
     $data = $items ? $items : rules_fetch_data($item_type . '_info');
     foreach ($data as $name => $info) {
-      // Verfiy the current user has access to use it.
+      // Verify the current user has access to use it.
       if (!user_access('bypass rules access') && !empty($info['access callback']) && !call_user_func($info['access callback'], $item_type, $name)) {
         continue;
       }

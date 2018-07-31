@@ -115,7 +115,7 @@ function rules_scheduler_schedule_form($form, &$form_state, $rules_config, $base
     $form_state['component'] = $rules_config->name;
     $action = rules_action('schedule', array('component' => $rules_config->name));
     $action->form($form, $form_state);
-    // The component should be fixed, so hide the paramter for it.
+    // The component should be fixed, so hide the parameter for it.
     $form['parameter']['component']['#access'] = FALSE;
     $form['submit'] = array(
       '#type' => 'submit',

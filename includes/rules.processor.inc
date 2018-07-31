@@ -268,7 +268,7 @@ abstract class RulesDataInputEvaluator extends RulesDataProcessor {
   }
 
   /**
-   * Overriden to prepare input evaluator processors. The setting is expected
+   * Overridden to prepare input evaluator processors. The setting is expected
    * to be the input value to be evaluated later on and is replaced by the
    * suiting processor.
    */
@@ -286,7 +286,7 @@ abstract class RulesDataInputEvaluator extends RulesDataProcessor {
   }
 
   /**
-   * Overriden to just attach the help() of evaluators.
+   * Overridden to just attach the help() of evaluators.
    */
   public static function attachForm(&$form, $settings, $param_info, $var_info, $access_check = TRUE) {
     foreach (self::evaluators($param_info, $access_check) as $name => $info) {
@@ -312,7 +312,7 @@ abstract class RulesDataInputEvaluator extends RulesDataProcessor {
   }
 
   /**
-   * Prepares the evalution, e.g. to determine whether the input evaluator has
+   * Prepares the evaluation, e.g. to determine whether the input evaluator has
    * been used. If this evaluator should be skipped just unset $this->setting.
    *
    * @param $text

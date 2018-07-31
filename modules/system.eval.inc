@@ -43,7 +43,7 @@ function rules_action_drupal_goto($url, $force = FALSE, $destination = FALSE) {
     unset($_GET['destination']);
   }
   // We don't invoke drupal_goto() right now, as this would end the the current
-  // page execution unpredictly for modules. So we'll take over drupal_goto()
+  // page execution unpredictably for modules. So we'll take over drupal_goto()
   // calls from somewhere else via hook_drupal_goto_alter() and make sure
   // a drupal_goto() is invoked before the page is output with
   // rules_page_build().
@@ -125,7 +125,7 @@ function rules_action_mail_to_users_of_role($roles, $subject, $message, $from = 
     $message = drupal_mail('rules', $key, $row->mail, language_default(), $params, $from);
     // If $message['result'] is FALSE, then it's likely that email sending is
     // failing at the moment, and we should just abort sending any more. If
-    // however, $mesage['result'] is NULL, then it's likely that a module has
+    // however, $message['result'] is NULL, then it's likely that a module has
     // aborted sending this particular email to this particular user, and we
     // should just keep on sending emails to the other users.
     // For more information on the result value, see drupal_mail().

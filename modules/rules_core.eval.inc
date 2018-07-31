@@ -46,7 +46,7 @@ function rules_element_invoke_component($arguments, RulesPlugin $element) {
     $state->mergeSaveVariables($new_state, $component, $element->settings);
     $state->unblock($component);
 
-    // Cleanup the state, what saves not mergable variables now.
+    // Cleanup the state, what saves not mergeable variables now.
     $new_state->cleanup();
     rules_log('Finished evaluation of @plugin %label.', $replacements, RulesLog::INFO, $component, FALSE);
     return $return;
@@ -231,7 +231,7 @@ class RulesTaxonomyVocabularyWrapper extends EntityDrupalWrapper {
   }
 
   /**
-   * Overriden to permit machine names as values.
+   * Overridden to permit machine names as values.
    */
   public function validate($value) {
     if (isset($value) && is_string($value)) {

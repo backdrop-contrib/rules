@@ -102,7 +102,7 @@ function rules_condition($name, $settings = array()) {
  *
  * @param $variables
  *   The array of variables to setup in the evaluation state, making them
- *   available for the configuraion elements. Values for the variables need to
+ *   available for the configuration elements. Values for the variables need to
  *   be passed as argument when the rule is executed. Only Rule instances with
  *   no variables can be embedded in other configurations, e.g. rule sets.
  *   The array has to be keyed by variable name and contain a sub-array for each
@@ -162,7 +162,7 @@ function rules_and($variables = NULL) {
  *   The loop settings, containing
  *     'list:select': The data selector for the list to loop over.
  *     'item:var': Optionally a name for the list item variable.
- *     'item:label': Optionally a lebel for the list item variable.
+ *     'item:label': Optionally a label for the list item variable.
  * @param $variables
  *   An optional array as for rule().
  * @return RulesLoop
@@ -247,7 +247,7 @@ function rules_log($msg, $args = array(), $priority = RulesLog::INFO, RulesPlugi
 /**
  * Fetches module definitions for the given hook name.
  *
- * Used for collecting events, rules, actions and condtions from other modules.
+ * Used for collecting events, rules, actions and condition from other modules.
  *
  * @param $hook
  *   The hook of the definitions to get from invoking hook_rules_{$hook}.
@@ -931,7 +931,7 @@ function rules_config_delete(array $ids) {
  */
 function rules_config_update_dirty_flag($rules_config, $update = TRUE) {
   // Keep a log of already check configurations to avoid repetitive checks on
-  // oftent used components.
+  // often used components.
   // @see rules_element_invoke_component_validate()
   $checked = &drupal_static(__FUNCTION__, array());
   if (!empty($checked[$rules_config->name])) {

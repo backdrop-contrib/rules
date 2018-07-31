@@ -533,7 +533,7 @@ abstract class RulesPlugin extends RulesExtendable {
    * Iterate over all elements nested below the current element.
    *
    * This helper can be used to recursively iterate over all elements of a
-   * configuration. To iterate over the children only, just regulary iterate
+   * configuration. To iterate over the children only, just regularly iterate
    * over the object.
    *
    * @param $mode
@@ -846,7 +846,7 @@ abstract class RulesPlugin extends RulesExtendable {
    *   Returns $this to support chained usage.
    *
    * @throws RulesIntegrityException
-   *   In case of a failed integraty check, a RulesIntegrityException exception
+   *   In case of a failed integrity check, a RulesIntegrityException exception
    *   is thrown.
    */
   public function integrityCheck() {
@@ -1254,7 +1254,7 @@ abstract class RulesPlugin extends RulesExtendable {
   }
 
   /**
-   * Seamlessy invokes the method implemented via faces without having to think
+   * Seamlessly invokes the method implemented via faces without having to think
    * about references.
    */
   public function form(&$form, &$form_state, array $options = array()) {
@@ -1345,7 +1345,7 @@ abstract class RulesPlugin extends RulesExtendable {
    *   Optional. Set to TRUE to format the export using PHP arrays. By default
    *   JSON is used.
    * @return
-   *   The exported confiugration.
+   *   The exported configuration.
    *
    * @see rules_import()
    */
@@ -1395,7 +1395,7 @@ abstract class RulesPlugin extends RulesExtendable {
   }
 
   /**
-   * Finalizies the configuration export by adding general attributes regarding
+   * Finalizes the configuration export by adding general attributes regarding
    * the configuration and returns it in the right format.
    */
   protected function returnExport($export, $prefix = '', $php = FALSE) {
@@ -1739,7 +1739,7 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
         // Cache only the plugin implementation specific callbacks.
         $info['faces_cache'][$interface] = array($methods, array_filter($file_names));
       }
-      // Filter out interfaces with no overriden methods.
+      // Filter out interfaces with no overridden methods.
       $info['faces_cache'] = rules_filter_array($info['faces_cache'], 0, TRUE);
       // We don't need that any more.
       unset($info['callbacks'], $info['base']);
@@ -2313,7 +2313,7 @@ abstract class RulesContainerPlugin extends RulesPlugin implements IteratorAggre
    */
   public function sortChildren($deep = FALSE) {
     // Make sure the array order is kept in case two children have the same
-    // weight by ensuring later childrens would have higher weights.
+    // weight by ensuring later children would have higher weights.
     foreach (array_values($this->children) as $i => $child) {
       $child->weight += $i / 1000;
     }

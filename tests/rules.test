@@ -168,7 +168,7 @@ class RulesTestCase extends DrupalWebTestCase {
     $action2->executeByArgs(array('node' => $node));
     $this->assertEqual($node->status, 1, 'Action executed correctly');
 
-    // Test calling an extended + overriden method.
+    // Test calling an extended + overridden method.
     $this->assertEqual($action2->help(), 'custom', 'Using custom help callback.');
 
     // Inspect the cache
@@ -388,7 +388,7 @@ class RulesTestCase extends DrupalWebTestCase {
     user_role_change_permissions($this->normal_role, array('use Rules component rules_test_roles' => TRUE));
     $this->assertTrue(rules_action('component_rules_test_roles')->access(), 'Authenticated user with the correct role can use the rule component.');
 
-    // Reset global user to anonyous.
+    // Reset global user to anonymous.
     $user = user_load(0);
     $this->assertFalse(rules_action('component_rules_test_roles')->access(), 'Anonymous user can\'t use the rule component.');
   }
@@ -1221,7 +1221,7 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
   /**
    * Ensure the recursion prevention still allows to let the rule trigger again
    * during evaluation of the same event set, if the event isn't caused by the
-   * rule itself - thus we won't run in an infinte loop.
+   * rule itself - thus we won't run in an infinite loop.
    */
   function testRecursionOnDifferentArguments() {
     // Create rule1 - which might recurse.
@@ -1397,7 +1397,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
 
     $node = $this->drupalCreateNode(array('title' => 'foo'));
     $rule->execute($node);
-    $this->assertEqual($node->title, 'bar', "Data comparision using IN operation evaluates to TRUE.");
+    $this->assertEqual($node->title, 'bar', "Data comparison using IN operation evaluates to TRUE.");
 
 
     // Test Condition: Data is empty.
@@ -1469,7 +1469,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     $set->action('data_convert', array('type' => 'integer', 'value:select' => 'source', 'rounding_behavior' => 'down'));
     $set->action('data_set', array('data:select' => 'result', 'value:select' => 'conversion_result'));
     list($result) = $set->execute('9.6');
-    $this->assertEqual($result, 9, 'Converted decimal to integer using roundin behavio down.');
+    $this->assertEqual($result, 9, 'Converted decimal to integer using rounding behavior down.');
 
     $set = rules_action_set(array(
       'result' => array('type' => 'integer', 'parameter' => FALSE),
@@ -1511,7 +1511,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
       ->execute(entity_metadata_wrapper('node', $article), 'field_tags');
     $this->assertTrue($result);
 
-    // Test entiy_is_of_bundle condition.
+    // Test entity_is_of_bundle condition.
     $result = rules_condition('entity_is_of_bundle', array(
       'type' => 'node',
       'bundle' => array('article'),
@@ -1984,7 +1984,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     // custom role and a user for it.
     $user = $this->drupalCreateUser(array('administer nodes'));
     $roles = $user->roles;
-    // Remove the authenticate role so we only use the new role created by
+    // Remove the authenticated role so we only use the new role created by
     // drupalCreateUser().
     unset($roles[DRUPAL_AUTHENTICATED_RID]);
     rules_action('mail_to_users_of_role', $settings + array('roles' => array_keys($roles)))->execute();

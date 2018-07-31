@@ -108,7 +108,7 @@ function rules_execute_php_eval($code, $settings, $state, $element) {
 }
 
 /**
- * Evalutes the given PHP code, with the given variables defined.
+ * Evaluates the given PHP code, with the given variables defined.
  *
  * @param $code
  *   The PHP code to run, with <?php ?>
@@ -130,7 +130,7 @@ function rules_php_eval($code, $arguments = array()) {
 }
 
 /**
- * Evalutes the given PHP code, with the given variables defined. This is like
+ * Evaluates the given PHP code, with the given variables defined. This is like
  * rules_php_eval() but does return the returned data from the PHP code.
  *
  * @param $code

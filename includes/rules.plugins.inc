@@ -160,7 +160,7 @@ class Rule extends RulesActionContainer {
 
   /**
    * Get an iterator over all contained conditions. Note that this iterator also
-   * implements the ArrayAcces interface.
+   * implements the ArrayAccess interface.
    *
    * @return RulesRecursiveElementIterator
    */
@@ -324,7 +324,7 @@ class Rule extends RulesActionContainer {
   }
 
   /**
-   * Overriden to expose the variables of all actions for embedded rules.
+   * Overridden to expose the variables of all actions for embedded rules.
    */
   public function providesVariables() {
     $provides = parent::providesVariables();

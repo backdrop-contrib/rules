@@ -176,7 +176,7 @@ function hook_rules_action_info() {
  *   - label: The label of the category. Start capitalized. Required.
  *   - weight: (optional) A weight for sorting the category. Defaults to 0.
  *   - equals group: (optional) For BC, categories may be defined that equal
- *     a previsouly used 'group'.
+ *     a previously used 'group'.
  *   - icon: (optional) The file path of an icon to use, relative to the module
  *     or specified icon path. The icon should be a transparent SVG containing
  *     no colors (only #fff). See https://drupal.org/node/2090265 for
@@ -260,9 +260,9 @@ function hook_rules_directory() {
  *   hook_rules_action_info() as well as an array containing the action's
  *   configuration settings.
  * @return
- *   The action may return an array containg parameter or provided variables
+ *   The action may return an array containing parameter or provided variables
  *   with their names as key. This is used update the value of a parameter or to
- *   provdide the value for a provided variable.
+ *   provide the value for a provided variable.
  *   Apart from that any parameters which have the key 'save' set to TRUE will
  *   be remembered to be saved by rules unless the action returns FALSE.
  *   Conditions have to return a boolean value in any case.
@@ -446,7 +446,7 @@ function hook_rules_event_info() {
  *     makes use of the class for wrapping the data of the given type. However
  *     note that if data is already wrapped when it is passed to Rules, the
  *     existing wrappers will be kept.
- *     For modules implementing identifiable data types being non-entites the
+ *     For modules implementing identifiable data types being non-entities the
  *     class RulesIdentifiableDataWrapper is provided, which can be used as base
  *     for a custom wrapper class. See RulesIdentifiableDataWrapper for details.
  *   - property info: (optional) May be used for non-entity data structures to
@@ -999,7 +999,7 @@ function hook_rules_action_base_upgrade_map_name($element) {
  * care of upgrading the configuration of all known parameters, which only works
  * if the parameter name has not changed.
  * If something changed, this callback can be used to properly apply the
- * configruation of the Drupal 6 action ($element) to the Drupal 7 version
+ * configuration of the Drupal 6 action ($element) to the Drupal 7 version
  * ($target).
  *
  * This is no real hook, but a callback that is invoked for each Drupal 6

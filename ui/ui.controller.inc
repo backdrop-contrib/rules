@@ -35,8 +35,8 @@ class RulesUIController {
     );
     $items[$base_path . '/manage/%rules_config/add/%rules_element'] = array(
       // Adding another part to the path would hit the menu path-part-limit
-      // for base paths like admin/config/workflow/rules. Therefor we have to
-      // use this fugly way for setting the title.
+      // for base paths like admin/config/workflow/rules. Therefore we have to
+      // use this ugly way for setting the title.
       'title callback' => 'rules_menu_add_element_title',
       // Wrap the integer in an array, so it is passed as is.
       'title arguments' => array(array($base_count + 4)),
@@ -157,8 +157,8 @@ class RulesUIController {
   }
 
   /**
-   * Generates the render array for a overview configuration table for arbitrary
-   * rule configs that match the given conditions.
+   * Generates the render array for an overview configuration table for
+   * arbitrary rule configs that match the given conditions.
    *
    * Note: The generated overview table contains multiple links for editing the
    * rule configurations. For the links to properly work use

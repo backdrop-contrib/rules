@@ -59,7 +59,7 @@ class RulesSchedulerTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Make sure recurion prevention is working fine for scheduled rule sets.
+   * Make sure recursion prevention is working fine for scheduled rule sets.
    */
   function testRecursionPrevention() {
     $set = rules_rule_set(array(

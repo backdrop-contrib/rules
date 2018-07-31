@@ -291,7 +291,7 @@ function rules_ui_add_element($form, &$form_state, $rules_config, $plugin_name, 
 /**
  * Add element submit callback.
  * Used for "abstract plugins" to create the initial element object with the
- * given implemenation name and rebuild the form.
+ * given implementation name and rebuild the form.
  */
 function rules_ui_add_element_submit($form, &$form_state) {
   $element = rules_plugin_factory($form_state['plugin'], $form_state['values']['element_name']);
@@ -487,7 +487,7 @@ function rules_ui_add_event_apply($form, &$form_state) {
 }
 
 /**
- * Form to remove a event from a rule.
+ * Form to remove an event from a rule.
  */
 function rules_ui_remove_event($form, &$form_state, $rules_config, $event, $base_path) {
   RulesPluginUI::$basePath = $base_path;
@@ -696,7 +696,7 @@ function rules_ui_element_ip_address_validate($element, &$form_state) {
 
 /**
  * FAPI validation of a date element. Makes sure the specified date format is
- * correct and converts date values specifiy a fixed (= non relative) date to
+ * correct and converts date values specify a fixed (= non relative) date to
  * a timestamp. Relative dates are handled by the date input evaluator.
  */
 function rules_ui_element_date_validate($element, &$form_state) {

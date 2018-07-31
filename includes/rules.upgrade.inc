@@ -28,7 +28,7 @@ function rules_upgrade_form($form, &$form_state) {
     '#prefix' => '<p>',
     '#suffix' => '</p>',
     '#markup' => t('This form allows you to convert rules or rule sets from Rules 1.x to Rules 2.x.') . ' ' .
-      t('In order to convert a rule or rule set make sure you have all dependend modules installed and upgraded, i.e. modules which provide Rules integration that has been used in your rules or rule sets. In addition those modules may need to implement some Rules specific update hooks for the conversion to properly work.') . ' ' .
+      t('In order to convert a rule or rule set make sure you have all dependent modules installed and upgraded, i.e. modules which provide Rules integration that has been used in your rules or rule sets. In addition those modules may need to implement some Rules specific update hooks for the conversion to properly work.') . ' ' .
       t('After conversion, the old rules and rule sets will stay in the database until you manually delete them. That way you can make sure the conversion has gone right before you delete the old rules and rule sets.')
   );
 
@@ -557,7 +557,7 @@ function rules_action_save_variable_upgrade($element, $target) {
 
 // System.module integration.
 function rules_action_set_breadcrumb_upgrade_map_name($element) {
-  return 'breadcumb_set';
+  return 'breadcrumb_set';
 }
 function rules_action_mail_to_user_upgrade_map_name($element) {
   return 'mail';

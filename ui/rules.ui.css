@@ -86,7 +86,7 @@ ul.rules-operations-add li {
   position: relative;
   cursor: pointer;
 
-  /* The span element with the icon which opens the log, has a whitepsace.
+  /* The span element with the icon which opens the log, has a whitespace.
      Since we don't want the user to mark this white space, we prevent this
      using the this code.*/
   -moz-user-select: -moz-none;

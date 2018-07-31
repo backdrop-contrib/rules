@@ -85,7 +85,7 @@ Upgrade from Rules 6.x-1.x to Rules 7.x-2.x
     for Drupal 7. The Drupal 6 tasks are preserved in the database as long as
     you do not clear your Rules 1.x configuration though.
   * The Rules Forms module has not been updated to Drupal 7 and there are no
-    plans to do so, as unfortuntely the module's design does not allow for
+    plans to do so, as unfortunately the module's design does not allow for
     automatic configuration updates.
     Thus, a possible future Rules 2.x Forms module is likely to work
     different, e.g. by working only for entity forms on the field level.
