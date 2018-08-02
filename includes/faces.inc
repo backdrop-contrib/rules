@@ -308,4 +308,5 @@ if (!class_exists('FacesExtendable', FALSE)) {
       return $this->__call($name, $args);
     }
   }
+
 }

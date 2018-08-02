@@ -117,5 +117,5 @@ class RulesSchedulerTestCase extends DrupalWebTestCase {
     // The task handler should have set the variable to TRUE now.
     $this->assertTrue(variable_get($variable));
   }
-}
 
+}

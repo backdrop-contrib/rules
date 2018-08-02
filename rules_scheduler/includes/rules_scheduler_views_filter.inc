@@ -19,4 +19,5 @@ class rules_scheduler_views_filter extends views_handler_filter_in_operator {
       $this->value_options = $config_names;
     }
   }
+
 }
