@@ -7,7 +7,7 @@
 
 class RulesSchedulerTestCase extends DrupalWebTestCase {
 
-  static function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => 'Rules Scheduler tests',
       'description' => 'Test scheduling components.',
@@ -15,7 +15,7 @@ class RulesSchedulerTestCase extends DrupalWebTestCase {
     );
   }
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp('rules_scheduler', 'rules_scheduler_test');
     RulesLog::logger()->clear();
     variable_set('rules_debug_log', 1);
@@ -27,7 +27,7 @@ class RulesSchedulerTestCase extends DrupalWebTestCase {
    * Note that this also makes sure Rules properly handles timezones, else this
    * test could fail due to a wrong 'now' timestamp.
    */
-  function testComponentSchedule() {
+  public function testComponentSchedule() {
     $set = rules_rule_set(array(
       'node1' => array('type' => 'node', 'label' => 'node'),
     ));
@@ -61,7 +61,7 @@ class RulesSchedulerTestCase extends DrupalWebTestCase {
   /**
    * Make sure recursion prevention is working fine for scheduled rule sets.
    */
-  function testRecursionPrevention() {
+  public function testRecursionPrevention() {
     $set = rules_rule_set(array(
       'node1' => array('type' => 'node', 'label' => 'node'),
     ));

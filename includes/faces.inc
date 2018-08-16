@@ -14,7 +14,7 @@ if (!interface_exists('FacesExtenderInterface', FALSE)) {
     /**
      * Constructs an instance of the extender.
      */
-    function __construct(FacesExtendable $object);
+    public function __construct(FacesExtendable $object);
 
     /**
      * Returns the extended object.
@@ -43,7 +43,7 @@ if (!class_exists('FacesExtender', FALSE)) {
     protected $object;
 
 
-    function __construct(FacesExtendable $object) {
+    public function __construct(FacesExtendable $object) {
       $this->object = $object;
     }
 
@@ -108,7 +108,7 @@ if (!class_exists('FacesExtendable', FALSE)) {
     /**
      * Magic method: Invoke the dynamically implemented methods.
      */
-    function __call($name, $arguments = array()) {
+    public function __call($name, $arguments = array()) {
       if (isset($this->facesMethods[$name])) {
         $method = $this->facesMethods[$name];
         // Include code, if necessary.

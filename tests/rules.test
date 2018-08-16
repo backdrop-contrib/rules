@@ -7,7 +7,7 @@
 
 class RulesTestCase extends DrupalWebTestCase {
 
-  static function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => 'Rules Engine tests',
       'description' => 'Test using the rules API to create and evaluate rules.',
@@ -15,7 +15,7 @@ class RulesTestCase extends DrupalWebTestCase {
     );
   }
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp('rules', 'rules_test');
     RulesLog::logger()->clear();
     variable_set('rules_debug_log', 1);
@@ -24,7 +24,7 @@ class RulesTestCase extends DrupalWebTestCase {
   /**
    * Calculates the output of t() given an array of placeholders to replace.
    */
-  static function t($text, $strings) {
+  public static function t($text, $strings) {
     $placeholders = array();
     foreach ($strings as $key => $string) {
       $key = !is_numeric($key) ? $key : $string;
@@ -53,7 +53,7 @@ class RulesTestCase extends DrupalWebTestCase {
   /**
    * Tests creating a rule and iterating over the rule elements.
    */
-  function testRuleCreation() {
+  public function testRuleCreation() {
     $rule = $this->createTestRule();
     $rule->integrityCheck();
     $rule->execute();
@@ -80,7 +80,7 @@ class RulesTestCase extends DrupalWebTestCase {
   /**
    * Test handling dependencies.
    */
-  function testDependencies() {
+  public function testDependencies() {
     $action = rules_action('rules_node_publish_action');
     $this->assertEqual($action->dependencies(), array('rules_test'), 'Providing module is returned as dependency.');
 
@@ -150,7 +150,7 @@ class RulesTestCase extends DrupalWebTestCase {
    * Test setting up an action with some action_info and serializing and
    * executing it.
    */
-  function testActionSetup() {
+  public function testActionSetup() {
     $action = rules_action('rules_node_publish_action');
 
     $s = serialize($action);
@@ -179,7 +179,7 @@ class RulesTestCase extends DrupalWebTestCase {
   /**
    * Test executing with wrong arguments.
    */
-  function testActionExecutionFails() {
+  public function testActionExecutionFails() {
     $action = rules_action('rules_node_publish_action');
     try {
       $action->execute();
@@ -193,7 +193,7 @@ class RulesTestCase extends DrupalWebTestCase {
   /**
    * Test setting up a rule and mapping variables.
    */
-  function testVariableMapping() {
+  public function testVariableMapping() {
     $rule = rule(array(
       'node' => array('type' => 'node'),
       'node_unchanged' => array('type' => 'node'),
@@ -215,7 +215,7 @@ class RulesTestCase extends DrupalWebTestCase {
   /**
    * Tests making use of class based actions.
    */
-  function testClassBasedActions() {
+  public function testClassBasedActions() {
     $cache = rules_get_cache();
     $this->assertTrue(!empty($cache['action_info']['rules_test_class_action']), 'Action has been discovered.');
     $action = rules_action('rules_test_class_action');
@@ -235,7 +235,7 @@ class RulesTestCase extends DrupalWebTestCase {
   /**
    * Tests CRUD functionality.
    */
-  function testRulesCRUD() {
+  public function testRulesCRUD() {
     $rule = $this->createTestRule();
     $rule->integrityCheck()->save('test');
 
@@ -298,7 +298,7 @@ class RulesTestCase extends DrupalWebTestCase {
   /**
    * Test automatic saving of variables.
    */
-  function testActionSaving() {
+  public function testActionSaving() {
     // Test saving a parameter.
     $action = rules_action('rules_node_publish_action_save');
     $node = $this->drupalCreateNode(array('status' => 0, 'type' => 'page'));
@@ -337,7 +337,7 @@ class RulesTestCase extends DrupalWebTestCase {
   /**
    * Test adding a variable and optional parameters.
    */
-  function testVariableAdding() {
+  public function testVariableAdding() {
     $node = $this->drupalCreateNode();
     $rule = rule(array('nid' => array('type' => 'integer')));
     $rule->condition('rules_test_condition_true')
@@ -366,7 +366,7 @@ class RulesTestCase extends DrupalWebTestCase {
   /**
    * Test custom access for using component actions/conditions.
    */
-  function testRuleComponentAccess() {
+  public function testRuleComponentAccess() {
     // Create a normal user.
     $normal_user = $this->drupalCreateUser();
     // Create a role for granting access to the rule component.
@@ -396,7 +396,7 @@ class RulesTestCase extends DrupalWebTestCase {
   /**
    * Test passing arguments by reference to an action.
    */
-  function testPassingByReference() {
+  public function testPassingByReference() {
     // Keeping references of variables is unsupported, though the
     // EntityMetadataArrayObject may be used to achieve that.
     $array = array('foo' => 'bar');
@@ -408,7 +408,7 @@ class RulesTestCase extends DrupalWebTestCase {
   /**
    * Test sorting rule elements.
    */
-  function testSorting() {
+  public function testSorting() {
     $rule = $this->createTestRule();
     $conditions = $rule->conditions();
     $conditions[0]->weight = 10;
@@ -427,7 +427,7 @@ class RulesTestCase extends DrupalWebTestCase {
   /**
    * Tests using data selectors.
    */
-  function testDataSelectors() {
+  public function testDataSelectors() {
     $body[LANGUAGE_NONE][0] = array('value' => '<b>The body & nothing.</b>');
     $node = $this->drupalCreateNode(array('body' => $body, 'type' => 'page', 'summary' => ''));
 
@@ -508,7 +508,7 @@ class RulesTestCase extends DrupalWebTestCase {
   /**
    * Tests making use of rule sets.
    */
-  function testRuleSets() {
+  public function testRuleSets() {
     $set = rules_rule_set(array(
       'node' => array('type' => 'node', 'label' => 'node'),
     ));
@@ -543,7 +543,7 @@ class RulesTestCase extends DrupalWebTestCase {
   /**
    * Tests invoking components from the action.
    */
-  function testComponentInvocations() {
+  public function testComponentInvocations() {
     $set = rules_rule_set(array(
       'node1' => array('type' => 'node', 'label' => 'node'),
     ));
@@ -596,7 +596,7 @@ class RulesTestCase extends DrupalWebTestCase {
    * Test asserting metadata, customizing action info and make sure integrity
    * is checked.
    */
-  function testMetadataAssertion() {
+  public function testMetadataAssertion() {
     $action = rules_action('rules_node_make_sticky_action');
 
     // Test failing integrity check.
@@ -678,7 +678,7 @@ class RulesTestCase extends DrupalWebTestCase {
   /**
    * Test using loops.
    */
-  function testLoops() {
+  public function testLoops() {
     // Test passing the list parameter as argument to ensure that is working
     // generally for plugin container too.
     drupal_get_messages(NULL, TRUE);
@@ -719,7 +719,7 @@ class RulesTestCase extends DrupalWebTestCase {
   /**
    * Test access checks.
    */
-  function testAccessCheck() {
+  public function testAccessCheck() {
     $rule = rule();
     // Try to set a property which is provided by the test module and is not
     // accessible, so the access check has to return FALSE.
@@ -730,7 +730,7 @@ class RulesTestCase extends DrupalWebTestCase {
   /**
    * Test returning provided variables.
    */
-  function testReturningVariables() {
+  public function testReturningVariables() {
     $node = $this->drupalCreateNode();
     $action = rules_action('entity_fetch', array('type' => 'node', 'id' => $node->nid));
     list($node2) = $action->execute();
@@ -773,7 +773,7 @@ class RulesTestCase extends DrupalWebTestCase {
   /**
    * Tests using input evaluators.
    */
-  function testInputEvaluators() {
+  public function testInputEvaluators() {
     $node = $this->drupalCreateNode(array('title' => '<b>The body & nothing.</b>', 'type' => 'page'));
 
     $rule = rule(array('nid' => array('type' => 'integer')));
@@ -798,7 +798,7 @@ class RulesTestCase extends DrupalWebTestCase {
   /**
    * Test importing and exporting a rule.
    */
-  function testRuleImportExport() {
+  public function testRuleImportExport() {
     $rule = rule(array('nid' => array('type' => 'integer')));
     $rule->name = "rules_export_test";
     $rule->action('rules_action_load_node')
@@ -901,7 +901,7 @@ class RulesTestCase extends DrupalWebTestCase {
   /**
    * Test the named parameter mode.
    */
-  function testNamedParameters() {
+  public function testNamedParameters() {
     $rule = rule(array('node' => array('type' => 'node')));
     $rule->action('rules_action_node_set_title', array('title' => 'foo'));
     $rule->integrityCheck();
@@ -916,7 +916,7 @@ class RulesTestCase extends DrupalWebTestCase {
   /**
    * Make sure Rules aborts when NULL values are used.
    */
-  function testAbortOnNULLValues() {
+  public function testAbortOnNULLValues() {
     $rule = rule(array('node' => array('type' => 'node')));
     $rule->action('drupal_message', array('message:select' => 'node:log'));
     $rule->integrityCheck();
@@ -937,7 +937,7 @@ class RulesTestCase extends DrupalWebTestCase {
  */
 class RulesTestDataCase extends DrupalWebTestCase {
 
-  static function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => 'Rules Data tests',
       'description' => 'Tests rules data saving and type matching.',
@@ -945,7 +945,7 @@ class RulesTestDataCase extends DrupalWebTestCase {
     );
   }
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp('rules', 'rules_test');
     variable_set('rules_debug_log', 1);
     // Make sure we don't ran over issues with the node_load static cache.
@@ -955,7 +955,7 @@ class RulesTestDataCase extends DrupalWebTestCase {
   /**
    * Tests intelligently saving data.
    */
-  function testDataSaving() {
+  public function testDataSaving() {
     $node = $this->drupalCreateNode();
     $state = new RulesState(rule());
     $state->addVariable('node', $node, array('type' => 'node'));
@@ -990,7 +990,7 @@ class RulesTestDataCase extends DrupalWebTestCase {
   /**
    * Test type matching
    */
-  function testTypeMatching() {
+  public function testTypeMatching() {
     $entity = array('type' => 'entity');
     $node = array('type' => 'node');
     $this->assertTrue(RulesData::typesMatch($node, $entity), 'Types match.');
@@ -1010,7 +1010,7 @@ class RulesTestDataCase extends DrupalWebTestCase {
   /**
    * Tests making use of custom wrapper classes.
    */
-  function testCustomWrapperClasses() {
+  public function testCustomWrapperClasses() {
     // Test loading a vocabulary by name, which is done by a custom wrapper.
     $set = rules_action_set(array('vocab' => array('type' => 'taxonomy_vocabulary')), array('vocab'));
     $set->action('drupal_message', array('message:select' => 'vocab:name'));
@@ -1040,7 +1040,7 @@ class RulesTestDataCase extends DrupalWebTestCase {
   /**
    * Makes sure the RulesIdentifiableDataWrapper is working correctly.
    */
-  function testRulesIdentifiableDataWrapper() {
+  public function testRulesIdentifiableDataWrapper() {
     $node = $this->drupalCreateNode();
     $wrapper = new RulesTestTypeWrapper('rules_test_type', $node);
     $this->assertTrue($wrapper->value() == $node, 'Data correctly wrapped.');
@@ -1082,7 +1082,7 @@ class RulesTestDataCase extends DrupalWebTestCase {
  */
 class RulesTriggerTestCase extends DrupalWebTestCase {
 
-  static function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => 'Reaction Rules',
       'description' => 'Tests triggering reactive rules.',
@@ -1090,7 +1090,7 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
     );
   }
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp('rules', 'rules_test');
     RulesLog::logger()->clear();
     variable_set('rules_debug_log', 1);
@@ -1110,7 +1110,7 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
   /**
    * Tests CRUD for reaction rules - making sure the events are stored properly.
    */
-  function testReactiveRuleCreation() {
+  public function testReactiveRuleCreation() {
     $rule = $this->createTestRule();
     $rule->save();
     $result = db_query("SELECT event FROM {rules_trigger} WHERE id = :id", array(':id' => $rule->id));
@@ -1132,7 +1132,7 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
   /**
    * Tests creating and triggering a basic reaction rule.
    */
-  function testBasicReactionRule() {
+  public function testBasicReactionRule() {
     $node = $this->drupalCreateNode(array('type' => 'page'));
     $rule = $this->createTestRule();
     $rule->integrityCheck()->save();
@@ -1153,7 +1153,7 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
   /**
    * Test a rule using a handler to load a variable.
    */
-  function testVariableHandler() {
+  public function testVariableHandler() {
     $node = $this->drupalCreateNode(array('type' => 'page', 'sticky' => 0, 'status' => 0));
     $rule = $this->createTestRule(FALSE, 'node_update');
     $rule->action('rules_node_publish_action_save', array('node:select' => 'node_unchanged'));
@@ -1186,7 +1186,7 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
   /**
    * Test aborting silently when handlers are not able to load.
    */
-  function testVariableHandlerFailing() {
+  public function testVariableHandlerFailing() {
     $rule = $this->createTestRule(FALSE, 'node_presave');
     $rule->action('rules_node_publish_action_save', array('node:select' => 'node_unchanged'));
     $rule->integrityCheck()->save();
@@ -1203,7 +1203,7 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
    * Tests preventing recursive rule invocations by creating a rule that reacts
    * on node-update and generates a node update that would trigger it itself.
    */
-  function testRecursionPrevention() {
+  public function testRecursionPrevention() {
     $rule = $this->createTestRule(FALSE, 'node_update');
     $rule->action('rules_node_make_sticky_action');
     $rule->integrityCheck()->save();
@@ -1223,7 +1223,7 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
    * during evaluation of the same event set, if the event isn't caused by the
    * rule itself - thus we won't run in an infinite loop.
    */
-  function testRecursionOnDifferentArguments() {
+  public function testRecursionOnDifferentArguments() {
     // Create rule1 - which might recurse.
     $rule = $this->createTestRule(FALSE, 'node_update');
     $rule->action('rules_node_make_sticky_action');
@@ -1255,7 +1255,7 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
   /**
    * Tests the provided default rule 'rules_test_default_1'.
    */
-  function testDefaultRule() {
+  public function testDefaultRule() {
     $rule = rules_config_load('rules_test_default_1');
     $this->assertTrue($rule->status & ENTITY_IN_CODE && !($rule->status & ENTITY_IN_DB), 'Default rule can be loaded and has the right status.');
     $this->assertTrue($rule->tags == array('Admin', 'Tag2'), 'Default rule has correct tags.');
@@ -1277,7 +1277,7 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
   /**
    * Tests creating and triggering a reaction rule with event settings.
    */
-  function testEventSettings() {
+  public function testEventSettings() {
     $rule = rules_reaction_rule();
     $rule->event('node_presave', array('bundle' => 'article'))
       ->condition('data_is_empty', array('data:select' => 'node:field-tags'))
@@ -1307,7 +1307,7 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
  */
 class RulesIntegrationTestCase extends DrupalWebTestCase {
 
-  static function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => 'Rules Core Integration',
       'description' => 'Tests provided integration for drupal core.',
@@ -1315,7 +1315,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     );
   }
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp('rules', 'rules_test', 'php', 'path');
     RulesLog::logger()->clear();
     variable_set('rules_debug_log', 1);
@@ -1324,7 +1324,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
   /**
    * Just make sure the access callback run without errors.
    */
-  function testAccessCallbacks() {
+  public function testAccessCallbacks() {
     $cache = rules_get_cache();
     foreach (array('action', 'condition', 'event') as $type) {
       foreach (rules_fetch_data($type . '_info') as $name => $info) {
@@ -1338,7 +1338,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
   /**
    * Test data integration.
    */
-  function testDataIntegration() {
+  public function testDataIntegration() {
     // Test data_create action.
     $action = rules_action('data_create', array(
       'type' => 'log_entry',
@@ -1501,7 +1501,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
   /**
    * Tests entity related integration.
    */
-  function testEntityIntegration() {
+  public function testEntityIntegration() {
     global $user;
 
     $page = $this->drupalCreateNode(array('type' => 'page'));
@@ -1640,7 +1640,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
   /**
    * Test integration for the taxonomy module.
    */
-  function testTaxonomyIntegration() {
+  public function testTaxonomyIntegration() {
     $term = entity_property_values_create_entity('taxonomy_term', array(
       'name' => $this->randomName(),
       'vocabulary' => 1,
@@ -1736,7 +1736,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
   /**
    * Test integration for the node module.
    */
-  function testNodeIntegration() {
+  public function testNodeIntegration() {
     $tests = array(
       array('node_unpublish', 'node_is_published', 'node_publish', 'status'),
       array('node_make_unsticky', 'node_is_sticky', 'node_make_sticky', 'sticky'),
@@ -1781,7 +1781,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
   /**
    * Test integration for the user module.
    */
-  function testUserIntegration() {
+  public function testUserIntegration() {
     $rid = $this->drupalCreateRole(array('administer nodes'), 'foo');
     $user = $this->drupalCreateUser();
 
@@ -1830,7 +1830,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
   /**
    * Test integration for the php module.
    */
-  function testPHPIntegration() {
+  public function testPHPIntegration() {
     $node = $this->drupalCreateNode(array('title' => 'foo'));
     $rule = rule(array('var_name' => array('type' => 'node')));
     $rule->condition('php_eval', array('code' => 'return TRUE;'))
@@ -1862,7 +1862,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
   /**
    * Test the "rules_core" integration.
    */
-  function testRulesCoreIntegration() {
+  public function testRulesCoreIntegration() {
     // Make sure the date input evaluator evaluates properly using strtotime().
     $node = $this->drupalCreateNode(array('title' => 'foo'));
     $rule = rule(array('node' => array('type' => 'node')));
@@ -1933,7 +1933,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
   /**
    * Test site/system integration.
    */
-  function testSystemIntegration() {
+  public function testSystemIntegration() {
     // Test using the 'site' variable.
     $condition = rules_condition('data_is', array('data:select' => 'site:current-user:name', 'value' => $GLOBALS['user']->name));
     $this->assertTrue($condition->execute(), 'Retrieved the current user\'s name.');
@@ -2004,7 +2004,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
   /**
    * Tests the path module integration.
    */
-  function testPathIntegration() {
+  public function testPathIntegration() {
     rules_action('path_alias')->execute('foo', 'bar');
     $path = path_load('foo');
     $this->assertTrue($path['alias'] == 'bar', 'URL alias has been created.');
@@ -2039,7 +2039,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
  */
 class RulesEventDispatcherTestCase extends DrupalWebTestCase {
 
-  static function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => 'Rules event dispatchers',
       'description' => 'Tests event dispatcher functionality.',
@@ -2047,7 +2047,7 @@ class RulesEventDispatcherTestCase extends DrupalWebTestCase {
     );
   }
 
-  function setUp() {
+  protected function setUp() {
     parent::setUp('rules', 'rules_test');
   }
 
@@ -2120,7 +2120,7 @@ class RulesInvocationEnabledTestCase extends DrupalWebTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp('dblog', 'rules', 'rules_test', 'rules_test_invocation');
   }
 

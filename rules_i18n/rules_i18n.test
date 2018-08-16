@@ -19,7 +19,7 @@ class RulesI18nTestCase extends DrupalWebTestCase {
     );
   }
 
-  public function setUp() {
+  protected function setUp() {
     parent::setUp('rules_i18n');
     $this->admin_user = $this->drupalCreateUser(array('bypass node access', 'administer nodes', 'administer languages', 'administer content types', 'administer blocks', 'access administration pages'));
     $this->drupalLogin($this->admin_user);

@@ -58,7 +58,7 @@ class RulesNodeConditionType extends RulesNodeConditionBase {
   /**
    * Provides the content type of a node as asserted metadata.
    */
-  function assertions() {
+  public function assertions() {
     return array('node' => array('bundle' => $this->element->settings['type']));
   }
 }

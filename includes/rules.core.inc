@@ -586,7 +586,7 @@ abstract class RulesPlugin extends RulesExtendable {
   /**
    * Evaluate the element on a given rules evaluation state.
    */
-  abstract function evaluate(RulesState $state);
+  abstract public function evaluate(RulesState $state);
 
   protected static function compare(RulesPlugin $a, RulesPlugin $b) {
     if ($a->weight == $b->weight) {
@@ -1462,7 +1462,7 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
    * @throws RulesException
    *   If validation of the passed settings fails RulesExceptions are thrown.
    */
-  function __construct($name = NULL, $settings = array()) {
+  public function __construct($name = NULL, $settings = array()) {
     $this->elementName = $name;
     $this->settings = (array) $settings + array('#_needs_processing' => TRUE);
     $this->setUp();
@@ -2580,7 +2580,7 @@ class RulesLog {
    * @return RulesLog
    *   Returns the rules logger instance.
    */
-  static function logger() {
+  public static function logger() {
     if (!isset(self::$logger)) {
       $class = __CLASS__;
       self::$logger = new $class(variable_get('rules_log_level', self::INFO));
@@ -2616,7 +2616,7 @@ class RulesLog {
   /**
    * Checks the log and throws an exception if there were any problems.
    */
-  function checkLog($logLevel = self::WARN) {
+  public function checkLog($logLevel = self::WARN) {
     foreach ($this->log as $entry) {
       if ($entry[2] >= $logLevel) {
         throw new Exception($this->render());
@@ -2738,7 +2738,7 @@ class RulesEvaluationException extends RulesException {
    * @param $severity
    *   The RulesLog severity. Defaults to RulesLog::WARN.
    */
-  function __construct($msg, array $args = array(), $element = NULL, $severity = RulesLog::WARN) {
+  public function __construct($msg, array $args = array(), $element = NULL, $severity = RulesLog::WARN) {
     $this->element = is_array($element) ? array_shift($element) : $element;
     $this->keys = is_array($element) ? $element : array();
     $this->msg = $msg;
@@ -2777,7 +2777,7 @@ class RulesIntegrityException extends RulesException {
    *   variable causing the exception, e.g.
    *   @code array($element, 'parameter', 'node') @endcode.
    */
-  function __construct($msg, $element = NULL) {
+  public function __construct($msg, $element = NULL) {
     $this->element = is_array($element) ? array_shift($element) : $element;
     $this->keys = is_array($element) ? $element : array();
     parent::__construct($msg);

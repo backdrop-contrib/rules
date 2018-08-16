@@ -5,7 +5,7 @@
  * An extended subclass for component filtering.
  */
 class rules_scheduler_views_filter extends views_handler_filter_in_operator {
-  function get_value_options() {
+  public function get_value_options() {
     if (!isset($this->value_options)) {
       $this->value_title = t('Component');
       $result = db_select('rules_scheduler', 'r')

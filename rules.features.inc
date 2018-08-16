@@ -68,7 +68,7 @@ interface RulesPluginFeaturesIntegrationInterface {
   /**
    * Allows customizing the features export for a given rule element.
    */
-  function features_export(&$export, &$pipe, $module_name = '');
+  public function features_export(&$export, &$pipe, $module_name = '');
 }
 
 /**

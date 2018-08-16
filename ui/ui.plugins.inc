@@ -58,7 +58,7 @@ class RulesRuleUI extends RulesActionContainerUI {
   /**
    * Applies the values of the form to the rule configuration.
    */
-  function form_extract_values($form, &$form_state) {
+  public function form_extract_values($form, &$form_state) {
     $form_values = RulesPluginUI::getFormStateValues($form, $form_state);
     // Run condition and action container value extraction.
     if (isset($form['conditions'])) {
@@ -219,7 +219,7 @@ class RulesLoopUI extends RulesActionContainerUI {
     );
   }
 
-  function form_extract_values($form, &$form_state) {
+  public function form_extract_values($form, &$form_state) {
     parent::form_extract_values($form, $form_state);
     $form_values = RulesPluginUI::getFormStateValues($form, $form_state);
 
