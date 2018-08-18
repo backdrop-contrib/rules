@@ -1036,7 +1036,6 @@ class RulesContainerPluginUI extends RulesPluginUI {
     $content = parent::buildContent();
     // Don't link the title for embedded container plugins, except for rules.
     if (!$this->element->isRoot() && !($this->element instanceof Rule)) {
-      $content['label']['#type'] = 'markup';
       $content['label']['#markup'] = check_plain($content['label']['#title']);
       unset($content['label']['#title']);
     }
