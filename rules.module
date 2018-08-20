@@ -1388,11 +1388,14 @@ function rules_drupal_goto_alter(&$path, &$options, &$http_response_code) {
  * Returns whether the debug log should be shown.
  */
 function rules_show_debug_output() {
+  // For performance avoid unnecessary auto-loading of the RulesLog class.
+  if (!class_exists('RulesLog', FALSE)) {
+    return FALSE;
+  }
   if (variable_get('rules_debug', FALSE) == RulesLog::INFO && user_access('access rules debug')) {
     return TRUE;
   }
-  // For performance avoid unnecessary auto-loading of the RulesLog class.
-  return variable_get('rules_debug', FALSE) == RulesLog::WARN && user_access('access rules debug') && class_exists('RulesLog', FALSE) && RulesLog::logger()->hasErrors();
+  return variable_get('rules_debug', FALSE) == RulesLog::WARN && user_access('access rules debug') && RulesLog::logger()->hasErrors();
 }
 
 /**
