@@ -5,6 +5,7 @@
  * Contains rules integration for entities needed during evaluation.
  *
  * @addtogroup rules
+ *
  * @{
  */
 

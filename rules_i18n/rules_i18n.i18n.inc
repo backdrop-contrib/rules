@@ -34,6 +34,7 @@ class RulesI18nStringController extends EntityDefaultI18nStringController {
   protected function menuBasePath() {
     return 'admin/config/workflow/rules/reaction';
   }
+
 }
 
 /**
@@ -91,4 +92,5 @@ class RulesI18nStringObjectWrapper extends i18n_string_object_wrapper {
       }
     }
   }
+
 }

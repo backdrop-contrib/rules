@@ -145,6 +145,7 @@ interface RulesEventHandlerInterface {
    *   The info array of the event the event handler belongs to.
    */
   public function getEventInfo();
+
 }
 
 /**
@@ -169,6 +170,7 @@ interface RulesEventDispatcherInterface extends RulesEventHandlerInterface {
    *   TRUE if the event dispatcher is currently active, FALSE otherwise.
    */
   public function isWatching();
+
 }
 
 /**
@@ -257,12 +259,13 @@ abstract class RulesEventHandlerBase implements RulesEventHandlerInterface {
   public function getEventInfo() {
     return $this->eventInfo;
   }
+
 }
 
 /**
  * A handler for events having no settings. This is the default handler.
  */
-class RulesEventDefaultHandler extends RulesEventHandlerBase  {
+class RulesEventDefaultHandler extends RulesEventHandlerBase {
 
   /**
    * Implements RulesEventHandlerInterface::buildForm()
@@ -298,6 +301,7 @@ class RulesEventDefaultHandler extends RulesEventHandlerBase  {
   public function getSettings() {
     return NULL;
   }
+
 }
 
 /**
@@ -408,4 +412,5 @@ class RulesEventHandlerEntityBundle extends RulesEventHandlerBase {
     }
     return $variables;
   }
+
 }

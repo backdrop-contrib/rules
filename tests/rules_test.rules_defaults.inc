@@ -4,7 +4,6 @@
  * @file Includes any rules integration provided by the module.
  */
 
-
 /**
  * Implements hook_default_rules_configuration().
  */

@@ -193,4 +193,5 @@ class RulesI18nStringEvaluator extends RulesDataInputEvaluator {
       return $render;
     }
   }
+
 }

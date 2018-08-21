@@ -4,6 +4,7 @@
  * @file rules integration for the path module
  *
  * @addtogroup rules
+ *
  * @{
  */
 

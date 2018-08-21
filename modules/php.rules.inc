@@ -4,6 +4,7 @@
  * @file rules integration for the php module
  *
  * @addtogroup rules
+ *
  * @{
  */
 

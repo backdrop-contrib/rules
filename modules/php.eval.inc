@@ -5,6 +5,7 @@
  * Contains rules integration for the php module needed during evaluation.
  *
  * @addtogroup rules
+ *
  * @{
  */
 
@@ -58,6 +59,7 @@ class RulesPHPEvaluator extends RulesDataInputEvaluator {
 
     return $render;
   }
+
 }
 
 /**
@@ -92,6 +94,7 @@ class RulesPHPDataProcessor extends RulesDataProcessor {
     $value = isset($this->processor) ? $this->processor->process($value, $info, $state, $element) : $value;
     return rules_php_eval_return($this->setting['code'], array('value' => $value));
   }
+
 }
 
 /**

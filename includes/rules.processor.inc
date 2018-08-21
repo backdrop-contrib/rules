@@ -195,6 +195,7 @@ abstract class RulesDataProcessor {
    *   The rules evaluation state.
    * @param $element RulesPlugin
    *   The element for which we process the value.
+   *
    * @return
    *   The processed value.
    */
@@ -221,6 +222,7 @@ abstract class RulesDataProcessor {
   protected static function form($settings, $var_info) {
     return array();
   }
+
 }
 
 

@@ -1,9 +1,11 @@
 <?php
 
 /**
- * @file rules integration for the user module
+ * @file
+ * Rules integration for the user module.
  *
  * @addtogroup rules
+ *
  * @{
  */
 
@@ -88,6 +90,7 @@ function rules_user_event_info() {
 
 /**
  * Options list for user cancel methods.
+ *
  * @todo: Use for providing a user_cancel action.
  */
 function rules_user_cancel_methods() {

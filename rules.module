@@ -78,6 +78,7 @@ function rules_ui() {
  *   The action's name.
  * @param $settings
  *   The action's settings array.
+ *
  * @return RulesAction
  */
 function rules_action($name, $settings = array()) {
@@ -91,6 +92,7 @@ function rules_action($name, $settings = array()) {
  *   The condition's name.
  * @param $settings
  *   The condition's settings array.
+ *
  * @return RulesCondition
  */
 function rules_condition($name, $settings = array()) {
@@ -118,6 +120,7 @@ function rules_condition($name, $settings = array()) {
  * @param $provides
  *   The names of variables which should be provided to the caller. Only
  *   variables contained in $variables may be specified.
+ *
  * @return Rule
  */
 function rule($variables = NULL, $provides = array()) {
@@ -138,6 +141,7 @@ function rules_reaction_rule() {
  *
  * @param $variables
  *   An optional array as for rule().
+ *
  * @return RulesOr
  */
 function rules_or($variables = NULL) {
@@ -149,6 +153,7 @@ function rules_or($variables = NULL) {
  *
  * @param $variables
  *   An optional array as for rule().
+ *
  * @return RulesAnd
  */
 function rules_and($variables = NULL) {
@@ -165,6 +170,7 @@ function rules_and($variables = NULL) {
  *     'item:label': Optionally a label for the list item variable.
  * @param $variables
  *   An optional array as for rule().
+ *
  * @return RulesLoop
  */
 function rules_loop($settings = array(), $variables = NULL) {
@@ -178,6 +184,7 @@ function rules_loop($settings = array(), $variables = NULL) {
  *   An array as for rule().
  * @param $provides
  *   The names of variables which should be provided to the caller. See rule().
+ *
  * @return RulesRuleSet
  */
 function rules_rule_set($variables = array(), $provides = array()) {
@@ -191,6 +198,7 @@ function rules_rule_set($variables = array(), $provides = array()) {
  *   An array as for rule().
  * @param $provides
  *   The names of variables which should be provided to the caller. See rule().
+ *
  * @return RulesActionSet
  */
 function rules_action_set($variables = array(), $provides = array()) {
@@ -497,6 +505,7 @@ function rules_clear_cache() {
  * @param $export
  *   A serialized string in JSON format as produced by the RulesPlugin::export()
  *   method, or the PHP export as usual PHP array.
+ *
  * @return RulesPlugin
  */
 function rules_import($export, &$error_msg = '') {
@@ -514,6 +523,7 @@ function rules_import($export, &$error_msg = '') {
  * @param $force
  *   Usually data is only wrapped if really needed. If set to TRUE, wrapping the
  *   data is forced, so primitive data types are also wrapped.
+ *
  * @return EntityMetadataWrapper
  *   An EntityMetadataWrapper or the unwrapped data.
  *
@@ -558,6 +568,7 @@ function &rules_wrap_data($data = NULL, $info, $force = FALSE) {
  *   An array of wrapped data.
  * @param $info
  *   Optionally an array of info about how to unwrap the data. Keyed as $data.
+ *
  * @return
  *   An array containing unwrapped or passed through data.
  */
@@ -1269,6 +1280,7 @@ function rules_permissions_by_component(array $components = array()) {
 
 /**
  * Menu callback for loading rules configuration elements.
+ *
  * @see RulesUIController::config_menu()
  */
 function rules_element_load($element_id, $config_name) {
@@ -1278,6 +1290,7 @@ function rules_element_load($element_id, $config_name) {
 
 /**
  * Menu callback for getting the title as configured.
+ *
  * @see RulesUIController::config_menu()
  */
 function rules_get_title($text, $element) {
@@ -1296,6 +1309,7 @@ function rules_get_title($text, $element) {
  * Menu callback for getting the title for the add element page.
  *
  * Uses a work-a-round for accessing the plugin name.
+ *
  * @see RulesUIController::config_menu()
  */
 function rules_menu_add_element_title($array) {

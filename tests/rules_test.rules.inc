@@ -240,6 +240,7 @@ class RulesTestClassAction extends RulesActionHandlerBase {
   public function execute($node) {
     rules_log('Action called with node ' . $node->nid);
   }
+
 }
 
 /**
@@ -280,6 +281,7 @@ class RulesTestTypeWrapper extends RulesIdentifiableDataWrapper implements Rules
   public function save() {
     node_save($this->value());
   }
+
 }
 
 /**
@@ -307,6 +309,7 @@ class RulesTestContainer extends RulesContainerPlugin {
   public function evaluate(RulesState $state) {
     // Do nothing.
   }
+
 }
 
 /**

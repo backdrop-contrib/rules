@@ -5,6 +5,7 @@
  * Contains rules integration for the path module needed during evaluation.
  *
  * @addtogroup rules
+ *
  * @{
  */
 

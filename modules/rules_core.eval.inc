@@ -5,6 +5,7 @@
  * Contains rules core integration needed during evaluation.
  *
  * @addtogroup rules
+ *
  * @{
  */
 
@@ -89,6 +90,7 @@ class RulesDateInputEvaluator extends RulesDataInputEvaluator {
   public static function isFixedDateString($date) {
     return is_string($date) && preg_match(self::DATE_REGEX_LOOSE, $date);
   }
+
 }
 
 /**
@@ -119,6 +121,7 @@ class RulesURIInputEvaluator extends RulesDataInputEvaluator {
     }
     throw new RulesEvaluationException('Input evaluation generated an invalid URI.', array(), NULL, RulesLog::WARN);
   }
+
 }
 
 /**
@@ -178,6 +181,7 @@ class RulesDateOffsetProcessor extends RulesDataProcessor {
       return $timestamp + $offset;
     }
   }
+
 }
 
 /**
@@ -209,6 +213,7 @@ class RulesNumericOffsetProcessor extends RulesDataProcessor {
     $value = isset($this->processor) ? $this->processor->process($value, $info, $state, $element) : $value;
     return $value + $this->setting['value'];
   }
+
 }
 
 
@@ -239,4 +244,5 @@ class RulesTaxonomyVocabularyWrapper extends EntityDrupalWrapper {
     }
     return parent::validate($value);
   }
+
 }

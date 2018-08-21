@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @file Contains the state and data related stuff.
+ * @file
+ * Contains the state and data related stuff.
  */
 
 /**
@@ -350,12 +351,13 @@ class RulesState {
     );
     return isset($key) ? $vars[$key] : $vars;
   }
+
 }
 
 /**
  * A class holding static methods related to data.
  */
-class RulesData  {
+class RulesData {
 
   /**
    * Returns whether the type match. They match if type1 is compatible to type2.
@@ -622,6 +624,7 @@ class RulesData  {
     // have specified further metadata.
     return RulesData::applyMetadataAssertions($wrapper, $property_info);
   }
+
 }
 
 /**
@@ -756,6 +759,7 @@ abstract class RulesIdentifiableDataWrapper extends EntityStructureWrapper {
    *   The loaded data object, or FALSE if loading failed.
    */
   abstract protected function load($id);
+
 }
 
 /**
@@ -767,4 +771,5 @@ interface RulesDataWrapperSavableInterface {
    * Save the currently wrapped data.
    */
   public function save();
+
 }

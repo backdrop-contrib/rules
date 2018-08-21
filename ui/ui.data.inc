@@ -1,9 +1,9 @@
 <?php
 
 /**
- * @file Contains data type related forms.
+ * @file
+ * Contains data type related forms.
  */
-
 
 /**
  * Interface for data types providing a direct input form.
@@ -51,6 +51,7 @@ interface RulesDataInputOptionsListInterface extends RulesDataDirectInputFormInt
    *   An array of options as used by hook_options_list().
    */
   public static function optionsList(RulesPlugin $element, $name);
+
 }
 
 /**
@@ -181,6 +182,7 @@ class RulesDataUI {
     $parameters = $element->pluginParameterInfo();
     return array($parameters[$name]['type'], $parameters[$name]);
   }
+
 }
 
 /**
@@ -225,6 +227,7 @@ class RulesDataUIText extends RulesDataUI implements RulesDataDirectInputFormInt
       '#attributes' => array('class' => array('rules-parameter-text')),
     );
   }
+
 }
 
 /**
@@ -241,6 +244,7 @@ class RulesDataUITextToken extends RulesDataUIText {
     }
     return $form;
   }
+
 }
 
 /**
@@ -265,9 +269,8 @@ class RulesDataUITextFormatted extends RulesDataUIText {
       '#attributes' => array('class' => array('rules-parameter-text-formatted')),
     );
   }
+
 }
-
-
 
 /**
  * UI for decimal data.
@@ -283,6 +286,7 @@ class RulesDataUIDecimal extends RulesDataUIText {
     $form[$name]['#rows'] = 1;
     return $form;
   }
+
 }
 
 /**
@@ -298,6 +302,7 @@ class RulesDataUIInteger extends RulesDataUIText {
     $form[$name]['#element_validate'][] = 'rules_ui_element_integer_validate';
     return $form;
   }
+
 }
 
 /**
@@ -315,6 +320,7 @@ class RulesDataUIIPAddress extends RulesDataUIText {
     $form[$name]['#rows'] = 1;
     return $form;
   }
+
 }
 
 /**
@@ -346,6 +352,7 @@ class RulesDataUIBoolean extends RulesDataUI implements RulesDataDirectInputForm
       '#attributes' => array('class' => array('rules-parameter-boolean')),
     );
   }
+
 }
 
 /**
@@ -381,6 +388,7 @@ class RulesDataUIDate extends RulesDataUIText {
       '#attributes' => array('class' => array('rules-parameter-date')),
     );
   }
+
 }
 
 /**
@@ -402,6 +410,7 @@ class RulesDataUIDuration extends RulesDataUIText {
       '#attributes' => array('class' => array('rules-parameter-duration')),
     );
   }
+
 }
 
 /**
@@ -415,6 +424,7 @@ class RulesDataUIURI extends RulesDataUIText {
     $form[$name]['#description'] = t('You may enter relative URLs like %url as well as absolute URLs like %absolute-url.', array('%url' => 'user/login?destination=node', '%absolute-url' => 'http://drupal.org'));
     return $form;
   }
+
 }
 
 /**
@@ -453,6 +463,7 @@ class RulesDataUIListText extends RulesDataUIText {
       '#attributes' => array('class' => array('rules-parameter-list')),
     );
   }
+
 }
 
 /**
@@ -473,6 +484,7 @@ class RulesDataUIListInteger extends RulesDataUIListText {
     }
     return $form;
   }
+
 }
 
 /**
@@ -489,6 +501,7 @@ class RulesDataUIListToken extends RulesDataUIListInteger {
     }
     return $form;
   }
+
 }
 
 /**
@@ -515,6 +528,7 @@ class RulesDataUIEntity extends RulesDataUIText {
     }
     return $form;
   }
+
 }
 
 /**
@@ -525,6 +539,7 @@ class RulesDataUIEntityExportable extends RulesDataUIEntity {
   public static function getDefaultMode() {
     return 'input';
   }
+
 }
 
 /**
@@ -554,6 +569,7 @@ class RulesDataUIBundleEntity extends RulesDataUIEntity implements RulesDataInpu
     }
     return $bundles;
   }
+
 }
 
 /**
@@ -577,6 +593,7 @@ class RulesDataUITaxonomyVocabulary extends RulesDataUIEntity implements RulesDa
     }
     return $options;
   }
+
 }
 
 /**
@@ -598,4 +615,5 @@ class RulesDataUIListEntity extends RulesDataUIListInteger {
     }
     return $form;
   }
+
 }

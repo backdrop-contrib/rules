@@ -166,12 +166,16 @@ function rules_ui_confirm_operations($op, $rules_config) {
   switch ($op) {
     case 'enable':
       return array(t('Are you sure you want to enable the %plugin %label?', $vars), '');
+
     case 'disable':
       return array(t('Are you sure you want to disable the %plugin %label?', $vars), '');
+
     case 'revert':
       return array(t('Are you sure you want to revert the %plugin %label?', $vars), t('This action cannot be undone.'));
+
     case 'delete':
       return array(t('Are you sure you want to delete the %plugin %label?', $vars), t('This action cannot be undone.'));
+
     default:
       return FALSE;
   }
@@ -877,6 +881,7 @@ function rules_ui_element_machine_name_validate($element, &$form_state) {
 
 /**
  * FAPI callback to validate the form for editing variable info.
+ *
  * @see RulesPluginUI::getVariableForm()
  */
 function rules_ui_element_variable_form_validate($elements, &$form_state) {

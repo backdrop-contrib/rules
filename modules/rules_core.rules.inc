@@ -5,6 +5,7 @@
  * actions to invoke configured components.
  *
  * @addtogroup rules
+ *
  * @{
  */
 

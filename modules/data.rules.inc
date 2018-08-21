@@ -1,9 +1,11 @@
 <?php
 
 /**
- * @file General data related rules integration
+ * @file
+ * General data related rules integration.
  *
  * @addtogroup rules
+ *
  * @{
  */
 
@@ -22,6 +24,7 @@ function rules_data_category_info() {
 
 /**
  * Implements hook_rules_file_info() on behalf of the pseudo data module.
+ *
  * @see rules_core_modules()
  */
 function rules_data_file_info() {
@@ -30,6 +33,7 @@ function rules_data_file_info() {
 
 /**
  * Implements hook_rules_action_info() on behalf of the pseudo data module.
+ *
  * @see rules_core_modules()
  */
 function rules_data_action_info() {
@@ -489,6 +493,7 @@ function rules_data_action_data_create_options() {
 
 /**
  * Implements hook_rules_condition_info() on behalf of the pseudo data module.
+ *
  * @see rules_core_modules()
  */
 function rules_data_condition_info() {

@@ -135,6 +135,7 @@ class RulesElementMap {
     }
     return isset($this->index[$id]) ? $this->index[$id] : FALSE;
   }
+
 }
 
 /**
@@ -879,6 +880,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
       ->fetchCol('tag');
     return drupal_map_assoc($result);
   }
+
 }
 
 /**
@@ -923,6 +925,7 @@ class RulesAbstractPluginUI extends RulesPluginUI {
       form_set_error(implode('][', $e->keys), $e->getMessage());
     }
   }
+
 }
 
 /**
@@ -1078,6 +1081,7 @@ class RulesContainerPluginUI extends RulesPluginUI {
     }
     return $content;
   }
+
 }
 
 /**
@@ -1123,6 +1127,7 @@ class RulesConditionContainerUI extends RulesContainerPluginUI {
       $this->element->negate($form_values['negate']);
     }
   }
+
 }
 
 /**
@@ -1137,6 +1142,7 @@ class RulesActionContainerUI extends RulesContainerPluginUI {
     $form['elements']['#attributes']['class'][] = 'rules-action-container';
     $form['elements']['#caption'] = t('Actions');
   }
+
 }
 
 /**
@@ -1166,14 +1172,14 @@ class RulesUICategory {
    *   (optional) Whether group labels for grouping inside a category should be
    *   return. Defaults to FALSE.
    *
-   * @return string|boolean
+   * @return string|bool
    *   The group label to use, or FALSE if none can be found.
    */
   public static function getItemGroup($item_info, $in_category = FALSE) {
     if (isset($item_info['category']) && !$in_category) {
       return self::getCategory($item_info, 'label');
     }
-    else if (!empty($item_info['group'])) {
+    elseif (!empty($item_info['group'])) {
       return $item_info['group'];
     }
     return FALSE;
@@ -1255,6 +1261,7 @@ class RulesUICategory {
     }
     return $ungrouped + $sorted_groups;
   }
+
 }
 
 /**

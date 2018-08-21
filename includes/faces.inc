@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @file Extendable Object Faces API. Provided by the faces module.
+ * @file
+ * Extendable Object Faces API. Provided by the faces module.
  */
 
 if (!interface_exists('FacesExtenderInterface', FALSE)) {
@@ -20,6 +21,7 @@ if (!interface_exists('FacesExtenderInterface', FALSE)) {
      * Returns the extended object.
      */
     public function getExtendable();
+
   }
 
   /**
@@ -74,6 +76,7 @@ if (!class_exists('FacesExtender', FALSE)) {
     protected function call($name, array $args = array()) {
       return $this->object->call($name, $args);
     }
+
   }
 }
 
@@ -153,6 +156,7 @@ if (!class_exists('FacesExtendable', FALSE)) {
      * @param $interface
      *   Optional. An interface to test for. If it's omitted, all interfaces
      *   that the object can be faced as are returned.
+     *
      * @return
      *   Whether the object can face as the interface or an array of interface
      *   names.
@@ -307,6 +311,7 @@ if (!class_exists('FacesExtendable', FALSE)) {
       }
       return $this->__call($name, $args);
     }
+
   }
 
 }

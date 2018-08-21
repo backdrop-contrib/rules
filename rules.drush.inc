@@ -48,8 +48,10 @@ function rules_drush_help($section) {
   switch ($section) {
     case 'drush:rules':
       return dt("List all the rules on your site.");
+
     case 'drush:rules-enable':
       return dt("Enable/activate a rule on your site.");
+
     case 'drush:rules-disable':
       return dt("Disable/deactivate a rule on your site.");
   }

@@ -7,8 +7,7 @@
 
 // This is not necessary as the classes are autoloaded via the registry. However
 // it saves some possible update headaches until the registry is rebuilt.
-// @todo
-//   Remove for a future release.
+// @todo Remove for a future release.
 require_once dirname(__FILE__) . '/faces.inc';
 
 /**
@@ -29,6 +28,7 @@ class RulesEntityController extends EntityAPIControllerExportable {
 
   /**
    * Overridden.
+   *
    * @see DrupalDefaultEntityController::attachLoad()
    */
   protected function attachLoad(&$queried_entities, $revision_id = FALSE) {
@@ -68,6 +68,7 @@ class RulesEntityController extends EntityAPIControllerExportable {
 
   /**
    * Override to support having events and tags as conditions.
+   *
    * @see EntityAPIController::applyConditions($entities, $conditions)
    * @see rules_query_rules_config_load_multiple_alter()
    */
@@ -227,6 +228,7 @@ class RulesEntityController extends EntityAPIControllerExportable {
 
   /**
    * Overridden to support tags and events in $conditions.
+   *
    * @see EntityAPIControllerExportable::buildQuery()
    */
   protected function buildQuery($ids, $conditions = array(), $revision_id = FALSE) {
@@ -255,6 +257,7 @@ class RulesEntityController extends EntityAPIControllerExportable {
 
   /**
    * Overridden to also delete tags and events.
+   *
    * @see EntityAPIControllerExportable::delete()
    */
   public function delete($ids, DatabaseTransaction $transaction = NULL) {
@@ -305,6 +308,7 @@ class RulesEntityController extends EntityAPIControllerExportable {
 
     return $return;
   }
+
 }
 
 /**
@@ -402,12 +406,14 @@ abstract class RulesExtendable extends FacesExtendable {
    *   The info about the item as specified in the hook.
    * @param $interface
    *   The interface to check for.
+   *
    * @return
    *   Whether it supports the given interface.
    */
   public static function itemFacesAs(&$itemInfo, $interface) {
     return in_array($interface, class_implements($itemInfo['class'])) || isset($itemInfo['faces_cache'][2][$interface]);
   }
+
 }
 
 /**
@@ -439,6 +445,7 @@ abstract class RulesPlugin extends RulesExtendable {
 
   /**
    * The parent element, if any.
+   *
    * @var RulesContainerPlugin
    */
   protected $parent = NULL;
@@ -813,7 +820,6 @@ abstract class RulesPlugin extends RulesExtendable {
    * Usually settings get processed automatically, however if $this->settings
    * has been altered manually after element construction, it needs to be
    * invoked explicitly with $force set to TRUE.
-   *
    */
   public function processSettings($force = FALSE) {
     // Process if not done yet.
@@ -1344,6 +1350,7 @@ abstract class RulesPlugin extends RulesExtendable {
    * @param $php
    *   Optional. Set to TRUE to format the export using PHP arrays. By default
    *   JSON is used.
+   *
    * @return
    *   The exported configuration.
    *
@@ -1442,6 +1449,7 @@ abstract class RulesPlugin extends RulesExtendable {
   public function resetInternalCache() {
     $this->availableVariables = NULL;
   }
+
 }
 
 /**
@@ -1823,6 +1831,7 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
     }
     return $filenames[$function];
   }
+
 }
 
 /**
@@ -1837,6 +1846,7 @@ interface RulesActionInterface {
    *   Throws an exception if not all necessary arguments have been provided.
    */
   public function execute();
+
 }
 
 /**
@@ -1861,6 +1871,7 @@ interface RulesConditionInterface {
    * Returns whether the element is configured to negate the result.
    */
   public function isNegated();
+
 }
 
 interface RulesTriggerableInterface {
@@ -1875,6 +1886,7 @@ interface RulesTriggerableInterface {
    *
    * @param $event
    *   The name of the (configured) event to remove.
+   *
    * @return RulesTriggerableInterface
    *   The object instance itself, to allow chaining.
    */
@@ -2016,6 +2028,7 @@ interface RulesPluginImplInterface extends RulesPluginHandlerInterface {
    * Execute the action or condition making use of the parameters as specified.
    */
   public function execute();
+
 }
 
 /**
@@ -2028,6 +2041,7 @@ interface RulesOptimizationInterface {
    * Optimizes a rule configuration in order to speed up evaluation.
    */
   public function optimize();
+
 }
 
 /**
@@ -2061,6 +2075,7 @@ abstract class RulesPluginHandlerBase extends FacesExtender implements RulesPlug
   public function dependencies() {}
   public function form_alter(&$form, $form_state, $options) {}
   public function assertions() {}
+
 }
 
 /**
@@ -2087,6 +2102,7 @@ class RulesAbstractPluginDefaults extends RulesPluginHandlerBase implements Rule
   public function execute() {
     throw new RulesEvaluationException($this->object->getPluginName() .": Execution implementation is missing.", array(), $this->object, RulesLog::ERROR);
   }
+
 }
 
 /**
@@ -2094,13 +2110,14 @@ class RulesAbstractPluginDefaults extends RulesPluginHandlerBase implements Rule
  */
 class RulesRecursiveElementIterator extends ArrayIterator implements RecursiveIterator {
 
-   public function getChildren() {
-     return $this->current()->getIterator();
-   }
+  public function getChildren() {
+    return $this->current()->getIterator();
+  }
 
-   public function hasChildren() {
-      return $this->current() instanceof IteratorAggregate;
-   }
+  public function hasChildren() {
+    return $this->current() instanceof IteratorAggregate;
+  }
+
 }
 
 /**
@@ -2406,6 +2423,7 @@ abstract class RulesContainerPlugin extends RulesPlugin implements IteratorAggre
       $element->optimize();
     }
   }
+
 }
 
 /**
@@ -2481,6 +2499,7 @@ abstract class RulesActionContainer extends RulesContainerPlugin implements Rule
       $this->info['provides'] = $export['PROVIDES VARIABLES'];
     }
   }
+
 }
 
 /**
@@ -2563,6 +2582,7 @@ abstract class RulesConditionContainer extends RulesContainerPlugin implements R
     }
     return $vars;
   }
+
 }
 
 /**
@@ -2706,6 +2726,7 @@ class RulesLog {
   public function clear() {
     $this->log = array();
   }
+
 }
 
 /**
@@ -2757,6 +2778,7 @@ class RulesEvaluationException extends RulesException {
     // @todo fix _drupal_decode_exception() to use __toString() and override it.
     $this->message = t($this->msg, $this->args);
   }
+
 }
 
 /**
@@ -2782,6 +2804,7 @@ class RulesIntegrityException extends RulesException {
     $this->keys = is_array($element) ? $element : array();
     parent::__construct($msg);
   }
+
 }
 
 /**

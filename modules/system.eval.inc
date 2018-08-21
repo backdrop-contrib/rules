@@ -5,6 +5,7 @@
  * Contains rules integration for the system module needed during evaluation.
  *
  * @addtogroup rules
+ *
  * @{
  */
 
@@ -262,6 +263,7 @@ class RulesTokenEvaluator extends RulesDataInputEvaluator {
     }
     return $render;
   }
+
 }
 
 /**

@@ -180,4 +180,5 @@ class RulesI18nTestCase extends DrupalWebTestCase {
     $messages = drupal_get_messages();
     $this->assertEqual($messages['status'][0], "German body.\n", 'Translated text has been selected.');
   }
+
 }

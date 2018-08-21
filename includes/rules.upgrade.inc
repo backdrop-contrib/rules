@@ -299,8 +299,10 @@ function rules_upgrade_plugin_factory($element) {
   switch ($element['#type']) {
     case 'OR':
       return rules_plugin_factory('or');
+
     case 'AND':
       return rules_plugin_factory('and');
+
     default:
       return rules_plugin_factory($element['#type']);
 

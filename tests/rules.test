@@ -351,7 +351,6 @@ class RulesTestCase extends DrupalWebTestCase {
     $vars = $rule->conditions()->offsetGet(0)->availableVariables();
     $this->assertEqual(!isset($vars['node_loaded']), 'Loaded variable is not available to conditions.');
 
-
     // Test adding a variable with a custom variable name.
     $node = $this->drupalCreateNode();
     $rule = rule(array('nid' => array('type' => 'integer')));
@@ -626,7 +625,6 @@ class RulesTestCase extends DrupalWebTestCase {
     $node = $this->drupalCreateNode(array('type' => 'page', 'sticky' => 0));
     $rule->execute($node);
     $this->assertTrue($node->sticky, 'Rule with asserted metadata executed.');
-
 
     // Test asserting metadata on a derived property, i.e. not a variable.
     $rule = rule(array('node' => array('type' => 'node')));
@@ -930,6 +928,7 @@ class RulesTestCase extends DrupalWebTestCase {
     $msg = RulesTestCase::t('The variable or parameter %message is empty.', array('message'));
     $this->assertTrue(strpos($text, $msg) !== FALSE, 'Evaluation aborted due to an empty argument value.');
   }
+
 }
 
 /**
@@ -1075,6 +1074,7 @@ class RulesTestDataCase extends DrupalWebTestCase {
     $node = node_load($node->nid, NULL, TRUE);
     $this->assertEqual($node->status, 1, 'Savable non-entity has been saved.');
   }
+
 }
 
 /**
@@ -1300,6 +1300,7 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
       $this->pass('Integrity check failed: ' . $e);
     }
   }
+
 }
 
 /**
@@ -1354,7 +1355,6 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     $pos = strpos($text, RulesTestCase::t('Added the provided variable %data_created of type %log_entry', array('data_created', 'log_entry')));
     $this->assertTrue($pos !== FALSE, 'Data of type log entry has been created.');
 
-
     // Test variable_add action.
     $action = rules_action('variable_add', array(
       'type' => 'text_formatted',
@@ -1368,7 +1368,6 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     $text = RulesLog::logger()->render();
     $pos = strpos($text, RulesTestCase::t('Added the provided variable %variable_added of type %text_formatted', array('variable_added', 'text_formatted')));
     $this->assertTrue($pos !== FALSE, 'Data of type text formatted has been created.');
-
 
     // Test using the list actions.
     $rule = rule(array(
@@ -1398,7 +1397,6 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     $node = $this->drupalCreateNode(array('title' => 'foo'));
     $rule->execute($node);
     $this->assertEqual($node->title, 'bar', "Data comparison using IN operation evaluates to TRUE.");
-
 
     // Test Condition: Data is empty.
     $rule = rule(array('node' => array('type' => 'node')));
@@ -1585,8 +1583,6 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     $this->assertTrue($pos !== FALSE, 'Data has been fetched, saved and deleted.');
     //debug(RulesLog::logger()->render());
 
-
-
     $node = entity_property_values_create_entity('node', array(
       'type' => 'article',
       'author' => $user,
@@ -1621,7 +1617,6 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     $rule->execute(entity_metadata_wrapper('node', $node));
 
     $this->assertEqual(entity_metadata_wrapper('node', $node->nid)->title->value(), 'bar', 'Entity is of type condition correctly asserts the entity type.');
-
 
     // Test the entity_query action.
     $node = $this->drupalCreateNode(array('type' => 'page', 'title' => 'foo2'));
@@ -1764,7 +1759,6 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     $this->assertTrue($return, 'Condition determines node is of type page.');
     $return = rules_condition('node_is_of_type', array('type' => array('article')))->execute($node);
     $this->assertFalse($return, 'Condition determines node is not of type article.');
-
 
     // Test auto saving of a new node after it has been inserted into the DB.
     $rule = rules_reaction_rule();
@@ -1970,7 +1964,6 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     $this->drupalGet('node/' . $node->nid);
     $this->assertEqual($this->getUrl(), url('user', array('absolute' => TRUE, 'fragment' => 'fragment')), 'Redirect has been issued.');
 
-
     // Test sending mail.
     $settings = array('to' => 'mail@example.com', 'subject' => 'subject', 'message' => 'hello.');
     rules_action('mail', $settings)->execute();
@@ -2032,6 +2025,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
 
     RulesLog::logger()->checkLog();
   }
+
 }
 
 /**
@@ -2099,6 +2093,7 @@ class RulesEventDispatcherTestCase extends DrupalWebTestCase {
       $this->assertEqual($key !== 5, $handler->isWatching());
     }
   }
+
 }
 
 /**

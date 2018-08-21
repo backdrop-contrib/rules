@@ -4,7 +4,9 @@
  * @file
  * An extended subclass for component filtering.
  */
+
 class rules_scheduler_views_filter extends views_handler_filter_in_operator {
+
   public function get_value_options() {
     if (!isset($this->value_options)) {
       $this->value_title = t('Component');

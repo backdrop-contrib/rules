@@ -5,9 +5,9 @@
  *   directly in the module providing rules integration instead.
  *
  * @addtogroup rules
+ *
  * @{
  */
-
 
 /**
  * Gets an unchanged entity that doesn't contain any recent changes. This
@@ -41,10 +41,12 @@ function rules_entity_view($entity, $type, $view_mode, $langcode) {
       rules_invoke_event('comment_view--' . $entity->node_type, $entity, $view_mode);
       rules_invoke_event('comment_view', $entity, $view_mode);
       break;
+
     case 'node':
       rules_invoke_event('node_view--' . $entity->type, $entity, $view_mode);
       rules_invoke_event('node_view', $entity, $view_mode);
       break;
+
     case 'user':
       rules_invoke_event('user_view', $entity, $view_mode);
       break;
@@ -60,14 +62,17 @@ function rules_entity_presave($entity, $type) {
       rules_invoke_event('comment_presave--' . $entity->node_type, $entity);
       rules_invoke_event('comment_presave', $entity);
       break;
+
     case 'node':
       rules_invoke_event('node_presave--' . $entity->type, $entity);
       rules_invoke_event('node_presave', $entity);
       break;
+
     case 'taxonomy_term':
       rules_invoke_event('taxonomy_term_presave--' . $entity->vocabulary_machine_name, $entity);
       rules_invoke_event('taxonomy_term_presave', $entity);
       break;
+
     case 'taxonomy_vocabulary':
     case 'user':
       rules_invoke_event($type . '_presave', $entity);
@@ -84,14 +89,17 @@ function rules_entity_update($entity, $type) {
       rules_invoke_event('comment_update--' . $entity->node_type, $entity);
       rules_invoke_event('comment_update', $entity);
       break;
+
     case 'node':
       rules_invoke_event('node_update--' . $entity->type, $entity);
       rules_invoke_event('node_update', $entity);
       break;
+
     case 'taxonomy_term':
       rules_invoke_event('taxonomy_term_update--' . $entity->vocabulary_machine_name, $entity);
       rules_invoke_event('taxonomy_term_update', $entity);
       break;
+
     case 'taxonomy_vocabulary':
     case 'user':
       rules_invoke_event($type . '_update', $entity);
@@ -108,14 +116,17 @@ function rules_entity_insert($entity, $type) {
       rules_invoke_event('comment_insert--' . $entity->node_type, $entity);
       rules_invoke_event('comment_insert', $entity);
       break;
+
     case 'node':
       rules_invoke_event('node_insert--' . $entity->type, $entity);
       rules_invoke_event('node_insert', $entity);
       break;
+
     case 'taxonomy_term':
       rules_invoke_event('taxonomy_term_insert--' . $entity->vocabulary_machine_name, $entity);
       rules_invoke_event('taxonomy_term_insert', $entity);
       break;
+
     case 'taxonomy_vocabulary':
     case 'user':
       rules_invoke_event($type . '_insert', $entity);
@@ -132,14 +143,17 @@ function rules_entity_delete($entity, $type) {
       rules_invoke_event('comment_delete--' . $entity->node_type, $entity);
       rules_invoke_event('comment_delete', $entity);
       break;
+
     case 'node':
       rules_invoke_event('node_delete--' . $entity->type, $entity);
       rules_invoke_event('node_delete', $entity);
       break;
+
     case 'taxonomy_term':
       rules_invoke_event('taxonomy_term_delete--' . $entity->vocabulary_machine_name, $entity);
       rules_invoke_event('taxonomy_term_delete', $entity);
       break;
+
     case 'taxonomy_vocabulary':
     case 'user':
       rules_invoke_event($type . '_delete', $entity);

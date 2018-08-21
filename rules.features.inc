@@ -6,7 +6,6 @@
  * integration provided by the Entity API.
  */
 
-
 /**
  * Controller handling the features integration.
  */
@@ -42,6 +41,7 @@ class RulesFeaturesController extends EntityDefaultFeaturesController {
     }
     return $pipe;
   }
+
 }
 
 /**
@@ -69,6 +69,7 @@ interface RulesPluginFeaturesIntegrationInterface {
    * Allows customizing the features export for a given rule element.
    */
   public function features_export(&$export, &$pipe, $module_name = '');
+
 }
 
 /**

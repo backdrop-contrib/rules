@@ -5,7 +5,6 @@
  * Rules i18n integration.
  */
 
-
 /**
  * Implements hook_menu().
  */

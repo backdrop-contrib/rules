@@ -4,6 +4,7 @@
  * @file rules integration for the comment module
  *
  * @addtogroup rules
+ *
  * @{
  */
 
@@ -76,6 +77,7 @@ class RulesCommentEventHandler extends RulesEventHandlerEntityBundle {
   protected function getBundlePropertyLabel() {
     return t('type');
   }
+
 }
 
 /**

@@ -4,7 +4,6 @@
  * @file Contains plugin info and implementations not needed for rule evaluation.
  */
 
-
 /**
  * Implements a rules action.
  */
@@ -69,6 +68,7 @@ class RulesAction extends RulesAbstractPlugin implements RulesActionInterface {
       }
     }
   }
+
 }
 
 /**
@@ -134,6 +134,7 @@ class RulesCondition extends RulesAbstractPlugin implements RulesConditionInterf
     $label = parent::label();
     return $this->negate ? t('NOT @condition', array('@condition' => $label)) : $label;
   }
+
 }
 
 /**
@@ -340,6 +341,7 @@ class Rule extends RulesActionContainer {
     parent::resetInternalCache();
     $this->conditions->resetInternalCache();
   }
+
 }
 
 /**
@@ -516,6 +518,7 @@ class RulesReactionRule extends Rule implements RulesTriggerableInterface {
     // No need to keep event settings for evaluation.
     $this->eventSettings = array();
   }
+
 }
 
 /**
@@ -539,6 +542,7 @@ class RulesAnd extends RulesConditionContainer {
   public function label() {
     return !empty($this->label) ? $this->label : ($this->negate ? t('NOT AND') : t('AND'));
   }
+
 }
 
 /**
@@ -580,6 +584,7 @@ class RulesOr extends RulesConditionContainer {
     }
     return $vars;
   }
+
 }
 
 /**
@@ -693,6 +698,7 @@ class RulesLoop extends RulesActionContainer {
       $this->settings['item:label'] = reset($export['ITEM']);
     }
   }
+
 }
 
 /**
@@ -725,6 +731,7 @@ class RulesRuleSet extends RulesActionContainer {
   protected function importChildren($export, $key = 'RULES') {
     parent::importChildren($export, $key);
   }
+
 }
 
 /**
@@ -824,4 +831,5 @@ class RulesEventSet extends RulesRuleSet {
   public function save($name = NULL, $module = 'rules') {
     return FALSE;
   }
+
 }

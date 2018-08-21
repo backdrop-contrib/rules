@@ -321,4 +321,5 @@ class RulesUIController {
     $row[] = l(t('export'), RulesPluginUI::path($name, 'export'), array('attributes' => array('class' => array('export', 'action'))));
     return $row;
   }
+
 }

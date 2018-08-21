@@ -7,7 +7,6 @@
  * Drupal manner.
  */
 
-
 /**
  * @defgroup rules Rules module integrations.
  *
@@ -259,6 +258,7 @@ function hook_rules_directory() {
  *   The callback gets arguments passed as described as parameter in
  *   hook_rules_action_info() as well as an array containing the action's
  *   configuration settings.
+ *
  * @return
  *   The action may return an array containing parameter or provided variables
  *   with their names as key. This is used update the value of a parameter or to
@@ -412,7 +412,6 @@ function hook_rules_event_info() {
  * its properties and CRUD functions by integrating with the entity metadata
  * module.
  * For a list of data types defined by rules see rules_rules_core_data_info().
- *
  *
  * @return
  *   An array of information about the module's provided data types. The array
@@ -985,6 +984,7 @@ function hook_rules_event_set_alter($event_name, RulesEventSet $event_set) {
  * @param $element
  *   The element array of a configured condition or action which is to be
  *   upgraded.
+ *
  * @return
  *   The name of the action or condition which should be used.
  */
@@ -1080,7 +1080,8 @@ function hook_rules_ui_menu_alter(&$items, $base_path, $base_count) {
  * @param $account
  *   (optional) The user to check for. If no account is passed, access is
  *   determined for the current user.
- * @return boolean
+ *
+ * @return bool
  *   Return TRUE to grant access, FALSE to explicitly deny access. Return NULL
  *   or nothing to not affect the operation.
  *   Access is granted as soon as a module grants access and no one denies

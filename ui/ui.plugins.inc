@@ -77,6 +77,7 @@ class RulesRuleUI extends RulesActionContainerUI {
     $ops['#links'] = array_intersect_key($ops['#links'], array_flip(array('edit', 'delete')));
     return $ops;
   }
+
 }
 
 /**
@@ -170,6 +171,7 @@ class RulesReactionRuleUI extends RulesRuleUI {
     $this->rule->active = $form_values['active'];
     $this->rule->weight = $form_values['weight'];
   }
+
 }
 
 /**
@@ -186,6 +188,7 @@ class RulesRuleSetUI extends RulesActionContainerUI {
     $form['elements']['#attributes']['class'][] = 'rules-rule-set';
     $form['elements']['#caption'] = t('Rules');
   }
+
 }
 
 /**
@@ -251,4 +254,5 @@ class RulesLoopUI extends RulesActionContainerUI {
     );
     return $content;
   }
+
 }

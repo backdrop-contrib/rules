@@ -1,14 +1,17 @@
 <?php
 
 /**
- * @file General entity related rules integration
+ * @file
+ * General entity related rules integration.
  *
  * @addtogroup rules
+ *
  * @{
  */
 
 /**
  * Implements hook_rules_file_info() on behalf of the entity module.
+ *
  * @see rules_core_modules()
  */
 function rules_entity_file_info() {
@@ -30,6 +33,7 @@ function rules_entity_category_info() {
 
 /**
  * Implements hook_rules_action_info() on behalf of the entity module.
+ *
  * @see rules_core_modules()
  */
 function rules_entity_action_info() {
@@ -322,6 +326,7 @@ function rules_entity_action_access($type, $name) {
 
 /**
  * Implements hook_rules_condition_info() on behalf of the entity module.
+ *
  * @see rules_core_modules()
  */
 function rules_entity_condition_info() {
@@ -569,6 +574,7 @@ function rules_condition_entity_is_of_bundle_form_alter(&$form, &$form_state, $o
       unset($form['parameter']['bundle']);
       unset($form['submit']);
       break;
+
     case 3:
       if (($info = $element->getArgumentInfo('entity')) && $info['type'] != 'entity') {
         // Hide the entity type parameter if not needed.
