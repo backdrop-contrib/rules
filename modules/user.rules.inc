@@ -174,7 +174,7 @@ function rules_user_condition_operations() {
  */
 function rules_user_action_info() {
   $defaults = array(
-   'parameter' => array(
+    'parameter' => array(
       'account' => array(
         'type' => 'user',
         'label' => t('User'),
@@ -199,7 +199,7 @@ function rules_user_action_info() {
     'base' => 'rules_action_user_remove_role',
   );
   $defaults = array(
-   'parameter' => array(
+    'parameter' => array(
       'account' => array(
         'type' => 'user',
         'label' => t('User'),

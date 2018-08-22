@@ -13,15 +13,15 @@ interface RulesDataDirectInputFormInterface {
   /**
    * Constructs the direct input form.
    *
-   * @return Array
-   *  The direct input form.
+   * @return array
+   *   The direct input form.
    */
   public static function inputForm($name, $info, $settings, RulesPlugin $element);
 
   /**
    * Render the configured value.
    *
-   * @return Array
+   * @return array
    *   A renderable array.
    */
   public static function render($value);

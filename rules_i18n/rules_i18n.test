@@ -162,9 +162,9 @@ class RulesI18nTestCase extends DrupalWebTestCase {
 
     $set = rules_action_set(array('node' => array('type' => 'node')));
     $set->action('rules_i18n_select', array(
-        'data:select' => 'node:body:value',
-        'language' => 'de',
-        'data_translated:var' => 'body',
+      'data:select' => 'node:body:value',
+      'language' => 'de',
+      'data_translated:var' => 'body',
     ));
     $set->action('drupal_message', array('message:select' => 'body'));
     $set->save();

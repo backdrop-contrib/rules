@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @file Rules - Installation file.
+ * @file
+ * Rules - Installation file.
  */
 
 /**
@@ -54,7 +55,7 @@ function rules_schema() {
         'description' => 'The label of the configuration.',
         'default' => 'unlabeled',
       ),
-     'plugin' => array(
+      'plugin' => array(
         'type' => 'varchar',
         'length' => 127,
         'not null' => TRUE,
@@ -222,7 +223,7 @@ function rules_update_7200() {
         'description' => 'The label of the configuration.',
         'default' => 'unlabeled',
       ),
-     'plugin' => array(
+      'plugin' => array(
         'type' => 'varchar',
         'length' => 127,
         'not null' => TRUE,
@@ -492,7 +493,7 @@ function rules_update_7212() {
  * Recover the "owner" property for broken configurations.
  */
 function rules_update_7213() {
-  $rows= db_select('rules_config', 'c')
+  $rows = db_select('rules_config', 'c')
     ->fields('c')
     ->condition('status', ENTITY_OVERRIDDEN)
     ->condition('owner', 'rules', '<>')

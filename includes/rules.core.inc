@@ -203,10 +203,10 @@ class RulesEntityController extends EntityAPIControllerExportable {
     foreach ($rules_config->events() as $event) {
       db_insert('rules_trigger')
         ->fields(array(
-        'id' => $rules_config->id,
-        'event' => $event,
-      ))
-      ->execute();
+          'id' => $rules_config->id,
+          'event' => $event,
+        ))
+        ->execute();
     }
   }
 
@@ -218,10 +218,10 @@ class RulesEntityController extends EntityAPIControllerExportable {
       foreach ($rules_config->dependencies as $dependency) {
         db_insert('rules_dependencies')
           ->fields(array(
-          'id' => $rules_config->id,
-          'module' => $dependency,
-        ))
-        ->execute();
+            'id' => $rules_config->id,
+            'module' => $dependency,
+          ))
+          ->execute();
       }
     }
   }
@@ -1685,7 +1685,7 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
   }
 
   public function getPluginName() {
-    return $this->itemName ." ". $this->elementName;
+    return $this->itemName . " " . $this->elementName;
   }
 
   /**
@@ -1705,8 +1705,8 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
     self::includeFiles();
 
     // Get the plugin's own info data.
-    $cache[$this->itemName .'_info'] = rules_fetch_data($this->itemName .'_info');
-    foreach ($cache[$this->itemName .'_info'] as $name => &$info) {
+    $cache[$this->itemName . '_info'] = rules_fetch_data($this->itemName . '_info');
+    foreach ($cache[$this->itemName . '_info'] as $name => &$info) {
       $info += array(
         'parameter' => isset($info['arguments']) ? $info['arguments'] : array(),
         'provides' => isset($info['new variables']) ? $info['new variables'] : array(),
@@ -1804,7 +1804,7 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
    * $module.rules.inc file isn't added.
    */
   protected static function getIncludeFiles($module, $all = TRUE) {
-    $files = (array)module_invoke($module, 'rules_file_info');
+    $files = (array) module_invoke($module, 'rules_file_info');
     // Automatically add "$module.rules_forms.inc" and "$module.rules.inc".
     $files[] = $module . '.rules_forms';
     if ($all) {
@@ -2100,7 +2100,7 @@ abstract class RulesActionHandlerBase extends RulesPluginHandlerBase implements 
 class RulesAbstractPluginDefaults extends RulesPluginHandlerBase implements RulesPluginImplInterface {
 
   public function execute() {
-    throw new RulesEvaluationException($this->object->getPluginName() .": Execution implementation is missing.", array(), $this->object, RulesLog::ERROR);
+    throw new RulesEvaluationException($this->object->getPluginName() . ": Execution implementation is missing.", array(), $this->object, RulesLog::ERROR);
   }
 
 }
@@ -2699,11 +2699,11 @@ class RulesLog {
         $output[] = theme('rules_debug_element', $vars);
       }
       else {
-        $formatted_diff = round(($this->log[$line][3] - $startTime) * 1000, 3) .' ms';
-        $msg = $formatted_diff .' '. t($this->log[$line][0], $this->log[$line][1]);
+        $formatted_diff = round(($this->log[$line][3] - $startTime) * 1000, 3) . ' ms';
+        $msg = $formatted_diff . ' ' . t($this->log[$line][0], $this->log[$line][1]);
         if ($this->log[$line][2] >= RulesLog::WARN) {
           $level = $this->log[$line][2] == RulesLog::WARN ? 'warn' : 'error';
-          $msg = '<span class="rules-debug-' . $level . '">'. $msg .'</span>';
+          $msg = '<span class="rules-debug-' . $level . '">' . $msg . '</span>';
         }
         if (isset($this->log[$line][5]) && !isset($this->log[$line][4])) {
           $msg .= ' [' . l('edit', $this->log[$line][5]) . ']';

@@ -182,7 +182,7 @@ class RulesUIController {
    *     currently set RulesPluginUI::$basePath. If no base path has been set
    *     yet, the current path is used by default.
    *
-   * @return Array
+   * @return array
    *   A renderable array.
    */
   public function overviewTable($conditions = array(), $options = array()) {
@@ -199,7 +199,7 @@ class RulesUIController {
     if (!empty($options['base path'])) {
       RulesPluginUI::$basePath = $options['base path'];
     }
-    else if (!isset(RulesPluginUI::$basePath)) {
+    elseif (!isset(RulesPluginUI::$basePath)) {
       // Default to the current path, only if no path has been set yet.
       RulesPluginUI::$basePath = current_path();
     }
@@ -279,9 +279,9 @@ class RulesUIController {
 
     // Add operations depending on the options and the exportable status.
     if (!$config->hasStatus(ENTITY_FIXED)) {
-      $row[] =  l(t('edit'), RulesPluginUI::path($name), array('attributes' => array('class' => array('edit', 'action'))));
+      $row[] = l(t('edit'), RulesPluginUI::path($name), array('attributes' => array('class' => array('edit', 'action'))));
       if (module_exists('rules_i18n')) {
-        $row[] =  l(t('translate'), RulesPluginUI::path($name, 'translate'), array('attributes' => array('class' => array('translate', 'action'))));
+        $row[] = l(t('translate'), RulesPluginUI::path($name, 'translate'), array('attributes' => array('class' => array('translate', 'action'))));
       }
     }
     else {

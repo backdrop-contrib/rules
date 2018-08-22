@@ -186,7 +186,7 @@ class RulesTestCase extends DrupalWebTestCase {
       $this->fail("Execution hasn't created an exception.");
     }
     catch (RulesEvaluationException $e) {
-      $this->pass("RulesEvaluationException was thrown: ". $e);
+      $this->pass("RulesEvaluationException was thrown: " . $e);
     }
   }
 
@@ -467,7 +467,7 @@ class RulesTestCase extends DrupalWebTestCase {
       $this->fail("Validation hasn't created an exception.");
     }
     catch (RulesIntegrityException $e) {
-      $this->pass("Validation error correctly detected: ". $e);
+      $this->pass("Validation error correctly detected: " . $e);
     }
 
     // Test auto creation of nested data structures, like the node body field.
@@ -1061,7 +1061,7 @@ class RulesTestDataCase extends DrupalWebTestCase {
       $this->fail("Loading hasn't created an exception.");
     }
     catch (EntityMetadataWrapperException $e) {
-      $this->pass("Exception was thrown: ". $e->getMessage());
+      $this->pass("Exception was thrown: " . $e->getMessage());
     }
 
     // Test saving a savable custom, identifiable wrapper.
@@ -1744,15 +1744,15 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
       rules_action($action1)->execute($node);
 
       $node = node_load($node->nid, NULL, TRUE);
-      $this->assertFalse($node->$property, 'Action has permanently disabled node '. $property);
+      $this->assertFalse($node->$property, 'Action has permanently disabled node ' . $property);
       $return = rules_condition($condition)->execute($node);
-      $this->assertFalse($return, 'Condition determines node '. $property . ' is disabled.');
+      $this->assertFalse($return, 'Condition determines node ' . $property . ' is disabled.');
 
       rules_action($action2)->execute($node);
       $node = node_load($node->nid, NULL, TRUE);
-      $this->assertTrue($node->$property, 'Action has permanently enabled node '. $property);
+      $this->assertTrue($node->$property, 'Action has permanently enabled node ' . $property);
       $return = rules_condition($condition)->execute($node);
-      $this->assertTrue($return, 'Condition determines node '. $property . ' is enabled.');
+      $this->assertTrue($return, 'Condition determines node ' . $property . ' is enabled.');
     }
 
     $return = rules_condition('node_is_of_type', array('type' => array('page', 'article')))->execute($node);
@@ -1843,7 +1843,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     $rule->action('drupal_message', array(
       'message:select' => 'var_name:title',
       'message:process' => array(
-        'php' => array('code' => 'return "Title: $value";')
+        'php' => array('code' => 'return "Title: $value";'),
       ),
     ));
     $rule->execute($node);

@@ -207,7 +207,7 @@ function rules_scheduler_action_delete_validate($element) {
  * Help for the cancel action.
  */
 function rules_scheduler_action_delete_help() {
-  return t('This action allows you to delete scheduled tasks that are waiting for future execution.') .' '. t('They can be addressed by an identifier or by the component name, whereas if both are specified only tasks fulfilling both requirements will be deleted.');
+  return t('This action allows you to delete scheduled tasks that are waiting for future execution.') . ' ' . t('They can be addressed by an identifier or by the component name, whereas if both are specified only tasks fulfilling both requirements will be deleted.');
 }
 
 /**

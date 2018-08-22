@@ -216,7 +216,7 @@ function rules_action_set($variables = array(), $provides = array()) {
  *   A priority as defined by the RulesLog class.
  * @param RulesPlugin $element
  *  (optional) The RulesElement causing the log entry.
- * @param boolean $scope
+ * @param bool $scope
  *  (optional) This may be used to denote the beginning (TRUE) or the end
  *  (FALSE) of a new execution scope.
  */
@@ -283,7 +283,7 @@ function rules_fetch_data($hook) {
     if (isset($discover[$hook])) {
       $data[$hook] += rules_discover_plugins($discover[$hook]);
     }
-    drupal_alter('rules_'. $hook, $data[$hook]);
+    drupal_alter('rules_' . $hook, $data[$hook]);
   }
   return $data[$hook];
 }

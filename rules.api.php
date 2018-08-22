@@ -132,10 +132,10 @@
  *  The callback implementations for those interfaces may reside in any file
  *  specified in hook_rules_file_info().
  *
- *  @see hook_rules_file_info()
- *  @see rules_action_execution_callback()
- *  @see hook_rules_plugin_info()
- *  @see RulesPluginImplInterface
+ * @see hook_rules_file_info()
+ * @see rules_action_execution_callback()
+ * @see hook_rules_plugin_info()
+ * @see RulesPluginImplInterface
  */
 function hook_rules_action_info() {
   return array(
@@ -364,7 +364,7 @@ function hook_rules_condition_info() {
  *       Note that for lazy-loading entities just the entity id may be passed
  *       as variable value, so a handler is not necessary in that case.
  *
- *  @see rules_invoke_event()
+ * @see rules_invoke_event()
  */
 function hook_rules_event_info() {
   $items = array(
@@ -469,9 +469,9 @@ function hook_rules_event_info() {
  *   - cleaning callback: (optional) A callback that input evaluators may use
  *     to clean inserted replacements; e.g. this is used by the token evaluator.
  *
- *  @see entity_metadata_wrapper()
- *  @see hook_rules_data_info_alter()
- *  @see rules_rules_core_data_info()
+ * @see entity_metadata_wrapper()
+ * @see hook_rules_data_info_alter()
+ * @see rules_rules_core_data_info()
  */
 function hook_rules_data_info() {
   return array(
@@ -542,8 +542,8 @@ function hook_rules_data_info() {
  *     of the 'or' plugin. Note that only uppercase values are allowed, as
  *     lower case values are treated as action or condition exports.
  *
- *  @see class RulesPlugin
- *  @see hook_rules_plugin_info_alter()
+ * @see class RulesPlugin
+ * @see hook_rules_plugin_info_alter()
  */
 function hook_rules_plugin_info() {
   return array(
@@ -596,8 +596,8 @@ function hook_rules_plugin_info() {
  *     used. Defaults to 'text'. Multiple data types may be specified using an
  *     array.
  *
- *  @see class RulesDataInputEvaluator
- *  @see hook_rules_evaluator_info_alter()
+ * @see class RulesDataInputEvaluator
+ * @see hook_rules_evaluator_info_alter()
  */
 function hook_rules_evaluator_info() {
   return array(
@@ -605,7 +605,7 @@ function hook_rules_evaluator_info() {
       'class' => 'RulesTokenEvaluator',
       'type' => array('text', 'uri'),
       'weight' => 0,
-     ),
+    ),
   );
 }
 
@@ -635,8 +635,8 @@ function hook_rules_evaluator_info() {
  *     used. Defaults to 'text'. Multiple data types may be specified using an
  *     array.
  *
- *  @see class RulesDataProcessor
- *  @see hook_rules_data_processor_info_alter()
+ * @see class RulesDataProcessor
+ * @see hook_rules_data_processor_info_alter()
  */
 function hook_rules_data_processor_info() {
   return array(

@@ -44,7 +44,7 @@ function rules_scheduler_form($form, &$form_state) {
   $form['delete_by_config'] = array(
     '#type' => 'fieldset',
     '#title' => t('Delete tasks by component name'),
-    '#disabled' => empty($config_options)
+    '#disabled' => empty($config_options),
   );
   $form['delete_by_config']['config'] = array(
     '#title' => t('Component'),
@@ -57,7 +57,7 @@ function rules_scheduler_form($form, &$form_state) {
     '#type' => 'submit',
     '#value' => t('Delete tasks'),
     '#submit' => array('rules_scheduler_form_delete_by_config_submit'),
-    );
+  );
   return $form;
 }
 

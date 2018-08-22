@@ -125,7 +125,7 @@ function rules_php_eval($code, $arguments = array()) {
   extract($arguments);
 
   ob_start();
-  print eval('?>'. $code);
+  print eval('?>' . $code);
   $output = ob_get_contents();
   ob_end_clean();
 
@@ -139,7 +139,7 @@ function rules_php_eval($code, $arguments = array()) {
  * @param $code
  *   The PHP code to run, without <?php ?>
  * @param $arguments
- * Array containing variables to be extracted to the code.
+ *   Array containing variables to be extracted to the code.
  *
  * @return
  *   The return value of the evaled code.

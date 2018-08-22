@@ -29,7 +29,7 @@ function rules_upgrade_form($form, &$form_state) {
     '#suffix' => '</p>',
     '#markup' => t('This form allows you to convert rules or rule sets from Rules 1.x to Rules 2.x.') . ' ' .
       t('In order to convert a rule or rule set make sure you have all dependent modules installed and upgraded, i.e. modules which provide Rules integration that has been used in your rules or rule sets. In addition those modules may need to implement some Rules specific update hooks for the conversion to properly work.') . ' ' .
-      t('After conversion, the old rules and rule sets will stay in the database until you manually delete them. That way you can make sure the conversion has gone right before you delete the old rules and rule sets.')
+      t('After conversion, the old rules and rule sets will stay in the database until you manually delete them. That way you can make sure the conversion has gone right before you delete the old rules and rule sets.'),
   );
 
   $option_rules = $option_sets = array();
@@ -51,7 +51,7 @@ function rules_upgrade_form($form, &$form_state) {
     $form['clear'] = array(
       '#prefix' => '<p>',
       '#suffix' => '</p>',
-      '#markup' => t('Once you have successfully converted your configuration, you can clean up your database and <a href="!url">delete</a> all Rules 1.x configurations.', array('!url' => url('admin/config/workflow/rules/upgrade/clear')))
+      '#markup' => t('Once you have successfully converted your configuration, you can clean up your database and <a href="!url">delete</a> all Rules 1.x configurations.', array('!url' => url('admin/config/workflow/rules/upgrade/clear'))),
     );
   }
 
@@ -72,8 +72,8 @@ function rules_upgrade_form($form, &$form_state) {
     '#type' => 'radios',
     '#title' => t('Method'),
     '#options' => array(
-       'export' => t('Convert configuration and export it.'),
-       'save' => t('Convert configuration and save it.'),
+      'export' => t('Convert configuration and export it.'),
+      'save' => t('Convert configuration and save it.'),
     ),
     '#default_value' => 'export',
   );
@@ -81,7 +81,7 @@ function rules_upgrade_form($form, &$form_state) {
   $form['actions']['convert'] = array(
     '#type' => 'submit',
     '#value' => t('Convert'),
-    '#disabled' => !db_table_exists('rules_rules')
+    '#disabled' => !db_table_exists('rules_rules'),
   );
   return $form;
 }
@@ -206,7 +206,7 @@ function rules_upgrade_convert_rule_set($name, $cfg_old) {
   }
 
   // Add in all rules of the set.
-  foreach(_rules_upgrade_fetch_all_rules() as $rule_name => $rule) {
+  foreach (_rules_upgrade_fetch_all_rules() as $rule_name => $rule) {
     if ($rule['#set'] == $name) {
       drupal_set_message(' >> ' . t('Converting %plugin %name...', array('%plugin' => t('rule'), '%name' => $rule_name . ': ' . $rule['#label'])));
       $new_rule = rules_upgrade_plugin_factory($rule);
@@ -268,10 +268,10 @@ function rules_upgrade_convert_element(array $element, RulesPlugin $target) {
 
   // Invoke action/condition specific hooks and a general one.
   if (($element['#type'] == 'action' || $element['#type'] == 'condition')) {
-    if (function_exists($function = $element['#name'] .'_upgrade')) {
+    if (function_exists($function = $element['#name'] . '_upgrade')) {
       $element_name = $function($element, $target);
     }
-    elseif (isset($element['#info']['base']) && function_exists($function = $element['#info']['base'] .'_upgrade')) {
+    elseif (isset($element['#info']['base']) && function_exists($function = $element['#info']['base'] . '_upgrade')) {
       $element_name = $function($element, $target);
     }
   }
@@ -331,7 +331,7 @@ function rules_upgrade_plugin_factory($element) {
         }
 
         // Call the upgrade callback if one has been defined.
-        if (function_exists($function = $element['#name'] .'_upgrade_map_name') || (isset($element['#info']['base']) && function_exists($function = $element['#info']['base'] .'_upgrade_map_name'))) {
+        if (function_exists($function = $element['#name'] . '_upgrade_map_name') || (isset($element['#info']['base']) && function_exists($function = $element['#info']['base'] . '_upgrade_map_name'))) {
           $element_name = $function($element);
         }
         if (!isset($element_name)) {

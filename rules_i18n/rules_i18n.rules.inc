@@ -115,7 +115,7 @@ function rules_i18n_rules_evaluator_info() {
       'type' => array('text', 'list<text>', 'token', 'list<token>'),
       // Be sure to translate after doing PHP evaluation.
       'weight' => -8,
-     ),
+    ),
   );
 }
 

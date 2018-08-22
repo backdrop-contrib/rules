@@ -37,8 +37,7 @@ interface RulesPluginUIInterface {
    *    - 'restrict events': Optionally set an array of event names to restrict
    *      the events that are available for adding.
    *
-   *  @todo
-   *    Implement the 'restrict *' options.
+   * @todo Implement the 'restrict *' options.
    */
   public function form(&$form, &$form_state, $options = array());
 
@@ -713,7 +712,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
       $element = array();
       if (!empty($this->element->settings[$name . ':select'])) {
         $element['content'] = array(
-         '#markup' => '[' . $this->element->settings[$name . ':select'] . ']',
+          '#markup' => '[' . $this->element->settings[$name . ':select'] . ']',
         );
       }
       elseif (isset($this->element->settings[$name]) && (!isset($parameter['default value']) || $parameter['default value'] != $this->element->settings[$name])) {
@@ -1136,7 +1135,7 @@ class RulesConditionContainerUI extends RulesContainerPluginUI {
 class RulesActionContainerUI extends RulesContainerPluginUI {
 
   public function form(&$form, &$form_state, $options = array(), $iterator = NULL) {
-    parent::form($form,  $form_state, $options, $iterator);
+    parent::form($form, $form_state, $options, $iterator);
     // Add the add-* operation links.
     $form['elements']['#add'] = self::addOperations();
     $form['elements']['#attributes']['class'][] = 'rules-action-container';

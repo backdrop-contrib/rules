@@ -103,7 +103,7 @@ function rules_scheduler_menu() {
     'access arguments' => array('administer rules'),
     'file' => 'rules_scheduler.admin.inc',
   );
-  $items[RULES_SCHEDULER_PATH .'/%rules_scheduler_task/delete'] = array(
+  $items[RULES_SCHEDULER_PATH . '/%rules_scheduler_task/delete'] = array(
     'title' => 'Delete a scheduled task',
     'type' => MENU_CALLBACK,
     'page callback' => 'drupal_get_form',
@@ -166,7 +166,7 @@ function rules_scheduler_schedule_task($task) {
 /**
  * Queue tasks that are ready for execution.
  *
- * @return boolean
+ * @return bool
  *   Returns TRUE if any queue items where created, otherwise FALSE.
  */
 function rules_scheduler_queue_tasks() {
@@ -209,6 +209,6 @@ function rules_scheduler_rules_config_delete($rules_config) {
 function rules_scheduler_views_api() {
   return array(
     'api' => '3.0-alpha1',
-    'path' => drupal_get_path('module', 'rules_scheduler') .'/includes',
+    'path' => drupal_get_path('module', 'rules_scheduler') . '/includes',
   );
 }

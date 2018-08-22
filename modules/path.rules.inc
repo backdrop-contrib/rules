@@ -27,13 +27,13 @@ function rules_path_action_info() {
         'source' => array(
           'type' => 'text',
           'label' => t('Existing system path'),
-          'description' => t('Specifies the existing path you wish to alias. For example: node/28, forum/1, taxonomy/term/1+2.') .' '. t('Leave it empty to delete URL aliases pointing to the given path alias.'),
+          'description' => t('Specifies the existing path you wish to alias. For example: node/28, forum/1, taxonomy/term/1+2.') . ' ' . t('Leave it empty to delete URL aliases pointing to the given path alias.'),
           'optional' => TRUE,
         ),
         'alias' => array(
           'type' => 'text',
           'label' => t('URL alias'),
-          'description' => t('Specify an alternative path by which this data can be accessed. For example, "about" for an about page. Use a relative path and do not add a trailing slash.') .' '. t('Leave it empty to delete URL aliases pointing to the given system path.'),
+          'description' => t('Specify an alternative path by which this data can be accessed. For example, "about" for an about page. Use a relative path and do not add a trailing slash.') . ' ' . t('Leave it empty to delete URL aliases pointing to the given system path.'),
           'optional' => TRUE,
           'cleaning callback' => 'rules_path_clean_replacement_values',
         ),
@@ -62,7 +62,7 @@ function rules_path_action_info() {
         'alias' => array(
           'type' => 'text',
           'label' => t('URL alias'),
-          'description' => t('Specify an alternative path by which the content can be accessed. For example, "about" for an about page. Use a relative path and do not add a trailing slash.') .' '. t('Leave it empty to delete the URL alias.'),
+          'description' => t('Specify an alternative path by which the content can be accessed. For example, "about" for an about page. Use a relative path and do not add a trailing slash.') . ' ' . t('Leave it empty to delete the URL alias.'),
           'optional' => TRUE,
           'cleaning callback' => 'rules_path_clean_replacement_values',
         ),
@@ -83,7 +83,7 @@ function rules_path_action_info() {
         'alias' => array(
           'type' => 'text',
           'label' => t('URL alias'),
-          'description' => t('Specify an alternative path by which the term can be accessed. For example, "content/drupal" for a Drupal term. Use a relative path and do not add a trailing slash.') .' '. t('Leave it empty to delete the URL alias.'),
+          'description' => t('Specify an alternative path by which the term can be accessed. For example, "content/drupal" for a Drupal term. Use a relative path and do not add a trailing slash.') . ' ' . t('Leave it empty to delete the URL alias.'),
           'optional' => TRUE,
           'cleaning callback' => 'rules_path_clean_replacement_values',
         ),

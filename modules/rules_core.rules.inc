@@ -192,13 +192,13 @@ function rules_rules_core_evaluator_info() {
       'class' => 'RulesDateInputEvaluator',
       'type' => 'date',
       'weight' => -10,
-     ),
+    ),
     // Post-process any input value to absolute URIs.
     'uri' => array(
       'class' => 'RulesURIInputEvaluator',
       'type' => 'uri',
       'weight' => 50,
-     ),
+    ),
   );
 }
 
@@ -214,12 +214,12 @@ function rules_rules_core_data_processor_info() {
       'class' => 'RulesDateOffsetProcessor',
       'type' => 'date',
       'weight' => -2,
-     ),
+    ),
     'num_offset' => array(
       'class' => 'RulesNumericOffsetProcessor',
       'type' => array('integer', 'decimal'),
       'weight' => -2,
-     ),
+    ),
   );
 }
 
