@@ -3,5 +3,4 @@ description = "Support module for the Rules tests."
 package = Testing
 core = 7.x
 files[] = rules_test.rules.inc
-files[] = rules_test.rules_defaults.inc
 hidden = TRUE
