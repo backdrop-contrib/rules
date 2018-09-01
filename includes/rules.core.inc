@@ -2693,7 +2693,7 @@ class RulesLog {
         // messages here.
         $vars['head'] = t($this->log[$line][0], $this->log[$line][1]);
         if (isset($this->log[$line][5])) {
-          $vars['link'] = '[' . l('edit', $this->log[$line][5]) . ']';
+          $vars['link'] = '[' . l(t('edit'), $this->log[$line][5]) . ']';
         }
         $vars['log'] = $this->renderHelper($line);
         $output[] = theme('rules_debug_element', $vars);
@@ -2706,7 +2706,7 @@ class RulesLog {
           $msg = '<span class="rules-debug-' . $level . '">' . $msg . '</span>';
         }
         if (isset($this->log[$line][5]) && !isset($this->log[$line][4])) {
-          $msg .= ' [' . l('edit', $this->log[$line][5]) . ']';
+          $msg .= ' [' . l(t('edit'), $this->log[$line][5]) . ']';
         }
         $output[] = $msg;
 

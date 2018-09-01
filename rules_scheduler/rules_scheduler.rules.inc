@@ -138,7 +138,7 @@ function rules_scheduler_action_schedule_validate(RulesPlugin $element) {
  */
 function rules_scheduler_action_schedule_help() {
   return t("Note that component evaluation is triggered by <em>cron</em> – make sure cron is configured correctly by checking your site's !status. The scheduling time accuracy depends on your configured cron interval. See <a href='@url'>the online documentation</a> for more information on how to schedule evaluation of components.",
-    array('!status' => l('Status report', 'admin/reports/status'),
+    array('!status' => l(t('Status report'), 'admin/reports/status'),
           '@url' => rules_external_help('scheduler')));
 }
 
