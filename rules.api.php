@@ -660,7 +660,7 @@ function hook_rules_data_processor_info() {
  * @see hook_rules_action_info().
  */
 function hook_rules_action_info_alter(&$actions) {
-  // The rules action is more powerful, so hide the core action
+  // The rules action is more powerful, so hide the core action.
   unset($actions['rules_core_node_assign_owner_action']);
   // We prefer handling saving by rules - not by the user.
   unset($actions['rules_core_node_save_action']);

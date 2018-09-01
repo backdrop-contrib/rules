@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @file Rules UI forms
+ * @file
+ * Rules User Interface forms.
  */
 
 /**

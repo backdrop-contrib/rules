@@ -235,7 +235,7 @@ function rules_upgrade_convert_element(array $element, RulesPlugin $target) {
   foreach ($target->pluginParameterInfo() as $name => $info) {
     rules_upgrade_element_parameter_settings($element, $target, $name);
   }
-  // @todo: Care about php input evaluator for non-text parameters.
+  // @todo Care about php input evaluator for non-text parameters.
 
   // Take care of variable names and labels.
   foreach ($target->pluginProvidesVariables() as $name => $info) {
@@ -512,7 +512,7 @@ function rules_action_custom_php_upgrade_map_name($element) {
 
 // General Rules integration.
 function rules_condition_text_compare_upgrade_map_name($element) {
-  // @todo: Support regex.
+  // @todo Support regex.
   return 'data_is';
 }
 function rules_condition_text_compare_upgrade($element, $target) {
@@ -581,12 +581,12 @@ function rules_action_drupal_goto_upgrade($element, $target) {
 }
 
 function rules_action_watchdog_upgrade_map_name($element) {
-  // @todo: Support action in Rules 2.x!
+  // @todo Support action in Rules 2.x!
   return NULL;
 }
 
 // Taxonomy.module integration.
-// @todo: Finish.
+// @todo Finish.
 function rules_action_taxonomy_load_term_upgrade_map_name($element) {
   return 'entity_fetch';
 }
@@ -597,11 +597,11 @@ function rules_action_taxonomy_delete_term_upgrade_map_name($element) {
   return 'entity_delete';
 }
 function rules_action_taxonomy_term_assign_to_content_upgrade_map_name($element) {
-  // @todo : list.
+  // @todo List.
   return NULL;
 }
 function rules_action_taxonomy_term_remove_from_content_upgrade_map_name($element) {
-  // @todo : list.
+  // @todo List.
   return NULL;
 }
 function rules_action_taxonomy_load_vocab_upgrade_map_name($element) {

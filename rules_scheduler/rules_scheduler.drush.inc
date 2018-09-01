@@ -41,8 +41,8 @@ function rules_scheduler_drush_help($section) {
 /**
  * Command callback for processing the rules_scheduler_tasks queue.
  *
- * @see rules_scheduler_cron_queue_info().
- * @see rules_scheduler_cron().
+ * @see rules_scheduler_cron_queue_info()
+ * @see rules_scheduler_cron()
  */
 function drush_rules_scheduler_tasks() {
   if (rules_scheduler_queue_tasks()) {

@@ -43,7 +43,7 @@ class RulesI18nStringController extends EntityDefaultI18nStringController {
 class RulesI18nStringObjectWrapper extends i18n_string_object_wrapper {
 
   /**
-   * Get translatable properties
+   * Get translatable properties.
    */
   protected function build_properties() {
     $strings = parent::build_properties();

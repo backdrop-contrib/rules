@@ -344,7 +344,7 @@ abstract class RulesExtendable extends FacesExtendable {
     if (isset($this->cache[$this->hook][$this->itemName])) {
       $this->itemInfo = &$this->cache[$this->hook][$this->itemName];
     }
-    // Set up the Faces Extenders
+    // Set up the Faces Extenders.
     if (!empty($this->itemInfo['faces_cache'])) {
       list($this->facesMethods, $this->facesIncludes, $this->faces) = $this->itemInfo['faces_cache'];
     }
@@ -907,7 +907,7 @@ abstract class RulesPlugin extends RulesExtendable {
       elseif (!$this->isRoot() && !isset($this->settings[$name]) && empty($info['optional']) && $info['type'] != 'hidden') {
         throw new RulesIntegrityException(t('Missing configuration for parameter %name.', array('%name' => $name)), array($this, 'parameter', $name));
       }
-      //TODO: Make sure used values are allowed. (key/value pairs + allowed values)
+      //@todo Make sure used values are allowed. (key/value pairs + allowed values)
     }
   }
 
@@ -974,7 +974,7 @@ abstract class RulesPlugin extends RulesExtendable {
     if (!empty($this->settings[$name . ':process'])) {
       // For processing, make sure the data is unwrapped now.
       $return = rules_unwrap_data(array($arg), array($info));
-      // @todo for Drupal 8: Refactor to add the name and language code as
+      // @todo For Drupal 8: Refactor to add the name and language code as
       // separate parameter to process().
       $info['#name'] = $name;
       $info['#langcode'] = $langcode;
@@ -1102,7 +1102,7 @@ abstract class RulesPlugin extends RulesExtendable {
       // default configurations 'module' points to the module providing the
       // default configuration, so the module via which the rules is configured
       // is stored in the "owner" property.
-      // @todo: For Drupal 8 use "owner" for generating machine names also and
+      // @todo For Drupal 8 use "owner" for generating machine names also and
       // module only for the modules providing default configurations.
       $this->module = !isset($this->module) || $module != 'rules' ? $module : $this->module;
       if (!isset($this->owner)) {
@@ -2775,7 +2775,7 @@ class RulesEvaluationException extends RulesException {
         rules_clear_cache();
       }
     }
-    // @todo fix _drupal_decode_exception() to use __toString() and override it.
+    // @todo Fix _drupal_decode_exception() to use __toString() and override it.
     $this->message = t($this->msg, $this->args);
   }
 

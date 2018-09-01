@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @file rules integration for the comment module
+ * @file
+ * Rules integration for the comment module.
  *
  * @addtogroup rules
  *

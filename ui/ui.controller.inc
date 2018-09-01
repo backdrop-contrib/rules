@@ -60,7 +60,7 @@ class RulesUIController {
       'file path' => drupal_get_path('module', 'rules'),
     );
     $items[$base_path . '/manage/%rules_config/delete/event'] = array(
-      //@todo: improve title.
+      // @todo Improve title.
       'title' => 'Remove event',
       'page callback' => 'drupal_get_form',
       'page arguments' => array('rules_ui_remove_event', $base_count + 1, $base_count + 4, $base_path),
@@ -241,7 +241,7 @@ class RulesUIController {
     $table['#attributes']['class'][] = 'rules-overview-table';
     $table['#attached']['css'][] = drupal_get_path('module', 'rules') . '/ui/rules.ui.css';
 
-    // TODO: hide configs where access() is FALSE.
+    // @todo Hide configs where access() is FALSE.
     return $table;
   }
 

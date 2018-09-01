@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @file rules integration for the path module
+ * @file
+ * Rules integration for the path module.
  *
  * @addtogroup rules
  *

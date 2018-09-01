@@ -91,7 +91,7 @@ function rules_user_event_info() {
 /**
  * Options list for user cancel methods.
  *
- * @todo: Use for providing a user_cancel action.
+ * @todo Use for providing a user_cancel action.
  */
 function rules_user_cancel_methods() {
   module_load_include('inc', 'user', 'user.pages');

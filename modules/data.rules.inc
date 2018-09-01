@@ -316,7 +316,7 @@ function rules_action_data_set_form_alter(&$form, &$form_state, $options, RulesA
   else {
     // Change the data parameter to be not editable.
     $form['parameter']['data']['settings']['#access'] = FALSE;
-    // TODO: improve display
+    // @todo Improve display.
     $form['parameter']['data']['info'] = array(
       '#prefix' => '<p>',
       '#markup' => t('<strong>Selected data:</strong> %selector', array('%selector' => $element->settings['data:select'])),
@@ -414,7 +414,7 @@ function rules_action_type_form_alter(&$form, &$form_state, $options, RulesAbstr
     unset($form['submit']);
     unset($form['provides']);
     // Disable #ajax for the first step as it has troubles with lazy-loaded JS.
-    // @todo: Re-enable once JS lazy-loading is fixed in core.
+    // @todo Re-enable once JS lazy-loading is fixed in core.
     unset($form['parameter']['type']['settings']['type']['#ajax']);
     unset($form['reload']['#ajax']);
   }
@@ -660,7 +660,7 @@ function rules_condition_data_is_form_alter(&$form, &$form_state, $options, Rule
   else {
     // Change the data parameter to be not editable.
     $form['parameter']['data']['settings']['#access'] = FALSE;
-    // TODO: improve display
+    // @todo Improve display.
     $form['parameter']['data']['info'] = array(
       '#prefix' => '<p>',
       '#markup' => t('<strong>Selected data:</strong> %selector', array('%selector' => $element->settings['data:select'])),

@@ -279,7 +279,7 @@ function rules_admin_settings_integrity_check_submit($form, &$form_state) {
     rules_config_update_dirty_flag($rules_config, TRUE, TRUE);
     if ($rules_config->dirty) {
       $count++;
-      $variables = array('%label' => $rules_config->label(), '%name' => $rules_config->name, '@plugin' => $rules_config->plugin(), '!uri'=> url(RulesPluginUI::path($rules_config->name)));
+      $variables = array('%label' => $rules_config->label(), '%name' => $rules_config->name, '@plugin' => $rules_config->plugin(), '!uri' => url(RulesPluginUI::path($rules_config->name)));
       drupal_set_message(t('The @plugin <a href="!uri">%label (%name)</a> fails the integrity check and cannot be executed.', $variables), 'error');
     }
 

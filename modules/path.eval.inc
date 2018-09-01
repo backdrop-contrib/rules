@@ -77,7 +77,7 @@ function rules_condition_path_alias_exists($alias, $langcode = LANGUAGE_NONE) {
 /**
  * Cleans the given path by replacing non ASCII characters with the replacment character.
  *
- * Path cleaning may be adapted by overriding the configuration variables
+ * Path cleaning may be adapted by overriding the configuration variables.
  * @code rules_clean_path @endcode,
  * @code rules_path_replacement_char @endcode and
  * @code rules_path_transliteration @endcode

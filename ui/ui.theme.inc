@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @file Rules theme functions
+ * @file
+ * Rules theme functions.
  */
 
 /**

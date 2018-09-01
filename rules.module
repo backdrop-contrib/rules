@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @file Rules engine module
+ * @file
+ * Rules engine module.
  */
 
 // The class autoloader may fail for classes added in 7.x-2.4 (Issue 2090511).
@@ -427,7 +428,7 @@ function &rules_get_cache($cid = 'data') {
  * @see entity_defaults_rebuild()
  */
 function _rules_rebuild_cache(&$cache) {
-  foreach(array('data_info', 'plugin_info') as $hook) {
+  foreach (array('data_info', 'plugin_info') as $hook) {
     $cache[$hook] = rules_fetch_data($hook);
   }
   foreach ($cache['plugin_info'] as $name => &$info) {
@@ -489,7 +490,7 @@ function rules_flush_caches() {
 }
 
 /**
- * Clears the rule set cache
+ * Clears the rule set cache.
  */
 function rules_clear_cache() {
   cache_clear_all('*', 'cache_rules', TRUE);
@@ -840,7 +841,7 @@ function rules_entity_info() {
  * Implementation of hook_hook_info().
  */
 function rules_hook_info() {
-  foreach(array('plugin_info', 'rules_directory', 'data_info', 'condition_info', 'action_info', 'event_info', 'file_info', 'evaluator_info', 'data_processor_info') as $hook) {
+  foreach (array('plugin_info', 'rules_directory', 'data_info', 'condition_info', 'action_info', 'event_info', 'file_info', 'evaluator_info', 'data_processor_info') as $hook) {
     $hooks['rules_' . $hook] = array(
       'group' => 'rules',
     );

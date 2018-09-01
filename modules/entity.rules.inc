@@ -568,7 +568,7 @@ function rules_condition_entity_is_of_bundle_form_alter(&$form, &$form_state, $o
       $form['reload']['#limit_validation_errors'] = array(array('parameter', 'entity'));
       unset($form['parameter']['type']);
       unset($form['reload']['#attributes']['class']);
-      // NO break;
+      // NO break.
     case 2:
       $form['negate']['#access'] = FALSE;
       unset($form['parameter']['bundle']);

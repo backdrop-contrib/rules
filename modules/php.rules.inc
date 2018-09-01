@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @file rules integration for the php module
+ * @file
+ * Rules integration for the php module.
  *
  * @addtogroup rules
  *

@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @file rules integration for the taxonomy_term module
+ * @file
+ * Rules integration for the taxonomy_term module.
  *
  * @addtogroup rules
  *

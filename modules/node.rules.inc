@@ -84,7 +84,7 @@ function rules_node_event_info() {
 }
 
 /**
- * Returns some parameter suitable for using it with a node
+ * Returns some parameter suitable for using it with a node.
  */
 function rules_events_node_variables($node_label, $update = FALSE) {
   $args = array(

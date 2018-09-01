@@ -376,7 +376,7 @@ class RulesDataUIDate extends RulesDataUIText {
       array('%format' => gmdate('Y-m-d H:i:s', time() + 86400),
             '!strtotime' => l('strtotime()', 'http://php.net/strtotime')));
 
-    // TODO: Leverage the jquery datepicker+timepicker once a module providing
+    // @todo Leverage the jquery datepicker+timepicker once a module providing
     // The timepicker is available.
     return $form;
   }

@@ -140,7 +140,7 @@ function rules_rules_core_data_info() {
       // If this entity type serves as bundle for another one, provide an
       // options list for selecting a bundle entity.
       if (!empty($info['bundle of'])) {
-        $return[$type]['ui class'] =  'RulesDataUIBundleEntity';
+        $return[$type]['ui class'] = 'RulesDataUIBundleEntity';
       }
     }
   }

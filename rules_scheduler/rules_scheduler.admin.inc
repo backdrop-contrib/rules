@@ -9,7 +9,7 @@
  * Schedule page with a view for the scheduled tasks.
  */
 function rules_scheduler_schedule_page() {
-  // Display view for all scheduled tasks
+  // Display view for all scheduled tasks.
   if (module_exists('views')) {
     // We cannot use views_embed_view() here as we need to set the path for the
     // component filter form.

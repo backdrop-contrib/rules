@@ -420,7 +420,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
       '#required' => TRUE,
       '#weight' => -5,
     );
-    // @todo: For Drupal 8 use "owner" for generating machine names and
+    // @todo For Drupal 8 use "owner" for generating machine names and
     // module only for the modules providing default configurations.
     if (!empty($this->element->module) && !empty($this->element->name) && $this->element->module == 'rules' && strpos($this->element->name, 'rules_') === 0) {
       // Remove the Rules module prefix from the machine name.
@@ -516,7 +516,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
       }
     }
 
-    // TODO: Attach field form thus description.
+    // @todo Attach field form thus description.
   }
 
   /**
@@ -567,7 +567,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
     $form_values = RulesPluginUI::getFormStateValues($form['settings'], $form_state);
     $this->element->label = $form_values['label'];
     // If the name was changed we have to redirect to the URL that contains
-    // the new name, instead of rebuilding on the old URL with the old name
+    // the new name, instead of rebuilding on the old URL with the old name.
     if ($form['settings']['name']['#default_value'] != $form_values['name']) {
       $module = isset($this->element->module) ? $this->element->module : 'rules';
       $this->element->name = $module . '_' . $form_values['name'];
@@ -718,7 +718,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
       elseif (isset($this->element->settings[$name]) && (!isset($parameter['default value']) || $parameter['default value'] != $this->element->settings[$name])) {
         $class = $this->getDataTypeClass($parameter['type'], $parameter);
         $method = empty($parameter['options list']) ? 'render' : 'renderOptionsLabel';
-        // We cannot use method_exists() here as it would trigger a PHP bug,
+        // We cannot use method_exists() here as it would trigger a PHP bug.
         // @see http://drupal.org/node/1258284
         $element = call_user_func(array($class, $method), $this->element->settings[$name], $name, $parameter, $this->element);
       }
@@ -1095,7 +1095,7 @@ class RulesConditionContainerUI extends RulesContainerPluginUI {
     $form['elements']['#attributes']['class'][] = 'rules-condition-container';
     $form['elements']['#caption'] = t('Conditions');
 
-    // By default skip
+    // By default skip.
     if (!empty($options['init']) && !$this->element->isRoot()) {
       $config = $this->element->root();
       $form['init_help'] = array(

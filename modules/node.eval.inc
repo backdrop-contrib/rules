@@ -27,7 +27,7 @@ abstract class RulesNodeConditionBase extends RulesConditionHandlerBase {
 }
 
 /**
- * Condition: Check for selected content types
+ * Condition: Check for selected content types.
  */
 class RulesNodeConditionType extends RulesNodeConditionBase {
 
@@ -115,7 +115,7 @@ class RulesNodeConditionSticky extends RulesNodeConditionBase {
 }
 
 /**
- * Condition: Check if the node is promoted to the frontpage
+ * Condition: Check if the node is promoted to the frontpage.
  */
 class RulesNodeConditionPromoted extends RulesNodeConditionBase {
 

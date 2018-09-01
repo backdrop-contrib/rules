@@ -305,7 +305,7 @@ class RulesTestCase extends DrupalWebTestCase {
     $action->executeByArgs(array('node' => $node));
 
     $this->assertEqual($node->status, 1, 'Action executed correctly on node.');
-    // Sync node_load cache with node_save
+    // Sync node_load cache with node_save.
     entity_get_controller('node')->resetCache();
 
     $node = node_load($node->nid);
@@ -613,7 +613,7 @@ class RulesTestCase extends DrupalWebTestCase {
     // Test asserting additional metadata.
     $rule = rule(array('node' => array('type' => 'node')));
     // Customize action info using the settings.
-    $rule->condition('data_is', array('data:select'   => 'node:type', 'value' => 'page'))
+    $rule->condition('data_is', array('data:select' => 'node:type', 'value' => 'page'))
          // Configure an condition using the body. As the body is a field,
          // tis requires the bundle to be correctly asserted.
          ->condition(rules_condition('data_is', array('data:select' => 'node:body:value', 'value' => 'foo'))->negate())
@@ -699,7 +699,7 @@ class RulesTestCase extends DrupalWebTestCase {
       'list' => array(
         'type' => 'list<node>',
         'label' => 'A list of nodes',
-      )
+      ),
     ));
     $loop = rules_loop(array('list:select' => 'list', 'item:var' => 'node'));
     $loop->action('data_set', array('data:select' => 'node:sticky', 'value' => TRUE));
@@ -987,7 +987,7 @@ class RulesTestDataCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test type matching
+   * Test type matching.
    */
   public function testTypeMatching() {
     $entity = array('type' => 'entity');
@@ -1174,7 +1174,7 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
     $this->assertFalse($node->sticky, 'Parameter has been loaded and saved.');
     $this->assertTrue($node->status, 'Action has been executed.');
 
-    // Ensure the rule was evaluated a second time
+    // Ensure the rule was evaluated a second time.
     $text = RulesLog::logger()->render();
     $msg = RulesTestCase::t('Evaluating conditions of rule %rule 1', array('rule 1'));
     $pos = strpos($text, $msg);
@@ -1838,7 +1838,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     $this->assertEqual(array_pop($msg['status']), "Title: foo Token: foo", 'PHP input evaluation has been applied.');
     $this->assertEqual(array_pop($msg['status']), "Executed-foo", 'PHP code condition and action have been evaluated.');
 
-    // Test PHP data processor
+    // Test PHP data processor.
     $rule = rule(array('var_name' => array('type' => 'node')));
     $rule->action('drupal_message', array(
       'message:select' => 'var_name:title',
