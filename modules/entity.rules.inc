@@ -468,7 +468,9 @@ function rules_condition_entity_has_field_options(RulesAbstractPlugin $element) 
   else {
     $fields = field_info_fields();
   }
-  return drupal_map_assoc(array_keys($fields));
+  $field_list = drupal_map_assoc(array_keys($fields));
+  ksort($field_list);
+  return $field_list;
 }
 
 /**
