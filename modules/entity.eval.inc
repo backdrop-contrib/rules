@@ -68,7 +68,13 @@ function rules_action_entity_query_info_alter(&$element_info, RulesAbstractPlugi
     if ($element->settings['property']) {
       $wrapper = rules_get_entity_metadata_wrapper_all_properties($element);
       if (isset($wrapper->{$element->settings['property']}) && $property = $wrapper->{$element->settings['property']}) {
-        $element_info['parameter']['value']['type'] = $property->type();
+        $property_type = $property->type();
+        // If the cardinality of the property > 1, i.e. of type 'list<{type}>',
+        // we will also accept a parameter of type {type}.
+        if (substr($property_type, 0, strlen('list<')) === 'list<' && substr($property_type, -strlen('>')) === '>') {
+          $property_type = array($property_type, substr($property_type, strlen('list<'), strlen($property_type) - strlen('list<>')));
+        }
+        $element_info['parameter']['value']['type'] = $property_type;
         $element_info['parameter']['value']['options list']  = $property->optionsList() ? 'rules_action_entity_query_value_options_list' : FALSE;
       }
     }
