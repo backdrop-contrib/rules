@@ -14,8 +14,8 @@
  */
 class RulesPHPEvaluator extends RulesDataInputEvaluator {
 
-  public static function access() {
-    return user_access('use PHP for settings');
+  public function editAccess() {
+    return parent::editAccess() && (user_access('use PHP for settings') || drupal_is_cli());
   }
 
   public static function getUsedVars($text, $var_info) {
@@ -86,8 +86,8 @@ class RulesPHPDataProcessor extends RulesDataProcessor {
     return $form;
   }
 
-  public static function access() {
-    return user_access('use PHP for settings');
+  public function editAccess() {
+    return parent::editAccess() && (user_access('use PHP for settings') || drupal_is_cli());
   }
 
   public function process($value, $info, RulesState $state, RulesPlugin $element) {
