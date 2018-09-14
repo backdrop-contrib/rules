@@ -244,8 +244,19 @@ function rules_action_data_convert_info_alter(&$element_info, RulesAbstractPlugi
   if (isset($element->settings['type']) && $type = $element->settings['type']) {
     $element_info['provides']['conversion_result']['type'] = $type;
 
-    if ($type != 'integer') {
-      // Only support the rounding behavior option for integers.
+    // Only support the rounding behavior option for integers.
+    if ($type == 'integer') {
+      $element_info['parameter']['rounding_behavior'] = array(
+        'type' => 'token',
+        'label' => t('Rounding behavior'),
+        'description' => t('The rounding behavior the conversion should use.'),
+        'options list' => 'rules_action_data_convert_rounding_behavior_options',
+        'restriction' => 'input',
+        'default value' => 'round',
+        'optional' => TRUE,
+      );
+    }
+    else {
       unset($element_info['parameter']['rounding_behavior']);
     }
 

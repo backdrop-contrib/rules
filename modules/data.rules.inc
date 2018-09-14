@@ -224,16 +224,6 @@ function rules_data_action_info() {
         'label' => t('Value to convert'),
         'default mode' => 'selector',
       ),
-      // For to-integer conversion only.
-      'rounding_behavior' => array(
-        'type' => 'token',
-        'label' => t('Rounding behavior'),
-        'description' => t('The rounding behavior the conversion should use.'),
-        'options list' => 'rules_action_data_convert_rounding_behavior_options',
-        'restriction' => 'input',
-        'default value' => 'round',
-        'optional' => TRUE,
-      ),
     ),
     'provides' => array(
       'conversion_result' => array(
