@@ -802,7 +802,6 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
    */
   public function help() {}
 
-
   /**
    * Deprecated by the controllers overviewTable() method.
    */
@@ -1038,7 +1037,6 @@ class RulesContainerPluginUI extends RulesPluginUI {
     }
     return $render;
   }
-
 
   public function buildContent() {
     $content = parent::buildContent();

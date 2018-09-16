@@ -12,7 +12,6 @@ function rules_test_custom_node_save($object) {
   throw new RulesEvaluationException('Custom save method invoked.');
 }
 
-
 /**
  * Custom help callback for the rules_node_publish_action().
  */

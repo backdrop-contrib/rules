@@ -332,7 +332,6 @@ abstract class RulesExtendable extends FacesExtendable {
 
   protected $cache, $itemInfo = array();
 
-
   public function __construct() {
     $this->setUp();
   }
@@ -461,7 +460,6 @@ abstract class RulesPlugin extends RulesExtendable {
    * Static cache for availableVariables().
    */
   protected $availableVariables;
-
 
   /**
    * Sets a new parent element.
@@ -1661,7 +1659,6 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
    */
   abstract protected function executeCallback(array $args, RulesState $state = NULL);
 
-
   public function evaluate(RulesState $state) {
     $this->processSettings();
     try {
@@ -1975,7 +1972,6 @@ interface RulesPluginHandlerInterface {
    */
   public function form_alter(&$form, $form_state, $options);
 
-
   /**
    * Optionally returns an array of info assertions for the specified
    * parameters. This allows conditions to assert additional metadata, such as
@@ -2037,6 +2033,7 @@ interface RulesPluginImplInterface extends RulesPluginHandlerInterface {
  * @see RulesContainerPlugin::optimize()
  */
 interface RulesOptimizationInterface {
+
   /**
    * Optimizes a rule configuration in order to speed up evaluation.
    */
@@ -2070,10 +2067,15 @@ abstract class RulesPluginHandlerBase extends FacesExtender implements RulesPlug
   }
 
   public function validate() {}
+
   public function process() {}
+
   public function info_alter(&$element_info) {}
+
   public function dependencies() {}
+
   public function form_alter(&$form, $form_state, $options) {}
+
   public function assertions() {}
 
 }

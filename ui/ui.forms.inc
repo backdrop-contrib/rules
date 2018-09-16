@@ -368,7 +368,6 @@ function rules_ui_delete_element_submit($form, &$form_state) {
   }
 }
 
-
 /**
  * Configure a rule element.
  */
@@ -662,7 +661,6 @@ function rules_ui_form_data_selection_auto_completion($parameter, $form_build_id
   drupal_json_output($matches);
 }
 
-
 /**
  * FAPI validation of an integer element. Copy of the private function
  * _element_validate_integer().
@@ -814,7 +812,6 @@ function rules_ui_element_fix_empty_after_build($element, &$form_state) {
   }
   return $element;
 }
-
 
 /**
  * FAPI after build callback for specifying a list of values.

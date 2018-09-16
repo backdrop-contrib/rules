@@ -513,7 +513,6 @@ function rules_import($export, &$error_msg = '') {
   return entity_get_controller('rules_config')->import($export, $error_msg);
 }
 
-
 /**
  * Wraps the given data.
  *

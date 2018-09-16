@@ -590,7 +590,6 @@ class RulesTestCase extends DrupalWebTestCase {
     $this->assertTrue($node->status == 1, 'Component provided in code has been executed.');
   }
 
-
   /**
    * Test asserting metadata, customizing action info and make sure integrity
    * is checked.

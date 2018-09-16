@@ -44,7 +44,6 @@ if (!class_exists('FacesExtender', FALSE)) {
      */
     protected $object;
 
-
     public function __construct(FacesExtendable $object) {
       $this->object = $object;
     }

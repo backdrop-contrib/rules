@@ -46,7 +46,6 @@ abstract class RulesDataProcessor {
     return $this->access() && (!isset($this->processor) || $this->processor->editAccess());
   }
 
-
   /**
    * Prepares the processor for parameters.
    *

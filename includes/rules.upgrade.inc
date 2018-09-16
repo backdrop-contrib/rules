@@ -386,6 +386,7 @@ function rules_upgrade_element_variable_settings($element, $target, $name, $new_
 function rules_action_load_comment_upgrade_map_name($element) {
   return 'entity_fetch';
 }
+
 function rules_action_load_comment_upgrade($element, $target) {
   $target->settings['type'] = 'comment';
   rules_upgrade_element_parameter_settings($element, $target, 'cid', 'id');
@@ -396,45 +397,58 @@ function rules_action_load_comment_upgrade($element, $target) {
 function rules_condition_content_is_type_upgrade_map_name($element) {
   return 'node_is_of_type';
 }
+
 function rules_condition_content_is_published_upgrade_map_name($element) {
   return 'node_is_published';
 }
+
 function rules_condition_content_is_sticky_upgrade_map_name($element) {
   return 'node_is_sticky';
 }
+
 function rules_condition_content_is_promoted_upgrade_map_name($element) {
   return 'node_is_promoted';
 }
+
 function rules_condition_content_is_new_upgrade_map_name($element) {
   return 'entity_is_new';
 }
+
 function rules_condition_content_is_new_upgrade($element, $target) {
   rules_upgrade_element_parameter_settings($element, $target, 'node', 'entity');
 }
+
 function rules_action_node_set_author_upgrade_map_name($element) {
   return 'data_set';
 }
+
 function rules_action_node_set_author_upgrade($element, $target) {
   $target->settings['data:select'] = $element['#settings']['#argument map']['node'] . ':author';
   $target->settings['value:select'] = $element['#settings']['#argument map']['author'];
 }
+
 function rules_action_node_load_author_upgrade_map_name($element) {
   return 'entity_fetch';
 }
+
 function rules_action_node_load_author_upgrade($element, $target) {
   $target->settings['type'] = 'user';
   $target->settings['id'] = $element['#settings']['#argument map']['node'] . ':author:uid';
 }
+
 function rules_action_set_node_title_upgrade_map_name($element) {
   return 'data_set';
 }
+
 function rules_action_set_node_title_upgrade($element, $target) {
   $target->settings['data:select'] = $element['#settings']['#argument map']['node'] . ':title';
   $target->settings['value'] = $element['#settings']['title'];
 }
+
 function rules_action_add_node_upgrade_map_name($element) {
   return 'entity_create';
 }
+
 function rules_action_add_node_upgrade($element, $target) {
   $target->settings['type'] = 'node';
   rules_upgrade_element_parameter_settings($element, $target, 'title', 'param_title');
@@ -445,105 +459,135 @@ function rules_action_add_node_upgrade($element, $target) {
     drupal_set_message(t('Warning: The node-access check option for the node creation action is not supported any more.'));
   }
 }
+
 function rules_action_load_node_upgrade_map_name($element) {
   return 'entity_fetch';
 }
+
 function rules_action_load_node_upgrade($element, $target) {
   $target->settings['type'] = 'node';
   rules_upgrade_element_parameter_settings($element, $target, 'nid', 'id');
   rules_upgrade_element_parameter_settings($element, $target, 'vid', 'revision_id');
   rules_upgrade_element_variable_settings($element, $target, 'node_loaded', 'entity_fetched');
 }
+
 function rules_action_delete_node_upgrade_map_name($element) {
   return 'entity_delete';
 }
+
 function rules_action_delete_node_upgrade($element, $target) {
   rules_upgrade_element_parameter_settings($element, $target, 'node', 'entity');
 }
+
 function rules_core_node_publish_action_upgrade_map_name($element) {
   return 'node_publish';
 }
+
 function rules_core_node_unpublish_action_upgrade_map_name($element) {
   return 'node_unpublish';
 }
+
 function rules_core_node_make_sticky_action_upgrade_map_name($element) {
   return 'node_make_sticky_action';
 }
+
 function rules_core_node_make_unsticky_action_upgrade_map_name($element) {
   return 'node_make_unsticky_action';
 }
+
 function rules_core_node_promote_action_upgrade_map_name($element) {
   return 'node_promote_action';
 }
+
 function rules_core_node_unpromote_action_upgrade_map_name($element) {
   return 'node_unpromote_action';
 }
 
-
-// Path.module integration.
+/**
+ * Path.module integration.
+ */
 function rules_condition_url_has_alias_upgrade_map_name($element) {
   return 'path_has_alias';
 }
+
 function rules_condition_url_has_alias_upgrade($element, $target) {
   $target->settings['source'] = $element['#settings']['src'];
   $target->settings['alias'] = $element['#settings']['dst'];
 }
+
 function rules_condition_alias_exists_upgrade_map_name($element) {
   return 'path_alias_exists';
 }
+
 function rules_condition_alias_exists_upgrade($element, $target) {
   $target->settings['alias'] = $element['#settings']['dst'];
 }
+
 function rules_action_path_alias_upgrade($element, $target) {
   $target->settings['source'] = $element['#settings']['src'];
   $target->settings['alias'] = $element['#settings']['dst'];
 }
+
 function rules_action_node_path_alias_upgrade($element, $target) {
   $target->settings['alias'] = $element['#settings']['dst'];
 }
 
-// PHP.module integration.
+/**
+ * PHP.module integration.
+ */
 function rules_condition_custom_php_upgrade_map_name($element) {
   return 'php_eval';
 }
+
 function rules_action_custom_php_upgrade_map_name($element) {
   return 'php_eval';
 }
 
-// General Rules integration.
+/**
+ * General Rules integration.
+ */
 function rules_condition_text_compare_upgrade_map_name($element) {
   // @todo Support regex.
   return 'data_is';
 }
+
 function rules_condition_text_compare_upgrade($element, $target) {
   rules_upgrade_element_parameter_settings($element, $target, 'text1', 'data');
   rules_upgrade_element_parameter_settings($element, $target, 'text2', 'value');
 }
+
 function rules_condition_number_compare_upgrade_map_name($element) {
   return 'data_is';
 }
+
 function rules_condition_number_compare_upgrade($element, $target) {
   rules_upgrade_element_parameter_settings($element, $target, 'number1', 'data');
   rules_upgrade_element_parameter_settings($element, $target, 'number2', 'value');
 }
+
 function rules_condition_check_boolean_upgrade_map_name($element) {
   return 'data_is';
 }
+
 function rules_condition_check_boolean_upgrade($element, $target) {
   rules_upgrade_element_parameter_settings($element, $target, 'boolean', 'data');
   $target->settings['value'] = TRUE;
 }
+
 function rules_action_invoke_set_upgrade_map_name($element) {
   return 'component_' . $element['#info']['set'];
 }
+
 function rules_action_invoke_set_upgrade($element, $target) {
   foreach ($element['#info']['arguments'] as $name => $info) {
     rules_upgrade_element_parameter_settings($element, $target, $name);
   }
 }
+
 function rules_action_save_variable_upgrade_map_name($element) {
   return isset($element['#info']['new variables']) ? 'variable_add' : 'entity_save';
 }
+
 function rules_action_save_variable_upgrade($element, $target) {
   $type = $element['#info']['arguments']['var_name']['default value'];
   if (isset($element['#info']['new variables'])) {
@@ -556,20 +600,25 @@ function rules_action_save_variable_upgrade($element, $target) {
   }
 }
 
-
-// System.module integration.
+/**
+ * System.module integration.
+ */
 function rules_action_set_breadcrumb_upgrade_map_name($element) {
   return 'breadcrumb_set';
 }
+
 function rules_action_mail_to_user_upgrade_map_name($element) {
   return 'mail';
 }
+
 function rules_action_mail_to_user_upgrade($element, $target) {
   $target->settings['to:select'] = $element['#settings']['#argument map']['user'] . ':mail';
 }
+
 function rules_action_drupal_goto_upgrade_map_name($element) {
   return 'redirect';
 }
+
 function rules_action_drupal_goto_upgrade($element, $target) {
   $settings = $element['#settings'];
   $target->settings['url'] = $settings['path'];
@@ -585,82 +634,105 @@ function rules_action_watchdog_upgrade_map_name($element) {
   return NULL;
 }
 
-// Taxonomy.module integration.
-// @todo Finish.
+/**
+ * Taxonomy.module integration.
+ *
+ *@todo Finish.
+ */
 function rules_action_taxonomy_load_term_upgrade_map_name($element) {
   return 'entity_fetch';
 }
+
 function rules_action_taxonomy_add_term_upgrade_map_name($element) {
   return 'entity_create';
 }
+
 function rules_action_taxonomy_delete_term_upgrade_map_name($element) {
   return 'entity_delete';
 }
+
 function rules_action_taxonomy_term_assign_to_content_upgrade_map_name($element) {
   // @todo List.
   return NULL;
 }
+
 function rules_action_taxonomy_term_remove_from_content_upgrade_map_name($element) {
   // @todo List.
   return NULL;
 }
+
 function rules_action_taxonomy_load_vocab_upgrade_map_name($element) {
   return 'entity_fetch';
 }
+
 function rules_action_taxonomy_add_vocab_upgrade_map_name($element) {
   return 'data_set';
 }
 
-// User.module integration.
+/**
+ * User.module integration.
+ */
 function rules_condition_user_hasrole_upgrade_map_name($element) {
   return 'user_has_role';
 }
+
 function rules_condition_user_hasrole_upgrade($element, $target) {
   rules_upgrade_element_parameter_settings($element, $target, 'user', 'account');
 }
+
 function rules_condition_user_comparison_upgrade_map_name($element) {
   return 'data_is';
 }
+
 function rules_condition_user_comparison_upgrade($element, $target) {
   rules_upgrade_element_parameter_settings($element, $target, 'user1', 'data');
   rules_upgrade_element_parameter_settings($element, $target, 'user2', 'value');
 }
+
 function rules_action_user_addrole_upgrade_map_name($element) {
   return 'user_add_role';
 }
+
 function rules_action_user_addrole_upgrade($element, $target) {
   rules_upgrade_element_parameter_settings($element, $target, 'user', 'account');
 }
+
 function rules_action_user_removerole_upgrade_map_name($element) {
   return 'user_remove_role';
 }
+
 function rules_action_user_removerole_upgrade($element, $target) {
   rules_upgrade_element_parameter_settings($element, $target, 'user', 'account');
 }
+
 function rules_action_load_user_upgrade_map_name($element) {
   if (!empty($element['#settings']['username'])) {
     drupal_set_message(t('Warning: Directly upgrading the load user by name action is not supported.'));
   }
   return 'entity_fetch';
 }
+
 function rules_action_load_user_upgrade($element, $target) {
   $target->settings['type'] = 'user';
   rules_upgrade_element_parameter_settings($element, $target, 'userid', 'id');
   rules_upgrade_element_variable_settings($element, $target, 'user_loaded', 'entity_fetched');
 }
+
 function rules_action_user_create_upgrade_map_name($element) {
   return 'entity_create';
 }
+
 function rules_action_user_create_upgrade($element, $target) {
   $target->settings['type'] = 'user';
   rules_upgrade_element_parameter_settings($element, $target, 'username', 'param_name');
   rules_upgrade_element_parameter_settings($element, $target, 'email', 'param_mail');
   rules_upgrade_element_variable_settings($element, $target, 'user_added', 'entity_created');
-
 }
+
 function rules_core_user_block_user_action_upgrade_map_name($element) {
   return 'user_block';
 }
+
 function rules_core_user_block_user_action_upgrade($element, $target) {
   $target->settings['account:select'] = $element['#settings']['#argument map']['user'];
 }

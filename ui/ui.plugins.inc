@@ -70,7 +70,6 @@ class RulesRuleUI extends RulesActionContainerUI {
     parent::form_extract_values($form, $form_state);
   }
 
-
   public function operations() {
     // When rules are listed only show the edit and delete operations.
     $ops = parent::operations();

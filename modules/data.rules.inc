@@ -373,7 +373,6 @@ function rules_data_list_form_alter(&$form, &$form_state, $options, RulesAbstrac
   }
 }
 
-
 /**
  * Form alter callback for actions relying on the entity type or the data type.
  */
