@@ -1516,11 +1516,13 @@ function rules_modules_disabled($modules) {
       ->fields('r')
       ->condition('id', $ids, 'IN')
       ->condition('active', 1)
-      ->execute()->rowCount();
+      ->countQuery()
+      ->execute()
+      ->fetchField();
     if ($count > 0) {
       $message = format_plural($count,
         '1 Rules configuration requires some of the disabled modules to function and cannot be executed any more.',
-        '@count Rules configuration require some of the disabled modules to function and cannot be executed any more.'
+        '@count Rules configurations require some of the disabled modules to function and cannot be executed any more.'
       );
       drupal_set_message($message, 'warning');
     }
