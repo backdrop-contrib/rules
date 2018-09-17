@@ -1788,8 +1788,11 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
         $dirs += $result;
       }
       foreach ($dirs as $module => $directory) {
-        foreach (glob(drupal_get_path('module', $module) . "/$directory/*.{inc,php}", GLOB_BRACE) as $filename) {
-          include_once $filename;
+        $module_path = drupal_get_path('module', $module);
+        foreach (array('inc', 'php') as $extension) {
+          foreach (glob("$module_path/$directory/*.$extension") as $filename) {
+            include_once $filename;
+          }
         }
       }
       $included = TRUE;
