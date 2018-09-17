@@ -410,10 +410,10 @@ function rules_condition_data_list_count_is($list, $op = '==', $value) {
     case '==':
       return count($list) == $value;
 
-    case '<';
+    case '<':
       return count($list) < $value;
 
-    case '>';
+    case '>':
       return count($list) > $value;
   }
 }
