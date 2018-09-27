@@ -344,6 +344,7 @@ class RulesEventHandlerEntityBundle extends RulesEventHandlerBase {
       '#description' => t('If you need to filter for multiple values, either add multiple events or use the "Entity is of bundle" condition instead.'),
       '#default_value' => $this->settings['bundle'],
       '#empty_value' => '',
+      '#options' => array(),
     );
     foreach ($this->entityInfo['bundles'] as $name => $bundle_info) {
       $form['bundle']['#options'][$name] = $bundle_info['label'];
