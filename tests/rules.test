@@ -1972,15 +1972,44 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     rules_action('mail', $settings + array('from' => 'sender@example.com'))->execute();
     $this->assertMail('from', 'sender@example.com', 'Specified from address has been used');
 
-    // Test sending mail to all users of a role. First make sure there is a
-    // custom role and a user for it.
-    $user = $this->drupalCreateUser(array('administer nodes'));
-    $roles = $user->roles;
+    // Test sending mail to all users of a role. First clear the mail
+    // collector to remove the mail sent in the previous line of code.
+    variable_set('drupal_test_email_collector', array());
+
+    // Now make sure there is a custom role and two users with that role.
+    $user1 = $this->drupalCreateUser(array('administer nodes'));
+    $roles = $user1->roles;
     // Remove the authenticated role so we only use the new role created by
     // drupalCreateUser().
     unset($roles[DRUPAL_AUTHENTICATED_RID]);
+
+    // Now create a second user with the same role.
+    $user2 = $this->drupalCreateUser();
+    user_save($user2, array('roles' => $roles));
+
+    // Now create a third user without the same role - this user should NOT
+    // receive the role email.
+    $user3 = $this->drupalCreateUser(array('administer blocks'));
+    $additional_roles = $user3->roles;
+    unset($additional_roles[DRUPAL_AUTHENTICATED_RID]);
+
+    // Execute action and check that only two mails were sent.
     rules_action('mail_to_users_of_role', $settings + array('roles' => array_keys($roles)))->execute();
-    $this->assertMail('to', $user->mail, 'Mail to users of a role has been sent.');
+    $mails = $this->drupalGetMails();
+    $this->assertEqual(count($mails), 2, '2 e-mails were sent to users of a role.');
+
+    // Check each mail to ensure that only $user1 and $user2 got the mail.
+    $mail = array_pop($mails);
+    $this->assertTrue($mail['to'] == $user2->mail, 'Mail to user of a role has been sent.');
+    $mail = array_pop($mails);
+    $this->assertTrue($mail['to'] == $user1->mail, 'Mail to user of a role has been sent.');
+
+    // Execute action again, this time to send mail to both roles.
+    // This time check that three mails were sent - one for each user..
+    variable_set('drupal_test_email_collector', array());
+    rules_action('mail_to_users_of_role', $settings + array('roles' => array_keys($roles + $additional_roles)))->execute();
+    $mails = $this->drupalGetMails();
+    $this->assertEqual(count($mails), 3, '3 e-mails were sent to users of multiple roles.');
 
     // Test reacting on new log entries and make sure the log entry is usable.
     $rule = rules_reaction_rule();
