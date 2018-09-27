@@ -132,7 +132,7 @@ class RulesCondition extends RulesAbstractPlugin implements RulesConditionInterf
 
   public function label() {
     $label = parent::label();
-    return $this->negate ? t('NOT @condition', array('@condition' => $label)) : $label;
+    return $this->negate ? t('NOT !condition', array('!condition' => $label)) : $label;
   }
 
 }

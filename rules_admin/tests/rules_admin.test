@@ -1,0 +1,69 @@
+<?php
+
+/**
+ * @file
+ * Rules UI tests.
+ */
+
+/**
+ * Tests for creating rules through the UI.
+ */
+class RulesUiTestCase extends DrupalWebTestCase {
+
+  /**
+   * Declares test metadata.
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Rules UI Tests ',
+      'description' => 'Tests Rules UI.',
+      'group' => 'Rules',
+    );
+  }
+
+  /**
+   * Overrides DrupalWebTestCase::setUp().
+   */
+  protected function setUp() {
+    parent::setUp('rules', 'rules_admin', 'rules_test');
+    RulesLog::logger()->clear();
+    variable_set('rules_debug_log', TRUE);
+  }
+
+  /**
+   * Tests that NOT condition labels are not HTML-encoded in the UI.
+   *
+   * @see https://www.drupal.org/project/rules/issues/1945006
+   */
+  public function testConditionLabel() {
+    // Create a simple user account with permission to create a rule.
+    $user = $this->drupalCreateUser(array('access administration pages', 'administer rules'));
+    $this->drupalLogin($user);
+
+    // First we need an event.
+    $this->drupalGet('admin/config/workflow/rules/reaction/add');
+    $edit = array(
+      'settings[label]' => 'Test node event',
+      'settings[name]' => 'test_node_event',
+      'event' => 'node_insert',
+    );
+    $this->drupalPost(NULL, $edit, 'Save');
+    $this->assertText('Editing reaction rule', 'Rule edit page is shown.');
+
+    // Now add a condition with a special character in the label.
+    $this->clickLink('Add condition');
+    $this->assertText('Add a new condition', 'Condition edit page is shown.');
+    $edit = array(
+      'element_name' => 'rules_test_condition_apostrophe',
+    );
+    $this->drupalPost(NULL, $edit, 'Continue');
+
+    // Negate the condition, as this is how it gets improperly HTML encoded.
+    $edit = array(
+      'negate' => TRUE,
+    );
+    $this->drupalPost(NULL, $edit, 'Save');
+    $this->assertNoRaw("&amp;#039;", 'Apostrophe is not HTML-encoded.');
+  }
+
+}

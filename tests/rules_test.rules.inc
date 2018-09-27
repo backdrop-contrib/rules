@@ -51,6 +51,10 @@ function rules_test_rules_condition_info() {
     'label' => t('Test condition returning false'),
     'group' => t('Rules test'),
   );
+  $items['rules_test_condition_apostrophe'] = array(
+    'label' => t("Test use of an apostrophe (') in a condition label"),
+    'group' => t('Rules test'),
+  );
   // A condition for testing passing entities wrapped.
   $items['rules_test_condition_node_wrapped'] = array(
     'label' => t('Content is published'),
@@ -83,6 +87,20 @@ function rules_test_condition_true($settings, $state, $element) {
 function rules_test_condition_false() {
   rules_log('condition false called');
   return FALSE;
+}
+
+/**
+ * Condition testing use of an apostrophe in a condition label.
+ *
+ * Specifically, we want to ensure that special characters do not show up as
+ * HTML-encoded in the user interface.
+ */
+function rules_test_condition_apostrophe($settings, $state, $element) {
+  if (!$element instanceof RulesCondition) {
+    throw new Exception('Rules element has not been passed to condition.');
+  }
+  rules_log('condition apostrophe called');
+  return TRUE;
 }
 
 /**

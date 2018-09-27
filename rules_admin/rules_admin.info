@@ -4,3 +4,6 @@ package = Rules
 core = 7.x
 dependencies[] = rules
 configure = admin/config/workflow/rules
+
+; Test cases
+files[] = tests/rules_admin.test
