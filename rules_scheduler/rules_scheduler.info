@@ -3,11 +3,11 @@ description = Schedule the execution of Rules components using actions.
 dependencies[] = rules
 package = Rules
 core = 7.x
-files[] = rules_scheduler.test
 files[] = includes/rules_scheduler.handler.inc
 
 ; Views handlers
 files[] = includes/rules_scheduler_views_filter.inc
 
 ; Test cases
+files[] = rules_scheduler.test
 files[] = tests/rules_scheduler_test.inc
