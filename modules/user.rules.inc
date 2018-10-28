@@ -56,6 +56,8 @@ function rules_user_event_info() {
           'type' => 'text',
           'label' => t('view mode'),
           'options list' => 'rules_get_entity_view_modes',
+          // Add the entity-type for the options list callback.
+          'options list entity type' => 'user',
         ),
       ),
       'access callback' => 'rules_user_integration_access',
