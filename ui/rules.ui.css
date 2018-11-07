@@ -1,10 +1,12 @@
-@CHARSET "UTF-8";
+@charset "utf-8";
 
-.rules-show-js, html.js .rules-hide-js {
+.rules-show-js,
+html.js .rules-hide-js {
   display: none;
 }
 
-.rules-hide-js, html.js .rules-show-js {
+.rules-hide-js,
+html.js .rules-show-js {
   display: block;
 }
 
@@ -58,7 +60,8 @@ ul.rules-operations-add li {
   right: 0px;
 }
 
-.rules-elements-table caption, .rules-overview-table caption {
+.rules-elements-table caption,
+.rules-overview-table caption {
   font-size: 110%;
   font-weight: bold;
   padding-bottom: 0.5em;
@@ -190,6 +193,6 @@ ul.rules-autocomplete .ui-corner-all {
 }
 
 /* IE 6 hack for max-height. */
-* html ul.rule-autocomplete{
+* html ul.rule-autocomplete {
   height: 23em;
 }
