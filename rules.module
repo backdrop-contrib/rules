@@ -216,10 +216,10 @@ function rules_action_set($variables = array(), $provides = array()) {
  * @param $priority
  *   A priority as defined by the RulesLog class.
  * @param RulesPlugin $element
- *  (optional) The RulesElement causing the log entry.
+ *   (optional) The RulesElement causing the log entry.
  * @param bool $scope
- *  (optional) This may be used to denote the beginning (TRUE) or the end
- *  (FALSE) of a new execution scope.
+ *   (optional) This may be used to denote the beginning (TRUE) or the end
+ *   (FALSE) of a new execution scope.
  */
 function rules_log($msg, $args = array(), $priority = RulesLog::INFO, RulesPlugin $element = NULL, $scope = NULL) {
   static $logger, $settings;
@@ -390,9 +390,10 @@ function &rules_get_cache($cid = 'data') {
         }
       }
       if ($cid === 'data') {
-        // There is no 'data' cache so we need to rebuild it. Make sure subsequent
-        // cache gets of the main 'data' cache during rebuild get the interim
-        // cache by passing in the reference of the static cache variable.
+        // There is no 'data' cache so we need to rebuild it. Make sure
+        // subsequent cache gets of the main 'data' cache during rebuild get
+        // the interim cache by passing in the reference of the static cache
+        // variable.
         _rules_rebuild_cache($cache['data']);
       }
       elseif (strpos($cid, 'comp_') === 0) {

@@ -236,7 +236,7 @@ class RulesEntityController extends EntityAPIControllerExportable {
     $query_conditions =& $query->conditions();
     foreach ($query_conditions as &$condition) {
       // One entry in $query_conditions is a string with key '#conjunction'.
-      // @see QueryConditionInterface::conditions().
+      // @see QueryConditionInterface::conditions()
       if (is_array($condition)) {
         // Support using 'tags' => array('tag1', 'tag2') as condition.
         if ($condition['field'] == 'base.tags') {
@@ -350,7 +350,7 @@ abstract class RulesExtendable extends FacesExtendable {
   }
 
   /**
-   * Force the object to be setUp, this executes setUp() if not done yet.
+   * Forces the object to be setUp, this executes setUp() if not done yet.
    */
   public function forceSetUp() {
     if (!isset($this->cache) || (!empty($this->itemInfo['faces_cache']) && !$this->faces)) {
@@ -1479,7 +1479,7 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
     if (isset($this->cache[$this->itemName . '_info'][$this->elementName])) {
       $this->info = $this->cache[$this->itemName . '_info'][$this->elementName];
       // Remember that the info has been correctly setup.
-      // @see self::forceSetup().
+      // @see self::forceSetup()
       $this->infoLoaded = TRUE;
 
       // Register the defined class, if any.
@@ -1835,12 +1835,13 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
 }
 
 /**
- * Interface for objects that can be used as action.
+ * Interface for objects that can be used as actions.
  */
 interface RulesActionInterface {
 
   /**
-   * @return As specified.
+   * @return
+   *   As specified.
    *
    * @throws RulesEvaluationException
    *   Throws an exception if not all necessary arguments have been provided.
@@ -1850,12 +1851,12 @@ interface RulesActionInterface {
 }
 
 /**
- * Interface for objects that can be used as condition.
+ * Interface for objects that can be used as conditions.
  */
 interface RulesConditionInterface {
 
   /**
-   * @return Boolean.
+   * @return bool
    *
    * @throws RulesEvaluationException
    *   Throws an exception if not all necessary arguments have been provided.
@@ -1874,6 +1875,9 @@ interface RulesConditionInterface {
 
 }
 
+/**
+ * Interface for objects that are triggerable.
+ */
 interface RulesTriggerableInterface {
 
   /**
@@ -1934,7 +1938,8 @@ interface RulesPluginHandlerInterface {
   /**
    * Processes settings independent from a form submission.
    *
-   * Processing results may be stored and accessed on execution time in $settings.
+   * Processing results may be stored and accessed on execution time
+   * in $settings.
    */
   public function process();
 
@@ -2024,7 +2029,7 @@ interface RulesActionHandlerInterface extends RulesPluginHandlerInterface {}
 interface RulesPluginImplInterface extends RulesPluginHandlerInterface {
 
   /**
-   * Execute the action or condition making use of the parameters as specified.
+   * Executes the action or condition making use of the parameters as specified.
    */
   public function execute();
 
@@ -2094,7 +2099,7 @@ abstract class RulesConditionHandlerBase extends RulesPluginHandlerBase implemen
 abstract class RulesActionHandlerBase extends RulesPluginHandlerBase implements RulesActionHandlerInterface {}
 
 /**
- * Class providing default implementations of the methods of the RulesPluginImplInterface.
+ * Provides default implementations of the methods of the RulesPluginImplInterface.
  *
  * If a plugin implementation does not provide a function for a method, the
  * default method of this class will be invoked.
@@ -2153,7 +2158,7 @@ abstract class RulesContainerPlugin extends RulesPlugin implements IteratorAggre
   }
 
   /**
-   * Allow access to the children through the iterator.
+   * Allows access to the children through the iterator.
    *
    * @return RulesRecursiveElementIterator
    */
@@ -2311,7 +2316,7 @@ abstract class RulesContainerPlugin extends RulesPlugin implements IteratorAggre
   }
 
   /**
-   * Override delete to keep the children alive, if possible.
+   * Overrides delete to keep the children alive, if possible.
    */
   public function delete($keep_children = TRUE) {
     if (isset($this->parent) && $keep_children) {

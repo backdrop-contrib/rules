@@ -2,6 +2,8 @@
 
 /**
  * @file
+ * Documentation for hooks provided by the Rules API.
+ *
  * This file contains no working PHP code; it exists to provide additional
  * documentation for doxygen as well as to document hooks in the standard
  * Drupal manner.
@@ -65,7 +67,7 @@
  *   - 'access callback': (optional) A callback which has to return whether the
  *     currently logged in user is allowed to configure this action. See
  *     rules_node_integration_access() for an example callback.
- *  Each 'parameter' array may contain the following properties:
+ *   Each 'parameter' array may contain the following properties:
  *   - label: The label of the parameter. Start capitalized. Required.
  *   - type: The rules data type of the parameter, which is to be passed to the
  *     action. All types declared in hook_rules_data_info() may be specified, as
@@ -113,7 +115,7 @@
  *     to clean inserted replacements; e.g. this is used by the token evaluator.
  *   - wrapped: (optional) Set this to TRUE in case the data should be passed
  *     wrapped. This only applies to wrapped data types, e.g. entities.
- *  Each 'provides' array may contain the following properties:
+ *   Each 'provides' array may contain the following properties:
  *   - label: The label of the variable. Start capitalized. Required.
  *   - type: The rules data type of the variable. All types declared in
  *     hook_rules_data_info() may be specified. Types may be parametrized e.g.
@@ -657,7 +659,7 @@ function hook_rules_data_processor_info() {
  * @param $actions
  *   The items of all modules as returned from hook_rules_action_info().
  *
- * @see hook_rules_action_info().
+ * @see hook_rules_action_info()
  */
 function hook_rules_action_info_alter(&$actions) {
   // The rules action is more powerful, so hide the core action.
@@ -690,7 +692,7 @@ function hook_rules_condition_info_alter(&$conditions) {
  * @param $events
  *   The items of all modules as returned from hook_rules_event_info().
  *
- * @see hook_rules_event_info().
+ * @see hook_rules_event_info()
  */
 function hook_rules_event_info_alter(&$events) {
   // Change events.
@@ -993,7 +995,7 @@ function hook_rules_action_base_upgrade_map_name($element) {
 }
 
 /**
- * D6 to D7 upgrade procedure hook for mapping action or condition configuration.
+ * D6 to D7 upgrade process hook for mapping action or condition configuration.
  *
  * During upgrading Drupal 6 rule configurations to Drupal 7 Rules is taking
  * care of upgrading the configuration of all known parameters, which only works
@@ -1021,7 +1023,7 @@ function hook_rules_action_base_upgrade($element, RulesPlugin $target) {
 }
 
 /**
- * D6 to D7 upgrade procedure hook for mapping action or condition configuration.
+ * D6 to D7 upgrade process hook for mapping action or condition configuration.
  *
  * A alter hook that is called after the action/condition specific callback for
  * each element of a configuration that is upgraded.

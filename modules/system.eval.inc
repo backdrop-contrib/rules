@@ -142,7 +142,7 @@ function rules_action_mail_to_users_of_role($roles, $subject, $message, $from = 
 /**
  * Implements hook_mail().
  *
- * Set's the message subject and body as configured.
+ * Sets the message subject and body as configured.
  */
 function rules_mail($key, &$message, $params) {
 

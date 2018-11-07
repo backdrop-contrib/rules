@@ -12,7 +12,7 @@ function rules_scheduler_drush_command() {
   $items = array();
 
   $items['rules-scheduler-tasks'] = array(
-    'description' => 'Checks for scheduled tasks to be added to the queue.',
+    'description' => 'Check for scheduled tasks to be added to the queue.',
     'options' => array(
       'claim' => 'Optionally claim tasks from the queue to work on. Any value set will override the default time spent on this queue.',
     ),

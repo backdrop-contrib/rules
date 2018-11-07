@@ -139,7 +139,7 @@ function rules_scheduler_task_delete($tid) {
  *
  * @param $task
  *   An array representing the task with the following keys:
- *   - config: The machine readable name of the to be scheduled component.
+ *   - config: The machine readable name of the to-be-scheduled component.
  *   - date: Timestamp when the component should be executed.
  *   - state: (deprecated) Rules evaluation state to use for scheduling.
  *   - data: Any additional data to store with the task.

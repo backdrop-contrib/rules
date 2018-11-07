@@ -42,8 +42,8 @@ Rules Scheduler
  * Make sure that you have configured cron for your drupal installation as cron
    is used for scheduling the Rules components. For help see
    http://drupal.org/cron
- * If the Views module (http://drupal.org/project/views) is installed, the module
-   displays the list of scheduled tasks in the UI.
+ * If the Views module (http://drupal.org/project/views) is installed, the
+   module displays the list of scheduled tasks in the UI.
 
 
 Upgrade from Rules 6.x-1.x to Rules 7.x-2.x
@@ -60,7 +60,7 @@ Upgrade from Rules 6.x-1.x to Rules 7.x-2.x
      * Note that for importing an export the export needs to pass the
        configuration integrity check, what might be troublesome if the
        conversion was not 100% successful. In that case, try choosing the
-       immediate saving method and correct the configuration after conversion.  
+       immediate saving method and correct the configuration after conversion.
      * A rule configuration might require multiple modules to be in place and
        upgraded to work properly. E.g. if you used an action provided
        by a third party module, make sure the module is in place and upgraded
