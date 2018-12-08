@@ -350,7 +350,8 @@ class Rule extends RulesActionContainer {
 class RulesReactionRule extends Rule implements RulesTriggerableInterface {
 
   protected $itemName = 'reaction rule';
-  protected $events = array(), $eventSettings = array();
+  protected $events = array();
+  protected $eventSettings = array();
 
   /**
    * Implements RulesTriggerableInterface::events().

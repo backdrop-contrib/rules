@@ -504,7 +504,7 @@ function rules_clear_cache() {
 /**
  * Imports the given export and returns the imported configuration.
  *
- * @param $export
+ * @param string $export
  *   A serialized string in JSON format as produced by the RulesPlugin::export()
  *   method, or the PHP export as usual PHP array.
  *
@@ -521,7 +521,7 @@ function rules_import($export, &$error_msg = '') {
  *   If available, the actual data, else NULL.
  * @param $info
  *   An array of info about this data.
- * @param $force
+ * @param bool $force
  *   Usually data is only wrapped if really needed. If set to TRUE, wrapping the
  *   data is forced, so primitive data types are also wrapped.
  *

@@ -309,7 +309,9 @@ class RulesEventDefaultHandler extends RulesEventHandlerBase {
  */
 class RulesEventHandlerEntityBundle extends RulesEventHandlerBase {
 
-  protected $entityType, $entityInfo, $bundleKey;
+  protected $entityType;
+  protected $entityInfo;
+  protected $bundleKey;
 
   /**
    * Implements RulesEventHandlerInterface::__construct().

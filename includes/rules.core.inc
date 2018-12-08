@@ -69,7 +69,7 @@ class RulesEntityController extends EntityAPIControllerExportable {
   /**
    * Override to support having events and tags as conditions.
    *
-   * @see EntityAPIController::applyConditions($entities, $conditions)
+   * @see EntityAPIController::applyConditions()
    * @see rules_query_rules_config_load_multiple_alter()
    */
   protected function applyConditions($entities, $conditions = array()) {
@@ -330,7 +330,8 @@ abstract class RulesExtendable extends FacesExtendable {
    */
   protected $itemName;
 
-  protected $cache, $itemInfo = array();
+  protected $cache;
+  protected $itemInfo = array();
 
   public function __construct() {
     $this->setUp();
@@ -406,7 +407,7 @@ abstract class RulesExtendable extends FacesExtendable {
    * @param $interface
    *   The interface to check for.
    *
-   * @return
+   * @return bool
    *   Whether it supports the given interface.
    */
   public static function itemFacesAs(&$itemInfo, $interface) {
@@ -449,7 +450,8 @@ abstract class RulesPlugin extends RulesExtendable {
    */
   protected $parent = NULL;
 
-  protected $cache = NULL, $hook = 'plugin_info';
+  protected $cache = NULL;
+  protected $hook = 'plugin_info';
 
   /**
    * Identifies an element inside a configuration.
@@ -1239,7 +1241,7 @@ abstract class RulesPlugin extends RulesExtendable {
    *   A status constant, i.e. one of ENTITY_CUSTOM, ENTITY_IN_CODE,
    *   ENTITY_OVERRIDDEN or ENTITY_FIXED.
    *
-   * @return
+   * @return bool
    *   TRUE if the configuration has the status, else FALSE.
    *
    * @see entity_has_status()
@@ -1402,6 +1404,12 @@ abstract class RulesPlugin extends RulesExtendable {
   /**
    * Finalizes the configuration export by adding general attributes regarding
    * the configuration and returns it in the right format.
+   *
+   * @param $prefix
+   *   An optional prefix for each line.
+   * @param $php
+   *   Optional. Set to TRUE to format the export using PHP arrays. By default
+   *   JSON is used.
    */
   protected function returnExport($export, $prefix = '', $php = FALSE) {
     $this->ensureNameExists();
@@ -2619,7 +2627,8 @@ class RulesLog {
   }
 
   protected $log = array();
-  protected $logLevel, $line = 0;
+  protected $logLevel;
+  protected $line = 0;
 
   /**
    * This is a singleton.
@@ -2657,7 +2666,7 @@ class RulesLog {
   /**
    * Checks the log for (error) messages with a log level equal or higher than the given one.
    *
-   * @return
+   * @return bool
    *   Whether the an error has been logged.
    */
   public function hasErrors($logLevel = self::WARN) {
@@ -2755,7 +2764,11 @@ abstract class RulesException extends Exception {}
  */
 class RulesEvaluationException extends RulesException {
 
-  public $msg, $args, $severity, $element, $keys = array();
+  public $msg;
+  public $args;
+  public $severity;
+  public $element;
+  public $keys = array();
 
   /**
    * @param $msg
@@ -2792,13 +2805,15 @@ class RulesEvaluationException extends RulesException {
 }
 
 /**
- * An exception that is thrown for Rules configurations that fail the integrity check.
+ * Indicates the Rules configuration failed the integrity check.
  *
  * @see RulesPlugin::integrityCheck()
  */
 class RulesIntegrityException extends RulesException {
 
-  public $msg, $element, $keys = array();
+  public $msg;
+  public $element;
+  public $keys = array();
 
   /**
    * @param string $msg

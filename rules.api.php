@@ -35,7 +35,7 @@
  * handlers may be provided by implementing RulesActionHandlerInterface. See
  * the interface for details.
  *
- * @return
+ * @return array
  *   An array of information about the module's provided rules actions.
  *   The array contains a sub-array for each action, with the action name as
  *   the key. Actions names may only contain lowercase alpha-numeric characters
@@ -168,7 +168,7 @@ function hook_rules_action_info() {
  * will be treated as grouping in the given category (e.g. group "paypal" in
  * category "commerce payment").
  *
- * @return
+ * @return array
  *   An array of information about the module's provided categories.
  *   The array contains a sub-array for each category, with the category name as
  *   the key. Names may only contain lowercase alpha-numeric characters
@@ -222,7 +222,7 @@ function hook_rules_category_info() {
  * plugin method callbacks in any file without having to care about file
  * inclusion.
  *
- * @return
+ * @return array
  *   An array of file names without the file ending which defaults to '.inc'.
  */
 function hook_rules_file_info() {
@@ -261,7 +261,7 @@ function hook_rules_directory() {
  *   hook_rules_action_info() as well as an array containing the action's
  *   configuration settings.
  *
- * @return
+ * @return array
  *   The action may return an array containing parameter or provided variables
  *   with their names as key. This is used update the value of a parameter or to
  *   provide the value for a provided variable.
@@ -323,7 +323,7 @@ function hook_rules_condition_info() {
  * handlers may be provided by implementing RulesEventHandlerInterface. See
  * the interface for details.
  *
- * @return
+ * @return array
  *   An array of information about the module's provided rules events. The array
  *   contains a sub-array for each event, with the event name as the key. The
  *   name may only contain lower case alpha-numeric characters and underscores
@@ -415,7 +415,7 @@ function hook_rules_event_info() {
  * module.
  * For a list of data types defined by rules see rules_rules_core_data_info().
  *
- * @return
+ * @return array
  *   An array of information about the module's provided data types. The array
  *   contains a sub-array for each data type, with the data type name as the
  *   key. The name may only contain lower case alpha-numeric characters and
@@ -498,7 +498,7 @@ function hook_rules_data_info() {
  * A rules configuration may consist of elements being instances of any rules
  * plugin. This hook can be used to define new or to extend rules plugins.
  *
- * @return
+ * @return array
  *   An array of information about the module's provided rules plugins. The
  *   array contains a sub-array for each plugin, with the plugin name as the
  *   key. The name may only contain lower case alpha-numeric characters,
@@ -544,7 +544,7 @@ function hook_rules_data_info() {
  *     of the 'or' plugin. Note that only uppercase values are allowed, as
  *     lower case values are treated as action or condition exports.
  *
- * @see class RulesPlugin
+ * @see RulesPlugin
  * @see hook_rules_plugin_info_alter()
  */
 function hook_rules_plugin_info() {
@@ -584,7 +584,7 @@ function hook_rules_plugin_info() {
  * and help() could be overridden in order to control access permissions or to
  * provide some usage help.
  *
- * @return
+ * @return array
  *   An array of information about the module's provided input evaluators. The
  *   array contains a sub-array for each evaluator, with the evaluator name as
  *   the key. The name may only contain lower case alpha-numeric characters and
@@ -598,7 +598,7 @@ function hook_rules_plugin_info() {
  *     used. Defaults to 'text'. Multiple data types may be specified using an
  *     array.
  *
- * @see class RulesDataInputEvaluator
+ * @see RulesDataInputEvaluator
  * @see hook_rules_evaluator_info_alter()
  */
 function hook_rules_evaluator_info() {
@@ -622,7 +622,7 @@ function hook_rules_evaluator_info() {
  * access() could be overridden in order to provide a configuration form or
  * to control access permissions.
  *
- * @return
+ * @return array
  *   An array of information about the module's provided data processors. The
  *   array contains a sub-array for each processor, with the processor name as
  *   the key. The name may only contain lower case alpha-numeric characters and
@@ -637,7 +637,7 @@ function hook_rules_evaluator_info() {
  *     used. Defaults to 'text'. Multiple data types may be specified using an
  *     array.
  *
- * @see class RulesDataProcessor
+ * @see RulesDataProcessor
  * @see hook_rules_data_processor_info_alter()
  */
 function hook_rules_data_processor_info() {
@@ -646,7 +646,7 @@ function hook_rules_data_processor_info() {
       'class' => 'RulesDateOffsetProcessor',
       'type' => 'date',
       'weight' => -2,
-     ),
+    ),
   );
 }
 
@@ -858,7 +858,7 @@ function hook_rules_config_execute($config) {
  * should be placed into the file MODULENAME.rules_defaults.inc, which gets
  * automatically included when the hook is invoked.
  *
- * @return
+ * @return array
  *   An array of rules configurations with the configuration names as keys.
  *
  * @see hook_default_rules_configuration_alter()
@@ -987,7 +987,7 @@ function hook_rules_event_set_alter($event_name, RulesEventSet $event_set) {
  *   The element array of a configured condition or action which is to be
  *   upgraded.
  *
- * @return
+ * @return string
  *   The name of the action or condition which should be used.
  */
 function hook_rules_action_base_upgrade_map_name($element) {

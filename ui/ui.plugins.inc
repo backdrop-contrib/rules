@@ -9,7 +9,8 @@
  */
 class RulesRuleUI extends RulesActionContainerUI {
 
-  protected $rule, $conditions;
+  protected $rule;
+  protected $conditions;
 
   public function __construct(FacesExtendable $object) {
     parent::__construct($object);
