@@ -719,7 +719,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
         $class = $this->getDataTypeClass($parameter['type'], $parameter);
         $method = empty($parameter['options list']) ? 'render' : 'renderOptionsLabel';
         // We cannot use method_exists() here as it would trigger a PHP bug.
-        // @see https://drupal.org/node/1258284
+        // @see https://www.drupal.org/node/1258284
         $element = call_user_func(array($class, $method), $this->element->settings[$name], $name, $parameter, $this->element);
       }
       // Only add parameters that are really configured / not default.

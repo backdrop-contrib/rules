@@ -18,7 +18,7 @@ function rules_scheduler_schedule_page() {
     $task_list = $view->preview();
   }
   else {
-    $task_list = t('To display scheduled tasks you have to install the <a href="https://drupal.org/project/views">Views</a> module.');
+    $task_list = t('To display scheduled tasks you have to install the <a href="https://www.drupal.org/project/views">Views</a> module.');
   }
   $page['task_view'] = array(
     '#markup' => $task_list,

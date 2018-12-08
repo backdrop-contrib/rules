@@ -26,10 +26,9 @@ function rules_events_entity_unchanged($arguments, $name, $info) {
 
 /**
  * Generic entity events, used for core-entities for which we provide Rules
- * integration only.
- * We are implementing the generic-entity hooks instead of the entity-type
- * specific hooks to ensure we come last. See https://drupal.org/node/1211946
- * for details.
+ * integration only. We are implementing the generic-entity hooks instead of
+ * the entity-type specific hooks to ensure we come last.
+ * See https://www.drupal.org/node/1211946 for details.
  */
 
 /**

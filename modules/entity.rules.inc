@@ -460,8 +460,8 @@ function rules_condition_entity_is_new_help() {
  * Returns options for choosing a field for the selected entity.
  */
 function rules_condition_entity_has_field_options(RulesAbstractPlugin $element) {
-  // The field_info_field_map() function was introduced in Drupal 7.22 (see
-  // https://drupal.org/node/1915646).
+  // The field_info_field_map() function was introduced in Drupal 7.22. See
+  // https://www.drupal.org/node/1915646.
   if (function_exists('field_info_field_map')) {
     $fields = field_info_field_map();
   }

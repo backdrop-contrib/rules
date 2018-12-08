@@ -160,7 +160,7 @@ function rules_admin_settings($form, &$form_state) {
       $pathauto_help = t("Note that Pathauto's URL path cleaning method can be configured at <a href='!url'>admin/config/search/path/settings</a>.", array('!url' => url('admin/config/search/path/settings')));
     }
     else {
-      $pathauto_help = t('Install the <a href="https://drupal.org/project/pathauto">Pathauto module</a> in order to get a configurable URL path cleaning method.');
+      $pathauto_help = t('Install the <a href="https://www.drupal.org/project/pathauto">Pathauto module</a> in order to get a configurable URL path cleaning method.');
     }
 
     $form['path']['rules_path_cleaning_callback'] = array(
