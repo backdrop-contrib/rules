@@ -15,7 +15,7 @@
  * Module integrations with the rules module.
  *
  * The Rules developer documentation describes how modules can integrate with
- * rules: http://drupal.org/node/298486.
+ * rules: https://drupal.org/node/298486.
  */
 
 /**
@@ -362,7 +362,7 @@ function hook_rules_condition_info() {
  *     - handler: (optional) A handler to load the actual variable value. This
  *       is useful for lazy loading variables. The handler gets all so far
  *       available variables passed in the order as defined. Also see
- *       http://drupal.org/node/884554.
+ *       https://drupal.org/node/884554.
  *       Note that for lazy-loading entities just the entity id may be passed
  *       as variable value, so a handler is not necessary in that case.
  *

@@ -1612,17 +1612,17 @@ function rules_menu() {
  */
 function rules_external_help($topic = NULL) {
   $help = array(
-    'rules' =>                'http://drupal.org/node/298480',
-    'terminology' =>          'http://drupal.org/node/1299990',
-    'condition-components' => 'http://drupal.org/node/1300034',
-    'data-selection' =>       'http://drupal.org/node/1300042',
-    'chained-tokens' =>       'http://drupal.org/node/1300042',
-    'loops' =>                'http://drupal.org/node/1300058',
-    'components' =>           'http://drupal.org/node/1300024',
-    'component-types' =>      'http://drupal.org/node/1300024',
-    'variables' =>            'http://drupal.org/node/1300024',
-    'scheduler' =>            'http://drupal.org/node/1300068',
-    'coding' =>               'http://drupal.org/node/878720',
+    'rules' =>                'https://drupal.org/node/298480',
+    'terminology' =>          'https://drupal.org/node/1299990',
+    'condition-components' => 'https://drupal.org/node/1300034',
+    'data-selection' =>       'https://drupal.org/node/1300042',
+    'chained-tokens' =>       'https://drupal.org/node/1300042',
+    'loops' =>                'https://drupal.org/node/1300058',
+    'components' =>           'https://drupal.org/node/1300024',
+    'component-types' =>      'https://drupal.org/node/1300024',
+    'variables' =>            'https://drupal.org/node/1300024',
+    'scheduler' =>            'https://drupal.org/node/1300068',
+    'coding' =>               'https://drupal.org/node/878720',
   );
 
   if (isset($topic)) {

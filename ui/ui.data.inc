@@ -421,7 +421,7 @@ class RulesDataUIURI extends RulesDataUIText {
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     $form = parent::inputForm($name, $info, $settings, $element);
     $form[$name]['#rows'] = 1;
-    $form[$name]['#description'] = t('You may enter relative URLs like %url as well as absolute URLs like %absolute-url.', array('%url' => 'user/login?destination=node', '%absolute-url' => 'http://drupal.org'));
+    $form[$name]['#description'] = t('You may enter relative URLs like %url as well as absolute URLs like %absolute-url.', array('%url' => 'user/login?destination=node', '%absolute-url' => 'https://drupal.org'));
     return $form;
   }
 
