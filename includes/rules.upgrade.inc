@@ -382,7 +382,9 @@ function rules_upgrade_element_variable_settings($element, $target, $name, $new_
  * Upgrade callbacks for upgrading the provided Rules 1.x integration.
  */
 
-// Comment.module integration.
+/**
+ * Comment.module integration.
+ */
 function rules_action_load_comment_upgrade_map_name($element) {
   return 'entity_fetch';
 }
@@ -393,7 +395,9 @@ function rules_action_load_comment_upgrade($element, $target) {
   rules_upgrade_element_variable_settings($element, $target, 'comment_loaded', 'entity_fetched');
 }
 
-// Node.module integration.
+/**
+ * Node.module integration.
+ */
 function rules_condition_content_is_type_upgrade_map_name($element) {
   return 'node_is_of_type';
 }
@@ -637,7 +641,7 @@ function rules_action_watchdog_upgrade_map_name($element) {
 /**
  * Taxonomy.module integration.
  *
- *@todo Finish.
+ * @todo Finish.
  */
 function rules_action_taxonomy_load_term_upgrade_map_name($element) {
   return 'entity_fetch';

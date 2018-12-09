@@ -907,7 +907,8 @@ abstract class RulesPlugin extends RulesExtendable {
       elseif (!$this->isRoot() && !isset($this->settings[$name]) && empty($info['optional']) && $info['type'] != 'hidden') {
         throw new RulesIntegrityException(t('Missing configuration for parameter %name.', array('%name' => $name)), array($this, 'parameter', $name));
       }
-      //@todo Make sure used values are allowed. (key/value pairs + allowed values)
+      // @todo Make sure used values are allowed.
+      // (key/value pairs + allowed values).
     }
   }
 
@@ -2816,13 +2817,15 @@ class RulesIntegrityException extends RulesException {
   public $keys = array();
 
   /**
+   * Constructs a RulesIntegrityException object.
+   *
    * @param string $msg
    *   The exception message, already translated.
    * @param $element
    *   The element of a configuration causing the exception or an array
    *   consisting of the element and keys specifying a parameter or provided
    *   variable causing the exception, e.g.
-   *   @code array($element, 'parameter', 'node') @endcode.
+   *   @code array($element, 'parameter', 'node') @endcode
    */
   public function __construct($msg, $element = NULL) {
     $this->element = is_array($element) ? array_shift($element) : $element;

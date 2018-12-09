@@ -17,7 +17,7 @@ function rules_user_file_info() {
 }
 
 /**
- * Implementation of hook_rules_event_info().
+ * Implements hook_rules_event_info().
  */
 function rules_user_event_info() {
   return array(

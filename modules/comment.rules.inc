@@ -10,7 +10,7 @@
  */
 
 /**
- * Implementation of hook_rules_event_info().
+ * Implements hook_rules_event_info().
  */
 function rules_comment_event_info() {
   $defaults = array(

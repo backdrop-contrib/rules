@@ -44,7 +44,9 @@ class RulesState {
    */
   protected $currentlyBlocked;
 
-
+  /**
+   * Constructs a RulesState object.
+   */
   public function __construct() {
     // Use an object in order to ensure any cloned states reference the same
     // save information.
@@ -313,30 +315,37 @@ class RulesState {
 
   /**
    * Magic method. Only serialize variables and their info.
+   *
    * Additionally we remember currently blocked configs, so we can restore them
    * upon deserialization using restoreBlocks().
    */
-  public function __sleep () {
+  public function __sleep() {
     $this->currentlyBlocked = self::$blocked;
     return array('info', 'variables', 'currentlyBlocked');
   }
 
+  /**
+   * Magic method. Unserialize variables and their info.
+   */
   public function __wakeup() {
     $this->save = new ArrayObject();
   }
 
   /**
-   * Restore the before serialization blocked configurations.
+   * Restores the before-serialization blocked configurations.
    *
    * Warning: This overwrites any possible currently blocked configs. Thus
-   * do not invoke this method, if there might be evaluations active.
+   * do not invoke this method if there might be evaluations active.
    */
   public function restoreBlocks() {
     self::$blocked = $this->currentlyBlocked;
   }
 
   /**
-   * Defines always available variables.
+   * Defines always-available variables.
+   *
+   * @param $key
+   *   (optional)
    */
   public static function defaultVariables($key = NULL) {
     // Add a variable for accessing site-wide data properties.
@@ -367,10 +376,10 @@ class RulesData {
    * @param $param_info
    *   The type expression to check for.
    * @param $ancestors
-   *   Whether sub-type relationships for checking type compatibility should be
-   *   taken into account. Defaults to TRUE.
+   *   (optional) Whether sub-type relationships for checking type compatibility
+   *   should be taken into account. Defaults to TRUE.
    *
-   * @return
+   * @return bool
    *   Whether the types match.
    */
   public static function typesMatch($var_info, $param_info, $ancestors = TRUE) {
@@ -435,7 +444,7 @@ class RulesData {
    *   Whether possibilities to recurse are suggested as soon as the deepest
    *   level of recursions is reached. Defaults to TRUE.
    *
-   * @return
+   * @return array
    *  An array of info about matching variables or properties that match, keyed
    *  with the data selector.
    */

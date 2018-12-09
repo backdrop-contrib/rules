@@ -36,18 +36,18 @@ interface RulesDataInputOptionsListInterface extends RulesDataDirectInputFormInt
   /**
    * Returns the options list for the data type.
    *
-   * @param RulesPlugin $element
-   *   The rules element to get the options for.
-   * @param string $name
-   *   The name of the parameter for which to get options.
-   *
    * For retrieving information about the used data type and parameter, the
    * helper RulesDataUI::getTypeInfo() may be used as following:
    * @code
    *   list($type, $parameter_info) = RulesDataUI::getTypeInfo($element, $name);
    * @endcode
    *
-   * @return
+   * @param RulesPlugin $element
+   *   The rules element to get the options for.
+   * @param string $name
+   *   The name of the parameter for which to get options.
+   *
+   * @return array
    *   An array of options as used by hook_options_list().
    */
   public static function optionsList(RulesPlugin $element, $name);

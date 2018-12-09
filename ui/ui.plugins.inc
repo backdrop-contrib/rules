@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @file Contains UI for diverse plugins provided by Rules.
+ * @file
+ * Contains UI for diverse plugins provided by Rules.
  */
 
 /**
@@ -12,6 +13,11 @@ class RulesRuleUI extends RulesActionContainerUI {
   protected $rule;
   protected $conditions;
 
+  /**
+   * Constructs a RulesRuleUI object.
+   *
+   * @param FacesExtendable $object
+   */
   public function __construct(FacesExtendable $object) {
     parent::__construct($object);
     $this->rule = $object;

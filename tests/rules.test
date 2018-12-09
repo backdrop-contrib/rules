@@ -1146,7 +1146,7 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
 
     RulesLog::logger()->checkLog();
     $this->assertFalse(node_load($nid), 'Rule successfully triggered and executed');
-    //debug(RulesLog::logger()->render());
+    // debug(RulesLog::logger()->render());
   }
 
   /**
@@ -1179,7 +1179,7 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
     $pos = strpos($text, $msg);
     $pos = ($pos !== FALSE) ? strpos($text, $msg, $pos) : FALSE;
     $this->assertTrue($pos !== FALSE, "Recursion prevented.");
-    //debug(RulesLog::logger()->render());
+    // debug(RulesLog::logger()->render());
   }
 
   /**
@@ -1193,7 +1193,7 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
     // On insert it's not possible to get the unchanged node during presave.
     $node = $this->drupalCreateNode(array('type' => 'page', 'sticky' => 0, 'status' => 0));
 
-    //debug(RulesLog::logger()->render());
+    // debug(RulesLog::logger()->render());
     $text = RulesTestCase::t('Unable to load variable %node_unchanged, aborting.', array('node_unchanged'));
     $this->assertTrue(strpos(RulesLog::logger()->render(), $text) !== FALSE, "Aborted evaluation.");
   }
@@ -1212,9 +1212,9 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
     node_save($node);
 
     $text = RulesTestCase::t('Not evaluating reaction rule %label to prevent recursion.', array('label' => $rule->name));
-    //debug(RulesLog::logger()->render());
+    // debug(RulesLog::logger()->render());
     $this->assertTrue((strpos(RulesLog::logger()->render(), $text) !== FALSE), "Recursion prevented.");
-    //debug(RulesLog::logger()->render());
+    // debug(RulesLog::logger()->render());
   }
 
   /**
@@ -1241,7 +1241,7 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
     $node = $this->drupalCreateNode(array('type' => 'page', 'sticky' => 0, 'status' => 0));
     node_save($node);
 
-    //debug(RulesLog::logger()->render());
+    // debug(RulesLog::logger()->render());
     $text = RulesLog::logger()->render();
     $pos = strpos($text, RulesTestCase::t('Evaluating conditions of rule %rule 1', array('rule 1')));
     $pos = ($pos !== FALSE) ? strpos($text, RulesTestCase::t('Evaluating conditions of rule %rule 2', array('rule 2')), $pos) : FALSE;
@@ -1360,7 +1360,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
       'value' => array(
         'value' => 'test text',
         'format' => 1,
-      )
+      ),
     ));
     $action->access();
     $action->execute();
@@ -1373,7 +1373,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
       'list' => array(
         'type' => 'list<text>',
         'label' => 'A list of text',
-      )
+      ),
     ));
     $rule->action('list_add', array('list:select' => 'list', 'item' => 'bar2'));
     $rule->action('list_add', array('list:select' => 'list', 'item' => 'bar', 'pos' => 'start'));
@@ -1385,7 +1385,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     $this->assertEqual($list->value(), array('bar', 'foo', 'foo2'), 'List items removed and added.');
     $this->assertFalse(rules_condition('list_contains')->execute($list, 'foo-bar'), 'Condition "List item contains" evaluates to FALSE');
     $this->assertTrue(rules_condition('list_contains')->execute($list, 'foo'), 'Condition "List item contains" evaluates to TRUE');
-    //debug(RulesLog::logger()->render());
+    // debug(RulesLog::logger()->render());
 
     // Test data_is condition with IN operation.
     $rule = rule(array('node' => array('type' => 'node')));
@@ -1580,7 +1580,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     $pos = ($pos !== FALSE) ? strpos($text, RulesTestCase::t('Saved %node of type %node.', array('node')), $pos) : FALSE;
     $pos = ($pos !== FALSE) ? strpos($text, RulesTestCase::t('Evaluating the action %entity_delete.', array('entity_delete')), $pos) : FALSE;
     $this->assertTrue($pos !== FALSE, 'Data has been fetched, saved and deleted.');
-    //debug(RulesLog::logger()->render());
+    // debug(RulesLog::logger()->render());
 
     $node = entity_property_values_create_entity('node', array(
       'type' => 'article',

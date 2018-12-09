@@ -502,7 +502,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
           '#type' => 'checkbox',
           '#title' => t('Configure access for using this component with a permission.'),
           '#default_value' => !empty($this->element->access_exposed),
-          '#description' => t('By default, the @plugin-type for using this component may be only used by users that have access to configure the component. If checked, access is determined by a permission instead.', array('@plugin-type' => $plugin_type))
+          '#description' => t('By default, the @plugin-type for using this component may be only used by users that have access to configure the component. If checked, access is determined by a permission instead.', array('@plugin-type' => $plugin_type)),
         );
         $form['settings']['access']['permissions'] = array(
           '#type' => 'container',
@@ -698,7 +698,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
       '#title' => $this->element->label(),
       '#href' => $this->element->isRoot() ? RulesPluginUI::path($config_name) : RulesPluginUI::path($config_name, 'edit', $this->element),
       '#prefix' => '<div class="rules-element-label">',
-      '#suffix' => '</div>'
+      '#suffix' => '</div>',
     );
     // Put the elements below in a "description" div.
     $content['description'] = array(
@@ -948,7 +948,7 @@ class RulesContainerPluginUI extends RulesPluginUI {
       '#tree' => TRUE,
       '#theme' => 'rules_elements',
       '#empty' => t('None'),
-      '#caption' => t('Elements')
+      '#caption' => t('Elements'),
     );
     $form['elements']['#attributes']['class'][] = 'rules-container-plugin';
 

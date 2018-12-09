@@ -43,7 +43,7 @@ function rules_action_drupal_goto($url, $force = FALSE, $destination = FALSE) {
   if ($force && isset($_GET['destination'])) {
     unset($_GET['destination']);
   }
-  // We don't invoke drupal_goto() right now, as this would end the the current
+  // We don't invoke drupal_goto() right now, as this would end the current
   // page execution unpredictably for modules. So we'll take over drupal_goto()
   // calls from somewhere else via hook_drupal_goto_alter() and make sure
   // a drupal_goto() is invoked before the page is output with

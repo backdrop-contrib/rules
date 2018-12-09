@@ -58,8 +58,9 @@ function rules_init() {
 }
 
 /**
- * Returns an instance of the rules UI controller, which eases re-using the Rules UI.
+ * Returns an instance of the rules UI controller.
  *
+ * This function is for convenience, to ease re-using the Rules UI.
  * See the rules_admin.module for example usage.
  *
  * @return RulesUIController
@@ -332,6 +333,13 @@ function rules_discover_plugins($class) {
 
 /**
  * Determines the module providing the given class.
+ *
+ * @param string $class
+ *   The name of the class or interface plugins to discover.
+ *
+ * @return string|false
+ *   The path of the class, relative to the Drupal installation root,
+ *   or FALSE if not discovered.
  */
 function _rules_discover_module($class) {
   $paths = &drupal_static(__FUNCTION__);
@@ -349,7 +357,7 @@ function _rules_discover_module($class) {
   $path = str_replace(realpath(DRUPAL_ROOT) . DIRECTORY_SEPARATOR, '', realpath(dirname($reflection->getFileName())));
   $path = DIRECTORY_SEPARATOR != '/' ? str_replace(DIRECTORY_SEPARATOR, '/', $path) : $path;
 
-  // Go up the path until we match a module up.
+  // Go up the path until we match a module.
   $parts = explode('/', $path);
   while (!isset($paths[$path]) && array_pop($parts)) {
     $path = dirname($path);
@@ -507,6 +515,7 @@ function rules_clear_cache() {
  * @param string $export
  *   A serialized string in JSON format as produced by the RulesPlugin::export()
  *   method, or the PHP export as usual PHP array.
+ * @param string $error_msg
  *
  * @return RulesPlugin
  */
@@ -638,6 +647,9 @@ function rules_get_event_info($event_name) {
  * For a configured event name like node_view--article the base event name
  * node_view is returned.
  *
+ * @param string $event_name
+ *   A (configured) event name.
+ *
  * @return string
  *   The event base name.
  */
@@ -684,7 +696,7 @@ function rules_plugin_factory($plugin_name, $arg1 = NULL, $arg2 = NULL) {
 }
 
 /**
- * Implementation of hook_rules_plugin_info().
+ * Implements hook_rules_plugin_info().
  *
  * Note that the cache is rebuilt in the order of the plugins. Therefore the
  * condition and action plugins must be at the top, so that any components
@@ -809,7 +821,7 @@ function rules_rules_plugin_info() {
 }
 
 /**
- * Implementation of hook_entity_info().
+ * Implements hook_entity_info().
  */
 function rules_entity_info() {
   return array(
@@ -838,7 +850,7 @@ function rules_entity_info() {
 }
 
 /**
- * Implementation of hook_hook_info().
+ * Implements hook_hook_info().
  */
 function rules_hook_info() {
   foreach (array('plugin_info', 'rules_directory', 'data_info', 'condition_info', 'action_info', 'event_info', 'file_info', 'evaluator_info', 'data_processor_info') as $hook) {
@@ -937,7 +949,7 @@ function rules_config_delete(array $ids) {
 /**
  * Ensures the configuration's 'dirty' flag is up to date by running an integrity check.
  *
- * @param $update
+ * @param bool $update
  *   (optional) Whether the dirty flag is also updated in the database if
  *   necessary. Defaults to TRUE.
  */
@@ -990,7 +1002,7 @@ function rules_config_update_dirty_flag($rules_config, $update = TRUE) {
  * @param ...
  *   Arguments to pass to the hook / event.
  *
- * @return
+ * @return array
  *   An array of return values of the hook implementations. If modules return
  *   arrays from their implementations, those are merged into one array.
  */
@@ -1082,7 +1094,7 @@ function rules_invoke_event_by_args($event_name, $args = array()) {
  * @param $args
  *   Pass further parameters as required for the invoked component.
  *
- * @return
+ * @return array
  *   An array of variables as provided by the component, or FALSE in case the
  *   component could not be executed.
  */
@@ -1124,7 +1136,7 @@ function rules_filter_array($array, $key, $value) {
  * Merges the $update array into $array making sure no values of $array not
  * appearing in $update are lost.
  *
- * @return
+ * @return array
  *   The updated array.
  */
 function rules_update_array(array $array, array $update) {
@@ -1604,10 +1616,10 @@ function rules_menu() {
 /**
  * Helper function to keep track of external documentation pages for Rules.
  *
- * @param $topic
+ * @param string $topic
  *   The topic key for used for identifying help pages.
  *
- * @return
+ * @return string|array|false
  *   Either a URL for the given page, or the full list of external help pages.
  */
 function rules_external_help($topic = NULL) {
@@ -1724,7 +1736,7 @@ function rules_entity_metadata_wrapper_all_properties_callback(EntityMetadataWra
  * when Drupal is not fully bootstrapped. It gets enabled in rules_init() and
  * rules_enable().
  *
- * @param bool|NULL $enable
+ * @param bool|null $enable
  *   NULL to leave the setting as is and TRUE / FALSE to change the behaviour.
  *
  * @return bool

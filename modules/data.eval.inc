@@ -44,7 +44,7 @@ function rules_action_data_set_info_alter(&$element_info, $element) {
   if ($wrapper = $element->applyDataSelector($element->settings['data:select'])) {
     $info = $wrapper->info();
     $element_info['parameter']['value']['type'] = $wrapper->type();
-    $element_info['parameter']['value']['options list']  = !empty($info['options list']) ? 'rules_data_selector_options_list' : FALSE;
+    $element_info['parameter']['value']['options list'] = !empty($info['options list']) ? 'rules_data_selector_options_list' : FALSE;
   }
 }
 
@@ -148,7 +148,7 @@ function rules_data_list_info_alter(&$element_info, RulesAbstractPlugin $element
     if ($type = entity_property_list_extract_type($wrapper->type())) {
       $info = $wrapper->info();
       $element_info['parameter']['item']['type'] = $type;
-      $element_info['parameter']['item']['options list']  = !empty($info['options list']) ? 'rules_data_selector_options_list' : FALSE;
+      $element_info['parameter']['item']['options list'] = !empty($info['options list']) ? 'rules_data_selector_options_list' : FALSE;
     }
   }
 }
@@ -321,7 +321,8 @@ function rules_action_data_create_info_alter(&$element_info, RulesAbstractPlugin
     if (isset($type_info['property info'])) {
       // Add the data type's properties as parameters.
       foreach ($type_info['property info'] as $property => $property_info) {
-        // Prefix parameter names to avoid name clashes with existing parameters.
+        // Prefix parameter names to avoid name clashes with
+        // existing parameters.
         $element_info['parameter']['param_' . $property] = array_intersect_key($property_info, array_flip(array('type', 'label', 'allow null')));
         if (empty($property_info['required'])) {
           $element_info['parameter']['param_' . $property]['optional'] = TRUE;
@@ -381,7 +382,7 @@ function rules_condition_data_is_info_alter(&$element_info, RulesAbstractPlugin 
   if ($wrapper = $element->applyDataSelector($element->settings['data:select'])) {
     $info = $wrapper->info();
     $element_info['parameter']['value']['type'] = $element->settings['op'] == 'IN' ? 'list<' . $wrapper->type() . '>' : $wrapper->type();
-    $element_info['parameter']['value']['options list']  = !empty($info['options list']) ? 'rules_data_selector_options_list' : FALSE;
+    $element_info['parameter']['value']['options list'] = !empty($info['options list']) ? 'rules_data_selector_options_list' : FALSE;
   }
 }
 

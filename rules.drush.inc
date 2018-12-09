@@ -7,11 +7,6 @@
 
 /**
  * Implements hook_drush_command().
- *
- * @return
- *   An associative array describing your command(s).
- *
- * @see drush_parse_command()
  */
 function rules_drush_command() {
   $items = array();
@@ -69,7 +64,11 @@ function drush_rules_list() {
       $event_info = rules_fetch_data('event_info');
       if ($rule instanceof RulesTriggerableInterface) {
         foreach ($rule->events() as $event_name) {
-          $event_info += array($event_name => array('label' => dt('Unknown event "!event_name"', array('!event_name' => $event_name))));
+          $event_info += array(
+            $event_name => array(
+              'label' => dt('Unknown event "!event_name"', array('!event_name' => $event_name)),
+            ),
+          );
           $events[] = check_plain($event_info[$event_name]['label']);
         }
       }

@@ -70,6 +70,7 @@ interface RulesEventHandlerInterface {
    * Returns an array of default settings.
    *
    * @return array
+   *   The array of default settings.
    */
   public function getDefaults();
 
@@ -358,6 +359,7 @@ class RulesEventHandlerEntityBundle extends RulesEventHandlerBase {
    * Returns the label to use for the bundle property.
    *
    * @return string
+   *   The label to use for the bundle property.
    */
   protected function getBundlePropertyLabel() {
     return $this->entityInfo['entity keys']['bundle'];

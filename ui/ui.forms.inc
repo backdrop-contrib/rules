@@ -36,7 +36,7 @@ function rules_ui_parameter_replace_submit($form, &$form_state) {
 }
 
 /**
- * General form submit handler, that rebuilds the form
+ * General form submit handler, that rebuilds the form.
  */
 function rules_form_submit_rebuild($form, &$form_state) {
   $form_state['rebuild'] = TRUE;
