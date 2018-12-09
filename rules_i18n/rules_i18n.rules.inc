@@ -179,7 +179,7 @@ class RulesI18nStringEvaluator extends RulesDataInputEvaluator {
 
   public static function help($var_info, $param_info = array()) {
     if (!empty($param_info['translatable'])) {
-      if ($param_info['custom translation language']) {
+      if (!empty($param_info['custom translation language'])) {
         $text = t('Translations can be provided at the %translate tab. The argument value is translated to the configured language.', array('%translate' => t('Translate')));
       }
       else {
