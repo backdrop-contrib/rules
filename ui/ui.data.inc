@@ -207,6 +207,7 @@ class RulesDataUIText extends RulesDataUI implements RulesDataDirectInputFormInt
     else {
       $form[$name] = array(
         '#type' => 'textarea',
+        '#rows' => 3,
       );
       RulesDataInputEvaluator::attachForm($form, $settings, $info, $element->availableVariables());
     }
@@ -216,7 +217,6 @@ class RulesDataUIText extends RulesDataUI implements RulesDataDirectInputFormInt
       '#default_value' => $settings[$name],
       '#required' => empty($info['optional']),
       '#after_build' => array('rules_ui_element_fix_empty_after_build'),
-      '#rows' => 3,
     );
     return $form;
   }
