@@ -36,8 +36,10 @@ class RulesPHPEvaluator extends RulesDataInputEvaluator {
   }
 
   /**
-   * Evaluates PHP code contained in $text. This doesn't apply $options, thus
-   * the PHP code is responsible for behaving appropriately.
+   * Evaluates PHP code contained in $text.
+   *
+   * This method doesn't apply $options, thus the PHP code is responsible for
+   * behaving appropriately.
    */
   public function evaluate($text, $options, RulesState $state) {
     $vars['eval_options'] = $options;
@@ -133,8 +135,10 @@ function rules_php_eval($code, $arguments = array()) {
 }
 
 /**
- * Evaluates the given PHP code, with the given variables defined. This is like
- * rules_php_eval() but does return the returned data from the PHP code.
+ * Evaluates the given PHP code, with the given variables defined.
+ *
+ * This is like rules_php_eval(), but does return the returned data from
+ * the PHP code.
  *
  * @param $code
  *   The PHP code to run, without <?php ?>

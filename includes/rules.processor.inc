@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @file Contains classes for data processing.
+ * @file
+ * Contains classes for data processing.
  *
  * Data processors can be used to process element arguments on evaluation time,
  * e.g. to apply input evaluators or to apply simple calculations to number
@@ -39,8 +40,12 @@ abstract class RulesDataProcessor {
   }
 
   /**
-   * Returns whether the current user has permission to edit this chain of data
-   * processors.
+   * Determines whether the current user has permission to edit this chain of
+   * data processors.
+   *
+   * @return bool
+   *   Whether the current user has permission to edit this chain of data
+   *   processors.
    */
   public function editAccess() {
     return $this->access() && (!isset($this->processor) || $this->processor->editAccess());
@@ -87,7 +92,8 @@ abstract class RulesDataProcessor {
 
   /**
    * Returns defined data processors applicable for the given parameter.
-   * Optionally also access to the processors is checked.
+   *
+   * Optionally also checks access to the processors.
    *
    * @param $param_info
    *   If given, only processors valid for this parameter are returned.
@@ -183,8 +189,10 @@ abstract class RulesDataProcessor {
   }
 
   /**
-   * Processes the value. If $this->processor is set, invoke this processor
-   * first so chaining multiple processors is working.
+   * Processes the value.
+   *
+   * If $this->processor is set, invoke this processor first so chaining
+   * multiple processors is working.
    *
    * @param $value
    *   The value to process.
@@ -226,9 +234,10 @@ abstract class RulesDataProcessor {
 
 
 /**
- * A base processor for use as input evaluators. Input evaluators are not listed
- * in hook_rules_data_processor_info(). Instead they use
- * hook_rules_evaluator_info() and get attached to input forms.
+ * A base processor for use by input evaluators.
+ *
+ * Input evaluators are not listed in hook_rules_data_processor_info(). Instead
+ * they use hook_rules_evaluator_info() and get attached to input forms.
  */
 abstract class RulesDataInputEvaluator extends RulesDataProcessor {
 
@@ -269,9 +278,10 @@ abstract class RulesDataInputEvaluator extends RulesDataProcessor {
   }
 
   /**
-   * Overridden to prepare input evaluator processors. The setting is expected
-   * to be the input value to be evaluated later on and is replaced by the
-   * suiting processor.
+   * Overridden to prepare input evaluator processors.
+   *
+   * The setting is expected to be the input value to be evaluated later on
+   * and is replaced by the suitable processor.
    */
   public static function prepareSetting(&$setting, $param_info, $var_info = array()) {
     $processor = NULL;
@@ -287,6 +297,8 @@ abstract class RulesDataInputEvaluator extends RulesDataProcessor {
   }
 
   /**
+   * Overrides RulesDataProcessor::attachForm().
+   *
    * Overridden to just attach the help() of evaluators.
    */
   public static function attachForm(&$form, $settings, $param_info, $var_info, $access_check = TRUE) {
@@ -297,14 +309,15 @@ abstract class RulesDataInputEvaluator extends RulesDataProcessor {
   }
 
   /**
-   * Returns all input evaluators that can be applied to the parameters needed
-   * type.
+   * Returns all input evaluators that can be applied to the parameters type.
    */
   public static function evaluators($param_info = NULL, $access_check = TRUE) {
     return parent::processors($param_info, $access_check, 'evaluator_info');
   }
 
   /**
+   * Overrides RulesDataProcessor::processors().
+   *
    * Overridden to default to our hook, thus being equivalent to
    * self::evaluators().
    */
@@ -313,8 +326,10 @@ abstract class RulesDataInputEvaluator extends RulesDataProcessor {
   }
 
   /**
-   * Prepares the evaluation, e.g. to determine whether the input evaluator has
-   * been used. If this evaluator should be skipped just unset $this->setting.
+   * Prepares the evaluation.
+   *
+   * For example, to determine whether the input evaluator has been used.
+   * If this evaluator should be skipped just unset $this->setting.
    *
    * @param $text
    *   The text to evaluate later on.

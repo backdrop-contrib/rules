@@ -1,8 +1,11 @@
 <?php
 
 /**
- * @file Invokes events on behalf core modules. Usually this should be
- *   directly in the module providing rules integration instead.
+ * @file
+ * Invokes events on behalf core modules.
+ *
+ * For non-core modules, the code to invoke events should be found in the
+ * module providing rules integration.
  *
  * @addtogroup rules
  *
@@ -10,10 +13,12 @@
  */
 
 /**
- * Gets an unchanged entity that doesn't contain any recent changes. This
- * handler assumes the name of the variable for the changed entity is the same
- * as for the unchanged entity but without the trailing "_unchanged"; e.g., for
- * the "node_unchanged" variable the handler assumes there is a "node" variable.
+ * Gets an unchanged entity that doesn't contain any recent changes.
+ *
+ * This handler assumes the name of the variable for the changed entity is the
+ * same as for the unchanged entity but without the trailing "_unchanged"; e.g.,
+ * for the "node_unchanged" variable the handler assumes there is a "node"
+ * variable.
  */
 function rules_events_entity_unchanged($arguments, $name, $info) {
   // Cut of the trailing _unchanged.
@@ -24,7 +29,7 @@ function rules_events_entity_unchanged($arguments, $name, $info) {
   }
 }
 
-/**
+/*
  * Generic entity events, used for core-entities for which we provide Rules
  * integration only. We are implementing the generic-entity hooks instead of
  * the entity-type specific hooks to ensure we come last.
@@ -174,8 +179,10 @@ function rules_user_logout($account) {
   rules_invoke_event('user_logout', $account);
 }
 
-/**
- * System events. Note that rules_init() is the main module file is used to
+/*
+ * System events.
+ *
+ * Note that rules_init() is the main module file is used to
  * invoke the init event.
  */
 

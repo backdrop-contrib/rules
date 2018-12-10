@@ -173,6 +173,8 @@ class RulesTokenEvaluator extends RulesDataInputEvaluator {
   }
 
   /**
+   * Evaluate tokens.
+   *
    * We replace the tokens on our own as we cannot use token_replace(), because
    * token usually assumes that $data['node'] is a of type node, which doesn't
    * hold in general in our case.

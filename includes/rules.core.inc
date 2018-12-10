@@ -312,6 +312,8 @@ class RulesEntityController extends EntityAPIControllerExportable {
 }
 
 /**
+ * Base class for RulesExtendables.
+ *
  * The RulesExtendable uses the rules cache to setup the defined extenders
  * and overrides automatically.
  * As soon faces is used the faces information is autoloaded using setUp().
@@ -320,6 +322,7 @@ abstract class RulesExtendable extends FacesExtendable {
 
   /**
    * The name of the info definitions associated with info about this class.
+   *
    * This would be defined abstract, if possible. Common rules hooks with class
    * info are e.g. plugin_info and data_info.
    */
@@ -751,19 +754,21 @@ abstract class RulesPlugin extends RulesExtendable {
   }
 
   /**
-   * Returns asserted additions to the available variable info. Any returned
-   * info is merged into the variable info, in case the execution flow passes
-   * the element.
+   * Returns asserted additions to the available variable info.
+   *
+   * Any returned info is merged into the variable info, in case the execution
+   * flow passes the element.
    * E.g. this is used to assert the content type of a node if the condition
-   * is met, such that the per node type properties are available.
+   * is met, such that the per-node type properties are available.
    */
   protected function variableInfoAssertions() {
     return array();
   }
 
   /**
-   * Get the name of this plugin instance. The returned name should identify
-   * the code which drives this plugin.
+   * Gets the name of this plugin instance.
+   *
+   * The returned name should identify the code which drives this plugin.
    */
   public function getPluginName() {
     return $this->itemName;
@@ -845,8 +850,10 @@ abstract class RulesPlugin extends RulesExtendable {
   }
 
   /**
-   * Makes sure the plugin is configured right, e.g. all needed variables
-   * are available in the element's scope and dependent modules are enabled.
+   * Makes sure the plugin is configured right.
+   *
+   * "Configured right" means all needed variables are available in the
+   * element's scope and dependent modules are enabled.
    *
    * @return RulesPlugin
    *   Returns $this to support chained usage.
@@ -913,6 +920,8 @@ abstract class RulesPlugin extends RulesExtendable {
   }
 
   /**
+   * Returns the argument for the parameter $name described with $info.
+   *
    * Returns the argument as configured in the element settings for the
    * parameter $name described with $info.
    *
@@ -1012,10 +1021,12 @@ abstract class RulesPlugin extends RulesExtendable {
   }
 
   /**
-   * Apply the given data selector by using the info about available variables.
-   * Thus it doesn't require an actual evaluation state.
+   * Applies the given data selector.
    *
-   * @param $selector
+   * Applies the given data selector by using the info about available
+   * variables. Thus it doesn't require an actual evaluation state.
+   *
+   * @param string $selector
    *   The selector string, e.g. "node:author:mail".
    *
    * @return EntityMetadataWrapper
@@ -1072,8 +1083,10 @@ abstract class RulesPlugin extends RulesExtendable {
   }
 
   /**
-   * Saves the configuration to the database, regardless whether this is invoked
-   * on the rules configuration or a contained rule element.
+   * Saves the configuration to the database.
+   *
+   * The configuration is saved regardless whether this method is invoked on
+   * the rules configuration or a contained rule element.
    */
   public function save($name = NULL, $module = 'rules') {
     if (isset($this->parent)) {
@@ -1198,6 +1211,8 @@ abstract class RulesPlugin extends RulesExtendable {
   }
 
   /**
+   * Deletes configuration from database.
+   *
    * If invoked on a rules configuration it is deleted from database. If
    * invoked on a contained rule element, it's removed from the configuration.
    */
@@ -1252,8 +1267,7 @@ abstract class RulesPlugin extends RulesExtendable {
   }
 
   /**
-   * Remove circular object references so the PHP garbage collector does its
-   * work.
+   * Removes circular object references so PHP garbage collector can work.
    */
   public function destroy() {
     parent::destroy();
@@ -1261,8 +1275,9 @@ abstract class RulesPlugin extends RulesExtendable {
   }
 
   /**
-   * Seamlessly invokes the method implemented via faces without having to think
-   * about references.
+   * Seamlessly invokes the method implemented via faces.
+   *
+   * Frees the caller from having to think about references.
    */
   public function form(&$form, &$form_state, array $options = array()) {
     $this->__call('form', array(&$form, &$form_state, $options));
@@ -1403,8 +1418,10 @@ abstract class RulesPlugin extends RulesExtendable {
   }
 
   /**
-   * Finalizes the configuration export by adding general attributes regarding
-   * the configuration and returns it in the right format.
+   * Finalizes the configuration export.
+   *
+   * Adds general attributes regarding the configuration and returns it in the
+   * right format for export.
    *
    * @param $prefix
    *   An optional prefix for each line.
@@ -1460,8 +1477,9 @@ abstract class RulesPlugin extends RulesExtendable {
 }
 
 /**
- * Defines a common base class for so called "Abstract Plugins" like actions.
- * Thus modules have to provide the concrete plugin implementation.
+ * Defines a common base class for so-called "Abstract Plugins" like actions.
+ *
+ * Modules have to provide the concrete plugin implementation.
  */
 abstract class RulesAbstractPlugin extends RulesPlugin {
 
@@ -1730,7 +1748,7 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
       // RulesPluginImplInterface.
       unset($this->faces['RulesPluginHandlerInterface']);
 
-      // Build up the per plugin implementation faces cache.
+      // Build up the per-plugin implementation faces cache.
       foreach ($this->faces as $interface) {
         $methods = $file_names = array();
         $includes = self::getIncludeFiles($info['module']);
@@ -1761,7 +1779,9 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
   }
 
   /**
-   * Makes sure the providing modules' .rules.inc file is included as diverse
+   * Loads this module's .rules.inc file.
+   *
+   * Makes sure the providing modules' .rules.inc file is included, as diverse
    * callbacks may reside in that file.
    */
   protected function loadBasicInclude() {
@@ -1775,7 +1795,7 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
   }
 
   /**
-   * Make sure all supported destinations are included.
+   * Makes sure all supported destinations are included.
    */
   public static function includeFiles() {
     static $included;
@@ -1980,7 +2000,7 @@ interface RulesPluginHandlerInterface {
   public function dependencies();
 
   /**
-   * Alter the generated configuration form of the element.
+   * Alters the generated configuration form of the element.
    *
    * Validation and processing of the settings should be untied from the form
    * and implemented in validate() and process() wherever it makes sense.
@@ -1990,9 +2010,10 @@ interface RulesPluginHandlerInterface {
   public function form_alter(&$form, $form_state, $options);
 
   /**
-   * Optionally returns an array of info assertions for the specified
-   * parameters. This allows conditions to assert additional metadata, such as
-   * info about the fields of a bundle.
+   * Returns an array of info assertions for the specified parameters.
+   *
+   * This allows conditions to assert additional metadata, such as info about
+   * the fields of a bundle.
    *
    * @see RulesPlugin::variableInfoAssertions()
    */
@@ -2031,6 +2052,7 @@ interface RulesConditionHandlerInterface extends RulesPluginHandlerInterface {}
 interface RulesActionHandlerInterface extends RulesPluginHandlerInterface {}
 
 /**
+ * Interface used for implementing an abstract plugin via Faces.
  *
  * Provides the interface used for implementing an abstract plugin by using
  * the Faces extension mechanism.
@@ -2229,6 +2251,8 @@ abstract class RulesContainerPlugin extends RulesPlugin implements IteratorAggre
   }
 
   /**
+   * Returns available state variables for an element.
+   *
    * Returns info about variables available in the evaluation state for any
    * children elements or if given for a special child element.
    *
@@ -2271,6 +2295,8 @@ abstract class RulesContainerPlugin extends RulesPlugin implements IteratorAggre
   }
 
   /**
+   * Executes container with the given arguments.
+   *
    * Condition containers just return a boolean while action containers return
    * the configured provided variables as an array of variables.
    */
@@ -2378,9 +2404,10 @@ abstract class RulesContainerPlugin extends RulesPlugin implements IteratorAggre
   }
 
   /**
-   * Determines whether the element should be exported in flat style. Flat style
-   * means that the export keys are written directly into the export array,
-   * whereas else the export is written into a sub-array.
+   * Determines whether the element should be exported in flat style.
+   *
+   * Flat style means that the export keys are written directly into the export
+   * array, whereas else the export is written into a sub-array.
    */
   protected function exportFlat() {
     // By default we always use flat style for plugins without any parameters
@@ -2460,8 +2487,10 @@ abstract class RulesActionContainer extends RulesContainerPlugin implements Rule
   }
 
   /**
-   * Add an action. Pass either an instance of the RulesActionInterface
-   * or the arguments as needed by rules_action().
+   * Adds an action to the container.
+   *
+   * Pass in either an instance of the RulesActionInterface or the arguments
+   * as needed by rules_action().
    *
    * @return RulesActionContainer
    *   Returns $this to support chained usage.
@@ -2496,6 +2525,8 @@ abstract class RulesActionContainer extends RulesContainerPlugin implements Rule
   }
 
   /**
+   * Returns an array of provided variable names.
+   *
    * Returns an array of variable names, which are provided by passing through
    * the provided variables of the children.
    */
@@ -2529,8 +2560,10 @@ abstract class RulesConditionContainer extends RulesContainerPlugin implements R
   protected $negate = FALSE;
 
   /**
-   * Add a condition. Pass either an instance of the RulesConditionInterface
-   * or the arguments as needed by rules_condition().
+   * Adds a condition to the container.
+   *
+   * Pass in either an instance of the RulesConditionInterface or the arguments
+   * as needed by rules_condition().
    *
    * @return RulesConditionContainer
    *   Returns $this to support chained usage.

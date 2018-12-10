@@ -1,8 +1,10 @@
 <?php
 
 /**
- * @file Rules core integration providing data types and conditions and
- * actions to invoke configured components.
+ * @file
+ * Rules integration with Drupal core.
+ *
+ * Provides data types, conditions, and actions to invoke configured components.
  *
  * @addtogroup rules
  *

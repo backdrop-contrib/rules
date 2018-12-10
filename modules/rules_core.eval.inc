@@ -58,8 +58,10 @@ function rules_element_invoke_component($arguments, RulesPlugin $element) {
 }
 
 /**
- * A class implementing a rules input evaluator processing date input. This is
- * needed to treat relative date inputs for strtotime right, consider "now".
+ * A class implementing a rules input evaluator processing date input.
+ *
+ * This is needed to treat relative date inputs for strtotime() correctly.
+ * Consider for example "now".
  */
 class RulesDateInputEvaluator extends RulesDataInputEvaluator {
 
@@ -94,8 +96,9 @@ class RulesDateInputEvaluator extends RulesDataInputEvaluator {
 }
 
 /**
- * A class implementing a rules input evaluator processing URI inputs to make
- * sure URIs are absolute and path aliases get applied.
+ * A class implementing a rules input evaluator processing URI inputs.
+ *
+ * Makes sure URIs are absolute and path aliases get applied.
  */
 class RulesURIInputEvaluator extends RulesDataInputEvaluator {
 
@@ -216,9 +219,10 @@ class RulesNumericOffsetProcessor extends RulesDataProcessor {
 
 }
 
-
 /**
- * A custom wrapper class for vocabularies that is capable of loading vocabularies by machine name.
+ * A custom wrapper class for vocabularies.
+ *
+ * This class is capable of loading vocabularies by machine name.
  */
 class RulesTaxonomyVocabularyWrapper extends EntityDrupalWrapper {
 

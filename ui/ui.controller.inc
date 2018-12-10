@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @file Contains the UI controller for Rules.
+ * @file
+ * Contains the UI controller for Rules.
  */
 
 /**
@@ -157,6 +158,8 @@ class RulesUIController {
   }
 
   /**
+   * Generates the render array for an overview configuration table.
+   *
    * Generates the render array for an overview configuration table for
    * arbitrary rule configs that match the given conditions.
    *

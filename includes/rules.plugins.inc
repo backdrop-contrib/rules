@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @file Contains plugin info and implementations not needed for rule evaluation.
+ * @file
+ * Contains plugin info and implementations not needed for rule evaluation.
  */
 
 /**
@@ -139,6 +140,7 @@ class RulesCondition extends RulesAbstractPlugin implements RulesConditionInterf
 
 /**
  * An actual rule.
+ *
  * Note: A rule also implements the RulesActionInterface (inherited).
  */
 class Rule extends RulesActionContainer {
@@ -160,8 +162,9 @@ class Rule extends RulesActionContainer {
   }
 
   /**
-   * Get an iterator over all contained conditions. Note that this iterator also
-   * implements the ArrayAccess interface.
+   * Gets an iterator over all contained conditions.
+   *
+   * Note that this iterator also implements the ArrayAccess interface.
    *
    * @return RulesRecursiveElementIterator
    */
@@ -184,8 +187,9 @@ class Rule extends RulesActionContainer {
   }
 
   /**
-   * Get an iterator over all contained actions. Note that this iterator also
-   * implements the ArrayAccess interface.
+   * Gets an iterator over all contained actions.
+   *
+   * Note that this iterator also implements the ArrayAccess interface.
    *
    * @return RulesRecursiveElementIterator
    */
@@ -194,8 +198,10 @@ class Rule extends RulesActionContainer {
   }
 
   /**
-   * Add a condition. Pass either an instance of the RulesConditionInterface
-   * or the arguments as needed by rules_condition().
+   * Adds a condition.
+   *
+   * Pass either an instance of the RulesConditionInterface or the arguments as
+   * needed by rules_condition().
    *
    * @return Rule
    *   Returns $this to support chained usage.
@@ -310,7 +316,9 @@ class Rule extends RulesActionContainer {
   }
 
   /**
-   * Rules may not provided any variable info assertions, as Rules are only
+   * Overrides RulesPlugin::variableInfoAssertions().
+   *
+   * Rules may not provide any variable info assertions, as Rules are only
    * conditionally executed.
    */
   protected function variableInfoAssertions() {
@@ -569,6 +577,8 @@ class RulesOr extends RulesConditionContainer {
   }
 
   /**
+   * Overrides RulesContainerPlugin::stateVariables().
+   *
    * Overridden to exclude all variable assertions as in an OR we cannot assert
    * the children are successfully evaluated.
    */

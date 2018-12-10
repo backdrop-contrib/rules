@@ -34,8 +34,9 @@ class RulesState {
   protected $save;
 
   /**
-   * Holds the arguments while an element is executed. May be used by the
-   * element to easily access the wrapped arguments.
+   * Holds the arguments while an element is executed.
+   *
+   * May be used by the element to easily access the wrapped arguments.
    */
   public $currentArguments;
 
@@ -237,9 +238,11 @@ class RulesState {
   }
 
   /**
-   * Merges the info about to be saved variables form the given state into the
-   * existing state. Therefor we can aggregate saves from invoked components.
-   * Merged in saves are removed from the given state, but not mergeable saves
+   * Merges info from the given state into the existing state.
+   *
+   * Merges the info about to-be-saved variables from the given state into the
+   * existing state. Therefore we can aggregate saves from invoked components.
+   * Merged-in saves are removed from the given state, but not-mergeable saves
    * remain there.
    *
    * @param $state
@@ -428,8 +431,10 @@ class RulesData {
   }
 
   /**
-   * Returns matching data variables or properties for the given info and the to
-   * be configured parameter.
+   * Returns data for the given info and the to-be-configured parameter.
+   *
+   * Returns matching data variables or properties for the given info and the
+   * to-be-configured parameter.
    *
    * @param $source
    *   Either an array of info about available variables or a entity metadata
@@ -493,8 +498,10 @@ class RulesData {
   }
 
   /**
-   * Adds asserted metadata to the variable info. In case there are already
-   * assertions for a variable, the assertions are merged such that both apply.
+   * Adds asserted metadata to the variable info.
+   *
+   * In case there are already assertions for a variable, the assertions are
+   * merged such that both apply.
    *
    * @see RulesData::applyMetadataAssertions()
    */
@@ -557,8 +564,9 @@ class RulesData {
   }
 
   /**
-   * Property info alter callback for the entity metadata wrapper for applying
-   * the rules metadata assertions.
+   * Property info alter callback for the entity metadata wrapper.
+   *
+   * Used for applying the rules metadata assertions.
    *
    * @see RulesData::addMetadataAssertions()
    */
@@ -619,9 +627,10 @@ class RulesData {
   }
 
   /**
-   * Property info alter callback for the entity metadata wrapper to inject
-   * metadata for the 'site' variable. In contrast to doing this via
-   * hook_rules_data_info() this callback makes use of the already existing
+   * Property info alter callback for the entity metadata wrapper.
+   *
+   * Used to inject metadata for the 'site' variable. In contrast to doing this
+   * via hook_rules_data_info() this callback makes use of the already existing
    * property info cache for site information of entity metadata.
    *
    * @see RulesPlugin::availableVariables()

@@ -198,9 +198,10 @@ function rules_ui_form_rules_config_confirm_op($form, &$form_state, $rules_confi
 }
 
 /**
- * Applies the operation and returns the message to show to the user. Also the
- * operation is logged to the watchdog. Note that the string is defined two
- * times so that the translation extractor can find it.
+ * Applies the operation and returns the message to show to the user.
+ *
+ * The operation is also logged to the watchdog. Note that the string is
+ * defined two times so that the translation extractor can find it.
  */
 function rules_ui_confirm_operation_apply($op, $rules_config) {
   $vars = array('%plugin' => $rules_config->plugin(), '%label' => $rules_config->label());
@@ -295,6 +296,7 @@ function rules_ui_add_element($form, &$form_state, $rules_config, $plugin_name, 
 
 /**
  * Add element submit callback.
+ *
  * Used for "abstract plugins" to create the initial element object with the
  * given implementation name and rebuild the form.
  */
@@ -602,6 +604,7 @@ function rules_ui_import_form_submit($form, &$form_state) {
 
 /**
  * FAPI process callback for the data selection widget.
+ *
  * This finalises the auto completion callback path by appending the form build
  * id.
  */
@@ -662,10 +665,11 @@ function rules_ui_form_data_selection_auto_completion($parameter, $form_build_id
 }
 
 /**
- * FAPI validation of an integer element. Copy of the private function
- * _element_validate_integer().
+ * FAPI validation of an integer element.
+ *
+ * Copy of the core Drupal private function _element_validate_integer().
  */
-function rules_ui_element_integer_validate($element, &$form_state) {;
+function rules_ui_element_integer_validate($element, &$form_state) {
   $value = $element['#value'];
   if (isset($value) && $value !== '' && (!is_numeric($value) || intval($value) != $value)) {
     form_error($element, t('%name must be an integer value.', array('%name' => isset($element['#title']) ? $element['#title'] : t('Element'))));
@@ -673,8 +677,9 @@ function rules_ui_element_integer_validate($element, &$form_state) {;
 }
 
 /**
- * FAPI validation of a decimal element. Improved version of the private
- * function _element_validate_number().
+ * FAPI validation of a decimal element.
+ *
+ * Improved version of the private function _element_validate_number().
  */
 function rules_ui_element_decimal_validate($element, &$form_state) {
   // Substitute the decimal separator ",".
@@ -698,9 +703,11 @@ function rules_ui_element_ip_address_validate($element, &$form_state) {
 }
 
 /**
- * FAPI validation of a date element. Makes sure the specified date format is
- * correct and converts date values specify a fixed (= non relative) date to
- * a timestamp. Relative dates are handled by the date input evaluator.
+ * FAPI validation of a date element.
+ *
+ * Makes sure the specified date format is correct and converts date values
+ * specify a fixed (= non relative) date to a timestamp. Relative dates are
+ * handled by the date input evaluator.
  */
 function rules_ui_element_date_validate($element, &$form_state) {
   $value = $element['#value'];
@@ -769,8 +776,9 @@ function rules_ui_element_duration_multipliers() {
 }
 
 /**
- * Helper function to determine the value for a rules duration form
- * element.
+ * Helper function a rules duration form element.
+ *
+ * Determines the value for a rules duration form element.
  */
 function rules_ui_element_duration_value($element, $input = FALSE) {
   // This runs before child elements are processed, so we cannot calculate the
@@ -784,6 +792,7 @@ function rules_ui_element_duration_value($element, $input = FALSE) {
 
 /**
  * FAPI after build callback for the duration parameter type form.
+ *
  * Fixes up the form value by applying the multiplier.
  */
 function rules_ui_element_duration_after_build($element, &$form_state) {

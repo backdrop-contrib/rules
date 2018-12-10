@@ -1108,8 +1108,10 @@ function rules_invoke_component() {
 }
 
 /**
- * Filters the given array of arrays by keeping only entries which have $key set
- * to the value of $value.
+ * Filters the given array of arrays.
+ *
+ * This filter operates by keeping only entries which have $key set to the
+ * value of $value.
  *
  * @param $array
  *   The array of arrays to filter.
@@ -1133,8 +1135,9 @@ function rules_filter_array($array, $key, $value) {
 }
 
 /**
- * Merges the $update array into $array making sure no values of $array not
- * appearing in $update are lost.
+ * Merges the $update array into $array.
+ *
+ * Makes sure no values of $array not appearing in $update are lost.
  *
  * @return array
  *   The updated array.

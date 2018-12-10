@@ -33,9 +33,10 @@ if (!interface_exists('FacesExtenderInterface', FALSE)) {
 
 if (!class_exists('FacesExtender', FALSE)) {
   /**
-   * A common base class for FacesExtenders. Extenders may access protected
-   * methods and properties of the extendable using the property() and call()
-   * methods.
+   * A common base class for FacesExtenders.
+   *
+   * Extenders may access protected methods and properties of the extendable
+   * using the property() and call() methods.
    */
   abstract class FacesExtender implements FacesExtenderInterface {
 
@@ -64,8 +65,7 @@ if (!class_exists('FacesExtender', FALSE)) {
     }
 
     /**
-     * Invokes any method on the extended object. May be used to invoke
-     * protected methods.
+     * Invokes any method on the extended object, including protected methods.
      *
      * @param $name
      *   The method name.
@@ -136,9 +136,11 @@ if (!class_exists('FacesExtendable', FALSE)) {
     }
 
     /**
-     * Returns the extender object for the given class. May be used to
-     * explicitly invoke a specific extender, e.g. a function overriding a
-     * method may use that to explicitly invoke the original extender.
+     * Returns the extender object for the given class.
+     *
+     * May be used to explicitly invoke a specific extender, e.g. a function
+     * overriding a method may use that to explicitly invoke the original
+     * extender.
      */
     public function extender($class) {
       if (!isset($this->facesClassInstances[$class])) {
@@ -148,6 +150,8 @@ if (!class_exists('FacesExtendable', FALSE)) {
     }
 
     /**
+     * Returns whether the object can face as the given interface.
+     *
      * Returns whether the object can face as the given interface, thus it
      * returns TRUE if this object has been extended by an appropriate
      * implementation.
@@ -260,6 +264,7 @@ if (!class_exists('FacesExtendable', FALSE)) {
 
     /**
      * Adds in include files for the given methods while removing any old files.
+     *
      * If a single include file is described, it's added for all methods.
      */
     protected function addIncludes($methods, $includes) {
@@ -275,6 +280,8 @@ if (!class_exists('FacesExtendable', FALSE)) {
     }
 
     /**
+     * Destroys all references to created instances.
+     *
      * Destroys all references to created instances so that PHP's garbage
      * collection can do its work. This is needed as PHP's gc has troubles with
      * circular references until PHP < 5.3.

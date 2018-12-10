@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @file Rules Admin UI
- *   Implements rule management and configuration screens.
+ * @file
+ * Implements rule management and configuration screens.
  */
 
 /**

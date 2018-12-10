@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @file Contains core ui functions.
+ * @file
+ * Contains core Rules UI functions.
  */
 
 /**
@@ -10,9 +11,10 @@
 interface RulesPluginUIInterface {
 
   /**
-   * Adds the whole configuration form of this rules configuration. For rule
-   * elements that are part of a configuration this method just adds the
-   * elements configuration form.
+   * Adds the whole configuration form of this rules configuration.
+   *
+   * For rule elements that are part of a configuration this method just adds
+   * the elements configuration form.
    *
    * @param $form
    *   The form array where to add the form.
@@ -50,6 +52,8 @@ interface RulesPluginUIInterface {
   public function form_validate($form, &$form_state);
 
   /**
+   * Form submit handler for the element configuration form.
+   *
    * Submit the configuration form of this rule element. This makes sure to
    * put the updated configuration in the form state. For saving changes
    * permanently, just call $config->save() afterwards.
@@ -138,8 +142,9 @@ class RulesElementMap {
 }
 
 /**
- * Faces UI extender for all kind of Rules plugins. Provides various useful
- * methods for any rules UI.
+ * Faces UI extender for all kind of Rules plugins.
+ *
+ * Provides various useful methods for any rules UI.
  */
 class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
 
@@ -149,10 +154,11 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
   protected $element;
 
   /**
-   * The base path determines where a Rules overview UI lives. All forms that
-   * want to display Rules (overview) forms need to set this variable. This is
-   * necessary in order to get correct operation links, paths, redirects, bread
-   * crumbs etc. for the form() and overviewTable() methods.
+   * The base path determines where a Rules overview UI lives.
+   *
+   * All forms that want to display Rules (overview) forms need to set this
+   * variable. This is necessary in order to get correct operation links,
+   * paths, redirects, breadcrumbs etc. for the form() and overviewTable() methods.
    *
    * @see RulesUIController
    * @see rules_admin_reaction_overview()
@@ -193,8 +199,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
   }
 
   /**
-   * Implements RulesPluginUIInterface.
-   * Generates the element edit form.
+   * Implements RulesPluginUIInterface. Generates the element edit form.
    *
    * Note: Make sure that you set RulesPluginUI::$basePath before using this
    * method, otherwise paths, links, redirects etc. won't be correct.
@@ -304,8 +309,8 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
     }
 
     // For translatable parameters, pre-populate an internal translation source
-    // key so data type forms or input evaluators (i18n) may produce suiting
-    // help.
+    // key so data type forms or input evaluators (i18n) may show a suitable
+    // help message.
     if (drupal_multilingual() && !empty($info['translatable'])) {
       $parameter = $this->element->pluginParameterInfo();
       $info['custom translation language'] = !empty($parameter['language']);
@@ -689,7 +694,8 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
 
   /**
    * Implements RulesPluginUIInterface.
-   * Show a preview of the configuration settings.
+   *
+   * Shows a preview of the configuration settings.
    */
   public function buildContent() {
     $config_name = $this->element->root()->name;
@@ -810,6 +816,8 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
   }
 
   /**
+   * Generates an operation path.
+   *
    * Generates a path using the given operation for the element with the given
    * id of the configuration with the given name.
    */
@@ -833,8 +841,9 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
   }
 
   /**
-   * Determines the default redirect target for an edited/deleted element. This
-   * is a parent element which is either a rule or the configuration root.
+   * Determines the default redirect target for an edited/deleted element.
+   *
+   * This is a parent element which is either a rule or the configuration root.
    */
   public static function defaultRedirect(RulesPlugin $element) {
     while (!$element->isRoot()) {
@@ -893,6 +902,8 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
 class RulesAbstractPluginUI extends RulesPluginUI {
 
   /**
+   * Overrides RulesPluginUI::form().
+   *
    * Overridden to invoke the abstract plugins form alter callback and to add
    * the negation checkbox for conditions.
    */
@@ -1210,7 +1221,9 @@ class RulesUICategory {
   }
 
   /**
-   * Returns an array of options to use with a select for the items specified
+   * Returns an array of options to use with a select.
+   *
+   * Returns an array of options to use with a selectfor the items specified
    * in the given hook.
    *
    * @param $item_type

@@ -147,8 +147,7 @@ class RulesTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test setting up an action with some action_info and serializing and
-   * executing it.
+   * Tests setting up an action, serializing, and executing it.
    */
   public function testActionSetup() {
     $action = rules_action('rules_node_publish_action');
@@ -591,8 +590,9 @@ class RulesTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test asserting metadata, customizing action info and make sure integrity
-   * is checked.
+   * Tests asserting metadata.
+   *
+   * Customizes action info and makes sure integrity is checked.
    */
   public function testMetadataAssertion() {
     $action = rules_action('rules_node_make_sticky_action');
@@ -1199,8 +1199,10 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Tests preventing recursive rule invocations by creating a rule that reacts
-   * on node-update and generates a node update that would trigger it itself.
+   * Tests preventing recursive rule invocations.
+   *
+   * Creates a rule that reacts on node-update then generates a node update
+   * that would trigger it itself.
    */
   public function testRecursionPrevention() {
     $rule = $this->createTestRule(FALSE, 'node_update');
@@ -1218,7 +1220,9 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Ensure the recursion prevention still allows to let the rule trigger again
+   * Tests recursion prevention with altered arguments.
+   *
+   * Ensure the recursion prevention still allows the rule to trigger again
    * during evaluation of the same event set, if the event isn't caused by the
    * rule itself - thus we won't run in an infinite loop.
    */

@@ -332,8 +332,7 @@ function rules_action_data_calc_form_alter(&$form, &$form_state, $options, Rules
 }
 
 /**
- * Custom validate callback for entity create, add variable and data create
- * action.
+ * Validate callback for entity create, add variable and data create actions.
  */
 function rules_action_create_type_validate($element) {
   if (!isset($element->settings['type'])) {
@@ -605,11 +604,13 @@ function rules_data_condition_info() {
 }
 
 /**
+ * Asserts the bundle of entities, if it's compared.
+ *
  * If the bundle is compared, add the metadata assertion so other elements
  * can make use of properties specific to the bundle.
  */
 function rules_condition_data_is_assertions($element) {
-  // Assert the bundle of entities, if its compared.
+  // Assert the bundle of entities, if it's compared.
   if ($wrapper = $element->applyDataSelector($element->settings['data:select'])) {
     $info = $wrapper->info();
     if (isset($info['parent']) && $info['parent'] instanceof EntityDrupalWrapper) {
