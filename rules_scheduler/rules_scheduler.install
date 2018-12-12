@@ -31,7 +31,8 @@ function rules_scheduler_schema() {
         'not null' => TRUE,
       ),
       'data' => array(
-        'type' => 'text',
+        'type' => 'blob',
+        'size' => 'big',
         'not null' => FALSE,
         'serialize' => TRUE,
         'description' => 'The whole, serialized evaluation data.',
@@ -147,6 +148,21 @@ function rules_scheduler_update_7204() {
   if (db_field_exists('rules_scheduler', 'state')) {
     db_change_field('rules_scheduler', 'state', 'data', array(
       'type' => 'text',
+      'not null' => FALSE,
+      'serialize' => TRUE,
+      'description' => 'The whole, serialized evaluation data.',
+    ));
+  }
+}
+
+/**
+ * Use blob:big for rules_scheduler.data for compatibility with PostgreSQL.
+ */
+function rules_scheduler_update_7205() {
+  if (db_field_exists('rules_scheduler', 'data')) {
+    db_change_field('rules_scheduler', 'data', 'data', array(
+      'type' => 'blob',
+      'size' => 'big',
       'not null' => FALSE,
       'serialize' => TRUE,
       'description' => 'The whole, serialized evaluation data.',
