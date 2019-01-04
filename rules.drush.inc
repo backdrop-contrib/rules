@@ -32,6 +32,20 @@ function rules_drush_command() {
     'drupal dependencies' => array('rules'),
     'aliases' => array('rd'),
   );
+  $items['rules-revert'] = array(
+    'description' => 'Revert a rule to its original state on your site.',
+    'arguments' => array(
+      'rule' => 'Rule name to revert.',
+    ),
+    'drupal dependencies' => array('rules'),
+  );
+  $items['rules-delete'] = array(
+    'description' => 'Delete a rule on your site.',
+    'arguments' => array(
+      'rule' => 'Rules name to delete.',
+    ),
+    'drupal dependencies' => array('rules'),
+  );
 
   return $items;
 }
@@ -49,6 +63,12 @@ function rules_drush_help($section) {
 
     case 'drush:rules-disable':
       return dt("Disable/deactivate a rule on your site.");
+
+    case 'drush:rules-revert':
+      return dt('Revert a module-provided rule to its original state on your site.');
+
+    case 'drush:rules-delete':
+      return dt('Delete a rule on your site.');
   }
 }
 
@@ -131,5 +151,58 @@ function drush_rules_disable() {
   }
   else {
     drush_log(dt('The rule "!name" is already disabled.', array('!name' => $rule_name)), 'warning');
+  }
+}
+
+/**
+ * Reverts a rule on the site.
+ */
+function drush_rules_revert() {
+  $args = func_get_args();
+  $rule_name = (!empty($args) && is_array($args)) ? array_shift($args) : '';
+  if (empty($rule_name)) {
+    return drush_set_error('', 'No rule name given.');
+  }
+
+  $rule = rules_config_load($rule_name);
+  if (empty($rule)) {
+    return drush_set_error('', dt('Could not load rule named "!rule-name".', array('!rule-name' => $rule_name)));
+  }
+
+  if (($rule->status & ENTITY_OVERRIDDEN) == ENTITY_OVERRIDDEN) {
+    if (drush_confirm(dt('Are you sure you want to revert the rule named "!rule-name"? This action cannot be undone.', array('!rule-name' => $rule_name)))) {
+      $rule->delete();
+      drush_log(dt('The rule "!name" has been reverted to its default state.', array('!name' => $rule_name)), 'success');
+    }
+    else {
+      drush_user_abort();
+    }
+  }
+  else {
+    drush_log(dt('The rule "!name" has not been overridden and can\'t be reverted.', array('!name' => $rule_name)), 'warning');
+  }
+}
+
+/**
+ * Deletes a rule on the site.
+ */
+function drush_rules_delete() {
+  $args = func_get_args();
+  $rule_name = (!empty($args) && is_array($args)) ? array_shift($args) : '';
+  if (empty($rule_name)) {
+    return drush_set_error('', 'No rule name given.');
+  }
+
+  $rule = rules_config_load($rule_name);
+  if (empty($rule)) {
+    return drush_set_error('', dt('Could not load rule named "!rule-name".', array('!rule-name' => $rule_name)));
+  }
+
+  if (drush_confirm(dt('Are you sure you want to delete the rule named "!rule-name"? This action cannot be undone.', array('!rule-name' => $rule_name)))) {
+    $rule->delete();
+    drush_log(dt('The rule "!name" has been deleted.', array('!name' => $rule_name)), 'success');
+  }
+  else {
+    drush_user_abort();
   }
 }
