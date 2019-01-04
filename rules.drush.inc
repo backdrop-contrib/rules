@@ -15,6 +15,12 @@ function rules_drush_command() {
     'description' => 'List all the active and inactive rules for your site.',
     'drupal dependencies' => array('rules'),
     'aliases' => array('rules'),
+    'outputformat' => array(
+      'default' => 'table',
+      'pipe-format' => 'list',
+      'field-labels' => array('rule' => dt('Rule'), 'label' => dt('Label'), 'event' => dt('Event'), 'active' => dt('Active'), 'status' => dt('Status')),
+      'output-data-type' => 'format-table',
+    ),
   );
   $items['rules-enable'] = array(
     'description' => 'Enable a rule on your site.',
@@ -46,6 +52,13 @@ function rules_drush_command() {
     ),
     'drupal dependencies' => array('rules'),
   );
+  $items['rules-export'] = array(
+    'description' => 'Export a rule.',
+    'arguments' => array(
+      'rule' => 'Rules name to export.',
+    ),
+    'drupal dependencies' => array('rules'),
+  );
 
   return $items;
 }
@@ -69,6 +82,9 @@ function rules_drush_help($section) {
 
     case 'drush:rules-delete':
       return dt('Delete a rule on your site.');
+
+    case 'drush:rules-export':
+      return dt('Export a rule.');
   }
 }
 
@@ -77,7 +93,7 @@ function rules_drush_help($section) {
  */
 function drush_rules_list() {
   $rules = rules_config_load_multiple(FALSE);
-  $rows = array(array(dt('Rule'), dt('Label'), dt('Event'), dt('Active'), dt('Status')));
+  $rows = array();
   foreach ($rules as $rule) {
     if (!empty($rule->name) && !empty($rule->label)) {
       $events = array();
@@ -92,16 +108,19 @@ function drush_rules_list() {
           $events[] = check_plain($event_info[$event_name]['label']);
         }
       }
-      $rows[] = array(
-        $rule->name,
-        $rule->label,
-        implode(', ', $events),
-        $rule->active ? dt('Enabled') : dt('Disabled'),
-        $rule->status ? theme('entity_status', array('status' => $rule->status, 'html' => FALSE)) : '',
+      $rows[$rule->name] = array(
+        'rule' => $rule->name,
+        'label' => $rule->label,
+        'event' => implode(', ', $events),
+        'active' => $rule->active ? dt('Enabled') : dt('Disabled'),
+        'status' => $rule->status ? theme('entity_status', array('status' => $rule->status, 'html' => FALSE)) : '',
       );
     }
   }
-  drush_print_table($rows, TRUE);
+  if (version_compare(DRUSH_VERSION, '6.0', '<')) {
+    drush_print_table($rows, TRUE);
+  }
+  return $rows;
 }
 
 /**
@@ -205,4 +224,23 @@ function drush_rules_delete() {
   else {
     drush_user_abort();
   }
+}
+
+/**
+ * Exports a single rule.
+ */
+function drush_rules_export() {
+  $args = func_get_args();
+  $rule_name = (!empty($args) && is_array($args)) ? array_shift($args) : '';
+  if (empty($rule_name)) {
+    return drush_set_error('', dt('No rule name given.'));
+  }
+
+  $rule = rules_config_load($rule_name);
+  if (empty($rule)) {
+    return drush_set_error('', dt('Could not load rule named "!rule-name".', array('!rule-name' => $rule_name)));
+  }
+
+  drush_print($rule->export());
+  drush_log(dt('The rule "!name" has been exported.', array('!name' => $rule_name)), 'success');
 }
