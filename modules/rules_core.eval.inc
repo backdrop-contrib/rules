@@ -67,6 +67,9 @@ class RulesDateInputEvaluator extends RulesDataInputEvaluator {
 
   const DATE_REGEX_LOOSE = '/^(\d{4})-?(\d{2})-?(\d{2})([T\s]?(\d{2}):?(\d{2}):?(\d{2})?)?$/';
 
+  /**
+   * Overrides RulesDataInputEvaluator::prepare().
+   */
   public function prepare($text, $var_info) {
     if (is_numeric($text)) {
       // Let rules skip this input evaluators in case it's already a timestamp.
@@ -74,6 +77,9 @@ class RulesDateInputEvaluator extends RulesDataInputEvaluator {
     }
   }
 
+  /**
+   * Overrides RulesDataInputEvaluator::evaluate().
+   */
   public function evaluate($text, $options, RulesState $state) {
     return self::gmstrtotime($text);
   }
@@ -102,6 +108,9 @@ class RulesDateInputEvaluator extends RulesDataInputEvaluator {
  */
 class RulesURIInputEvaluator extends RulesDataInputEvaluator {
 
+  /**
+   * Overrides RulesDataInputEvaluator::prepare().
+   */
   public function prepare($uri, $var_info) {
     if (!isset($this->processor) && valid_url($uri, TRUE)) {
       // Only process if another evaluator is used or the url is not absolute.
@@ -109,6 +118,9 @@ class RulesURIInputEvaluator extends RulesDataInputEvaluator {
     }
   }
 
+  /**
+   * Overrides RulesDataInputEvaluator::evaluate().
+   */
   public function evaluate($uri, $options, RulesState $state) {
     if (!url_is_external($uri)) {
       // Extract the path and build the URL using the url() function, so URL
@@ -132,6 +144,9 @@ class RulesURIInputEvaluator extends RulesDataInputEvaluator {
  */
 class RulesDateOffsetProcessor extends RulesDataProcessor {
 
+  /**
+   * Overrides RulesDataProcessor::form().
+   */
   protected static function form($settings, $var_info) {
     $settings += array('value' => '');
     $form = array(
@@ -151,6 +166,9 @@ class RulesDateOffsetProcessor extends RulesDataProcessor {
     return $form;
   }
 
+  /**
+   * Overrides RulesDataProcessor::process().
+   */
   public function process($value, $info, RulesState $state, RulesPlugin $element) {
     $value = isset($this->processor) ? $this->processor->process($value, $info, $state, $element) : $value;
     return RulesDateOffsetProcessor::applyOffset($value, $this->setting['value']);
@@ -192,6 +210,9 @@ class RulesDateOffsetProcessor extends RulesDataProcessor {
  */
 class RulesNumericOffsetProcessor extends RulesDataProcessor {
 
+  /**
+   * Overrides RulesDataProcessor::form().
+   */
   protected static function form($settings, $var_info) {
     $settings += array('value' => '');
     $form = array(
@@ -212,6 +233,9 @@ class RulesNumericOffsetProcessor extends RulesDataProcessor {
     return $form;
   }
 
+  /**
+   * Overrides RulesDataProcessor::process().
+   */
   public function process($value, $info, RulesState $state, RulesPlugin $element) {
     $value = isset($this->processor) ? $this->processor->process($value, $info, $state, $element) : $value;
     return $value + $this->setting['value'];
@@ -250,3 +274,7 @@ class RulesTaxonomyVocabularyWrapper extends EntityDrupalWrapper {
   }
 
 }
+
+/**
+ * @}
+ */

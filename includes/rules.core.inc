@@ -931,7 +931,7 @@ abstract class RulesPlugin extends RulesExtendable {
    *   Info about the parameter.
    * @param RulesState $state
    *   The current evaluation state.
-   * @param $langcode
+   * @param string $langcode
    *   (optional) The language code used to get the argument value if the
    *   argument value should be translated. By default (NULL) the current
    *   interface language will be used.

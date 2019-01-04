@@ -97,6 +97,8 @@ abstract class RulesDataProcessor {
    *
    * @param $param_info
    *   If given, only processors valid for this parameter are returned.
+   * @param bool $access_check
+   * @param string $hook
    */
   public static function processors($param_info = NULL, $access_check = TRUE, $hook = 'data_processor_info') {
     static $items = array();
@@ -198,9 +200,9 @@ abstract class RulesDataProcessor {
    *   The value to process.
    * @param $info
    *   Info about the parameter for which we process the value.
-   * @param $state RulesState
+   * @param RulesState $state
    *   The rules evaluation state.
-   * @param $element RulesPlugin
+   * @param RulesPlugin $element
    *   The element for which we process the value.
    *
    * @return
@@ -210,6 +212,9 @@ abstract class RulesDataProcessor {
 
   /**
    * Return whether the current user has permission to use the processor.
+   *
+   * @return bool
+   *   Whether the current user has permission to use the processor.
    */
   public static function access() {
     return TRUE;
@@ -331,7 +336,7 @@ abstract class RulesDataInputEvaluator extends RulesDataProcessor {
    * For example, to determine whether the input evaluator has been used.
    * If this evaluator should be skipped just unset $this->setting.
    *
-   * @param $text
+   * @param string $text
    *   The text to evaluate later on.
    * @param $variables
    *   An array of info about available variables.
@@ -344,7 +349,7 @@ abstract class RulesDataInputEvaluator extends RulesDataProcessor {
   /**
    * Apply the input evaluator.
    *
-   * @param $text
+   * @param string $text
    *   The text to evaluate.
    * @param $options
    *   A keyed array of settings and flags to control the processing.
@@ -355,7 +360,7 @@ abstract class RulesDataInputEvaluator extends RulesDataProcessor {
    *     certain way.
    *   - sanitize: A boolean flag indicating whether incorporated replacements
    *     should be sanitized.
-   * @param RulesState
+   * @param RulesState $state
    *   The rules evaluation state.
    *
    * @return
@@ -372,7 +377,7 @@ abstract class RulesDataInputEvaluator extends RulesDataProcessor {
    *   (optional) An array of information about the handled parameter value.
    *   For backward compatibility, this parameter is not required.
    *
-   * @return
+   * @return array
    *   A renderable array.
    */
   public static function help($variables) {

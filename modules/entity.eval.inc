@@ -179,3 +179,7 @@ function rules_condition_entity_field_access(EntityDrupalWrapper $wrapper, $fiel
   $field = field_info_field($field_name);
   return !empty($field) && field_access($op, $field, $wrapper->type(), $wrapper->value(), $account = NULL);
 }
+
+/**
+ * @}
+ */

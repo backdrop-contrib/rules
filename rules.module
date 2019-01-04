@@ -579,7 +579,7 @@ function &rules_wrap_data($data = NULL, $info, $force = FALSE) {
  * @param $info
  *   Optionally an array of info about how to unwrap the data. Keyed as $data.
  *
- * @return
+ * @return array
  *   An array containing unwrapped or passed through data.
  */
 function rules_unwrap_data(array $data, $info = array()) {
@@ -885,7 +885,7 @@ function rules_hook_info() {
  * @param $conditions
  *   An array of conditions in the form 'field' => $value.
  *
- * @return
+ * @return array
  *   An array of rule configurations indexed by their ids.
  */
 function rules_config_load_multiple($names = array(), $conditions = array()) {
@@ -916,7 +916,7 @@ function rules_config_load($name) {
  * @param $conditions
  *   An array of additional conditions as required by rules_config_load().
  *
- * @return
+ * @return array
  *   An array keyed by component name containing either the label or the config.
  */
 function rules_get_components($label = FALSE, $type = NULL, $conditions = array()) {
@@ -1162,7 +1162,8 @@ function rules_update_array(array $array, array $update) {
  * @param $key
  *   The name of the property to extract.
  *
- * @return An array of extracted properties, keyed as in $arrays-
+ * @return array
+ *   An array of extracted properties, keyed as in $arrays.
  */
 function rules_extract_property($arrays, $key) {
   $data = array();

@@ -166,6 +166,9 @@ function rules_action_block_ip($ip_address = NULL) {
  */
 class RulesTokenEvaluator extends RulesDataInputEvaluator {
 
+  /**
+   * Overrides RulesDataInputEvaluator::prepare().
+   */
   public function prepare($text, $var_info) {
     $text = is_array($text) ? implode('', $text) : $text;
     // Skip this evaluator if there are no tokens.

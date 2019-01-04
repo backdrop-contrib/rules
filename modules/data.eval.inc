@@ -458,3 +458,7 @@ function rules_data_text_comparison($text, $text2, $op = 'contains') {
       return (bool) preg_match('/' . str_replace('/', '\\/', $text2) . '/', $text);
   }
 }
+
+/**
+ * @}
+ */

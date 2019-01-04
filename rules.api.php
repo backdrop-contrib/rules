@@ -1073,7 +1073,7 @@ function hook_rules_ui_menu_alter(&$items, $base_path, $base_count) {
  * a given user has access to perform a given operation on a Rules
  * configuration.
  *
- * @param $op
+ * @param string $op
  *   The operation being performed. One of 'view', 'create', 'update' or
  *   'delete'.
  * @param $rules_config
@@ -1083,7 +1083,7 @@ function hook_rules_ui_menu_alter(&$items, $base_path, $base_count) {
  *   (optional) The user to check for. If no account is passed, access is
  *   determined for the current user.
  *
- * @return bool
+ * @return bool|null
  *   Return TRUE to grant access, FALSE to explicitly deny access. Return NULL
  *   or nothing to not affect the operation.
  *   Access is granted as soon as a module grants access and no one denies

@@ -55,8 +55,9 @@ function rules_ui_form_edit_rules_config($form, &$form_state, $rules_config, $ba
 }
 
 /**
- * General rules configuration form validation callback. Also populates the
- * rules configuration with the form values.
+ * General rules configuration form validation callback.
+ *
+ * Also populates the rules configuration with the form values.
  */
 function rules_ui_form_rules_config_validate($form, &$form_state) {
   $form_state['rules_element']->form_validate($form, $form_state);

@@ -1232,7 +1232,7 @@ class RulesUICategory {
    * @param $items
    *   (optional) An array of items to restrict the options to.
    *
-   * @return
+   * @return array
    *   An array of options.
    */
   public static function getOptions($item_type, $items = NULL) {

@@ -190,10 +190,16 @@ class RulesDataUI {
  */
 class RulesDataUIText extends RulesDataUI implements RulesDataDirectInputFormInterface {
 
+  /**
+   * Overrides RulesDataUI::getDefaultMode().
+   */
   public static function getDefaultMode() {
     return 'input';
   }
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     if (!empty($info['options list'])) {
       // Make sure the .rules.inc of the providing module is included as the
@@ -221,6 +227,9 @@ class RulesDataUIText extends RulesDataUI implements RulesDataDirectInputFormInt
     return $form;
   }
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::render().
+   */
   public static function render($value) {
     return array(
       'content' => array('#markup' => check_plain($value)),
@@ -235,6 +244,9 @@ class RulesDataUIText extends RulesDataUI implements RulesDataDirectInputFormInt
  */
 class RulesDataUITextToken extends RulesDataUIText {
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     $form = parent::inputForm($name, $info, $settings, $element);
     if ($form[$name]['#type'] == 'textarea') {
@@ -252,6 +264,9 @@ class RulesDataUITextToken extends RulesDataUIText {
  */
 class RulesDataUITextFormatted extends RulesDataUIText {
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     $form = parent::inputForm($name, $info, $settings, $element);
     $settings += array($name => isset($info['default value']) ? $info['default value'] : array('value' => NULL, 'format' => NULL));
@@ -263,6 +278,9 @@ class RulesDataUITextFormatted extends RulesDataUIText {
     return $form;
   }
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::render().
+   */
   public static function render($value) {
     return array(
       'content' => array('#markup' => check_plain($value['value'])),
@@ -277,6 +295,9 @@ class RulesDataUITextFormatted extends RulesDataUIText {
  */
 class RulesDataUIDecimal extends RulesDataUIText {
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     $form = parent::inputForm($name, $info, $settings, $element);
     if (empty($info['options list'])) {
@@ -294,6 +315,9 @@ class RulesDataUIDecimal extends RulesDataUIText {
  */
 class RulesDataUIInteger extends RulesDataUIText {
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     $form = parent::inputForm($name, $info, $settings, $element);
     if (empty($info['options list'])) {
@@ -310,6 +334,9 @@ class RulesDataUIInteger extends RulesDataUIText {
  */
 class RulesDataUIIPAddress extends RulesDataUIText {
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     $form = parent::inputForm($name, $info, $settings, $element);
     if (empty($info['options list'])) {
@@ -328,10 +355,16 @@ class RulesDataUIIPAddress extends RulesDataUIText {
  */
 class RulesDataUIBoolean extends RulesDataUI implements RulesDataDirectInputFormInterface {
 
+  /**
+   * Overrides RulesDataUI::getDefaultMode().
+   */
   public static function getDefaultMode() {
     return 'input';
   }
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     $settings += array($name => isset($info['default value']) ? $info['default value'] : NULL);
     // Note: Due to the checkbox even optional parameter always receive a value.
@@ -346,6 +379,9 @@ class RulesDataUIBoolean extends RulesDataUI implements RulesDataDirectInputForm
     return $form;
   }
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::render().
+   */
   public static function render($value) {
     return array(
       'content' => array('#markup' => !empty($value) ? t('true') : t('false')),
@@ -360,6 +396,9 @@ class RulesDataUIBoolean extends RulesDataUI implements RulesDataDirectInputForm
  */
 class RulesDataUIDate extends RulesDataUIText {
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     $settings += array($name => isset($info['default value']) ? $info['default value'] : (empty($info['optional']) ? gmdate('Y-m-d H:i:s', time()) : NULL));
 
@@ -381,6 +420,9 @@ class RulesDataUIDate extends RulesDataUIText {
     return $form;
   }
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::render().
+   */
   public static function render($value) {
     $value = is_numeric($value) ? format_date($value, 'short') : check_plain($value);
     return array(
@@ -396,6 +438,9 @@ class RulesDataUIDate extends RulesDataUIText {
  */
 class RulesDataUIDuration extends RulesDataUIText {
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     $form = parent::inputForm($name, $info, $settings, $element);
     $form[$name]['#type'] = 'rules_duration';
@@ -403,6 +448,9 @@ class RulesDataUIDuration extends RulesDataUIText {
     return $form;
   }
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::render().
+   */
   public static function render($value) {
     $value = is_numeric($value) ? format_interval($value) : check_plain($value);
     return array(
@@ -418,6 +466,9 @@ class RulesDataUIDuration extends RulesDataUIText {
  */
 class RulesDataUIURI extends RulesDataUIText {
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     $form = parent::inputForm($name, $info, $settings, $element);
     $form[$name]['#rows'] = 1;
@@ -432,11 +483,16 @@ class RulesDataUIURI extends RulesDataUIText {
  */
 class RulesDataUIListText extends RulesDataUIText {
 
+  /**
+   * Overrides RulesDataUI::getDefaultMode().
+   */
   public static function getDefaultMode() {
     return 'input';
   }
 
   /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   *
    * @todo This does not work for inputting textual values including "\n".
    */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
@@ -457,6 +513,9 @@ class RulesDataUIListText extends RulesDataUIText {
     return $form;
   }
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::render().
+   */
   public static function render($value) {
     return array(
       'content' => array('#markup' => check_plain(implode(', ', $value))),
@@ -471,6 +530,9 @@ class RulesDataUIListText extends RulesDataUIText {
  */
 class RulesDataUIListInteger extends RulesDataUIListText {
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     $settings += array($name => isset($info['default value']) ? $info['default value'] : NULL);
     $form = parent::inputForm($name, $info, $settings, $element);
@@ -492,6 +554,9 @@ class RulesDataUIListInteger extends RulesDataUIListText {
  */
 class RulesDataUIListToken extends RulesDataUIListInteger {
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     $form = parent::inputForm($name, $info, $settings, $element);
 
@@ -509,10 +574,16 @@ class RulesDataUIListToken extends RulesDataUIListInteger {
  */
 class RulesDataUIEntity extends RulesDataUIText {
 
+  /**
+   * Overrides RulesDataUI::getDefaultMode().
+   */
   public static function getDefaultMode() {
     return 'selector';
   }
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     $form = parent::inputForm($name, $info, $settings, $element);
     if (empty($info['options list'])) {
@@ -536,6 +607,9 @@ class RulesDataUIEntity extends RulesDataUIText {
  */
 class RulesDataUIEntityExportable extends RulesDataUIEntity {
 
+  /**
+   * Overrides RulesDataUI::getDefaultMode().
+   */
   public static function getDefaultMode() {
     return 'input';
   }
@@ -550,6 +624,9 @@ class RulesDataUIEntityExportable extends RulesDataUIEntity {
  */
 class RulesDataUIBundleEntity extends RulesDataUIEntity implements RulesDataInputOptionsListInterface {
 
+  /**
+   * Overrides RulesDataUI::getDefaultMode().
+   */
   public static function getDefaultMode() {
     return 'input';
   }
@@ -579,6 +656,9 @@ class RulesDataUIBundleEntity extends RulesDataUIEntity implements RulesDataInpu
  */
 class RulesDataUITaxonomyVocabulary extends RulesDataUIEntity implements RulesDataInputOptionsListInterface {
 
+  /**
+   * Overrides RulesDataUI::getDefaultMode().
+   */
   public static function getDefaultMode() {
     return 'input';
   }
@@ -601,6 +681,9 @@ class RulesDataUITaxonomyVocabulary extends RulesDataUIEntity implements RulesDa
  */
 class RulesDataUIListEntity extends RulesDataUIListInteger {
 
+  /**
+   * Implements RulesDataDirectInputFormInterface::inputForm().
+   */
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     $form = parent::inputForm($name, $info, $settings, $element);
     if (empty($info['options list'])) {

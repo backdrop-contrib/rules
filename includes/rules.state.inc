@@ -273,9 +273,9 @@ class RulesState {
   /**
    * Returns an entity metadata wrapper as specified in the selector.
    *
-   * @param $selector
+   * @param string $selector
    *   The selector string, e.g. "node:author:mail".
-   * @param $langcode
+   * @param string $langcode
    *   (optional) The language code used to get the argument value if the
    *   argument value should be translated. Defaults to LANGUAGE_NONE.
    *
@@ -378,7 +378,7 @@ class RulesData {
    *   The name of the type to check for whether it is compatible to type2.
    * @param $param_info
    *   The type expression to check for.
-   * @param $ancestors
+   * @param bool $ancestors
    *   (optional) Whether sub-type relationships for checking type compatibility
    *   should be taken into account. Defaults to TRUE.
    *
@@ -443,9 +443,9 @@ class RulesData {
    *   The information array about the to be configured parameter.
    * @param $prefix
    *   An optional prefix for the data selectors.
-   * @param $recursions
+   * @param int $recursions
    *   The number of recursions used to go down the tree. Defaults to 2.
-   * @param $suggestions
+   * @param bool $suggestions
    *   Whether possibilities to recurse are suggested as soon as the deepest
    *   level of recursions is reached. Defaults to TRUE.
    *

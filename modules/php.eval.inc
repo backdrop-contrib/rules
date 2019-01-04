@@ -30,6 +30,9 @@ class RulesPHPEvaluator extends RulesDataInputEvaluator {
     }
   }
 
+  /**
+   * Overrides RulesDataInputEvaluator::prepare().
+   */
   public function prepare($text, $var_info) {
     // A returned NULL skips the evaluator.
     $this->setting = self::getUsedVars($text, $var_info);
@@ -49,6 +52,9 @@ class RulesPHPEvaluator extends RulesDataInputEvaluator {
     return rules_php_eval($text, rules_unwrap_data($vars));
   }
 
+  /**
+   * Overrides RulesDataInputEvaluator::help().
+   */
   public static function help($var_info) {
     module_load_include('inc', 'rules', 'rules/modules/php.rules');
 
@@ -69,6 +75,9 @@ class RulesPHPEvaluator extends RulesDataInputEvaluator {
  */
 class RulesPHPDataProcessor extends RulesDataProcessor {
 
+  /**
+   * Overrides RulesDataProcessor::form().
+   */
   protected static function form($settings, $var_info) {
     $settings += array('code' => '');
     $form = array(
@@ -88,10 +97,16 @@ class RulesPHPDataProcessor extends RulesDataProcessor {
     return $form;
   }
 
+  /**
+   * Overrides RulesDataProcessor::editAccess().
+   */
   public function editAccess() {
     return parent::editAccess() && (user_access('use PHP for settings') || drupal_is_cli());
   }
 
+  /**
+   * Overrides RulesDataProcessor::process().
+   */
   public function process($value, $info, RulesState $state, RulesPlugin $element) {
     $value = isset($this->processor) ? $this->processor->process($value, $info, $state, $element) : $value;
     return rules_php_eval_return($this->setting['code'], array('value' => $value));

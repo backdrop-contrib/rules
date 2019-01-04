@@ -160,7 +160,7 @@ if (!class_exists('FacesExtendable', FALSE)) {
      *   Optional. An interface to test for. If it's omitted, all interfaces
      *   that the object can be faced as are returned.
      *
-     * @return
+     * @return bool
      *   Whether the object can face as the interface or an array of interface
      *   names.
      */

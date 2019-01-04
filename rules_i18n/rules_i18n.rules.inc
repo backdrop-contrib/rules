@@ -128,6 +128,9 @@ class RulesI18nStringEvaluator extends RulesDataInputEvaluator {
     return user_access('translate admin strings');
   }
 
+  /**
+   * Overrides RulesDataInputEvaluator::prepare().
+   */
   public function prepare($text, $var_info, $param_info = NULL) {
     if (!empty($param_info['translatable'])) {
       $this->setting = TRUE;
@@ -177,6 +180,9 @@ class RulesI18nStringEvaluator extends RulesDataInputEvaluator {
     return $value;
   }
 
+  /**
+   * Overrides RulesDataInputEvaluator::help().
+   */
   public static function help($var_info, $param_info = array()) {
     if (!empty($param_info['translatable'])) {
       if (!empty($param_info['custom translation language'])) {
