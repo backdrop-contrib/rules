@@ -12,12 +12,12 @@ function rules_drush_command() {
   $items = array();
 
   $items['rules-list'] = array(
-    'description' => "List all the active and inactive rules for your site.",
+    'description' => 'List all the active and inactive rules for your site.',
     'drupal dependencies' => array('rules'),
     'aliases' => array('rules'),
   );
   $items['rules-enable'] = array(
-    'description' => "Enable a rule on your site.",
+    'description' => 'Enable a rule on your site.',
     'arguments' => array(
       'rule' => 'Rule name to enable.',
     ),
@@ -25,7 +25,7 @@ function rules_drush_command() {
     'aliases' => array('re'),
   );
   $items['rules-disable'] = array(
-    'description' => "Disable a rule on your site.",
+    'description' => 'Disable a rule on your site.',
     'arguments' => array(
       'rule' => 'Rule name to export.',
     ),
@@ -55,14 +55,14 @@ function rules_drush_command() {
  */
 function rules_drush_help($section) {
   switch ($section) {
-    case 'drush:rules':
-      return dt("List all the rules on your site.");
+    case 'drush:rules-list':
+      return dt('List all the rules on your site.');
 
     case 'drush:rules-enable':
-      return dt("Enable/activate a rule on your site.");
+      return dt('Enable/activate a rule on your site.');
 
     case 'drush:rules-disable':
-      return dt("Disable/deactivate a rule on your site.");
+      return dt('Disable/deactivate a rule on your site.');
 
     case 'drush:rules-revert':
       return dt('Revert a module-provided rule to its original state on your site.');
