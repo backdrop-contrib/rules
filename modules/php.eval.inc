@@ -130,8 +130,8 @@ function rules_execute_php_eval($code, $settings, $state, $element) {
 /**
  * Evaluates the given PHP code, with the given variables defined.
  *
- * @param $code
- *   The PHP code to run, with <?php ?>
+ * @param string $code
+ *   The PHP code to run, including <?php and ?>
  * @param $arguments
  *   Array containing variables to be extracted to the code.
  *
@@ -155,8 +155,8 @@ function rules_php_eval($code, $arguments = array()) {
  * This is like rules_php_eval(), but does return the returned data from
  * the PHP code.
  *
- * @param $code
- *   The PHP code to run, without <?php ?>
+ * @param string $code
+ *   The PHP code to run, without <?php or ?>
  * @param $arguments
  *   Array containing variables to be extracted to the code.
  *

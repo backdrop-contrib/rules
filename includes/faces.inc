@@ -67,9 +67,9 @@ if (!class_exists('FacesExtender', FALSE)) {
     /**
      * Invokes any method on the extended object, including protected methods.
      *
-     * @param $name
+     * @param string $name
      *   The method name.
-     * @param $arguments
+     * @param array $args
      *   An array of arguments to pass to the method.
      */
     protected function call($name, array $args = array()) {
@@ -176,9 +176,9 @@ if (!class_exists('FacesExtendable', FALSE)) {
      *
      * @param $interface
      *   The interface name or an array of interface names.
-     * @param $class
+     * @param $className
      *   The extender class, which has to implement the FacesExtenderInterface.
-     * @param $include
+     * @param array $includes
      *   An optional array describing the file to include before invoking the
      *   class. The array entries known are 'type', 'module', and 'name'
      *   matching the parameters of module_load_include(). Only 'module' is
@@ -213,10 +213,10 @@ if (!class_exists('FacesExtendable', FALSE)) {
      * @param $interface
      *   The interface name or FALSE to extend the object without a given
      *   interface.
-     * @param $methods
+     * @param array $callbacks
      *   An array, where the keys are methods of the given interface and the
      *   values the callback functions to use.
-     * @param $includes
+     * @param array $includes
      *   An optional array to describe files to include before invoking the
      *   callbacks. You may pass a single array describing one include for all
      *   callbacks or an array of arrays, keyed by the method names. Look at the
@@ -241,11 +241,11 @@ if (!class_exists('FacesExtendable', FALSE)) {
     /**
      * Override the implementation of an extended method.
      *
-     * @param $methods
+     * @param array $callbacks
      *   An array of methods of the interface, that should be overridden, where
      *   the keys are methods to override and the values the callback functions
      *   to use.
-     * @param $includes
+     * @param array $includes
      *   An optional array to describe files to include before invoking the
      *   callbacks. You may pass a single array describing one include for all
      *   callbacks or an array of arrays, keyed by the method names. Look at the
@@ -306,9 +306,9 @@ if (!class_exists('FacesExtendable', FALSE)) {
      * This also allows to pass arguments by reference, so it may be used to
      * pass arguments by reference to dynamically extended methods.
      *
-     * @param $name
+     * @param string $name
      *   The method name.
-     * @param $arguments
+     * @param array $args
      *   An array of arguments to pass to the method.
      */
     public function call($name, array $args = array()) {

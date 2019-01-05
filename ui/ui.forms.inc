@@ -167,16 +167,28 @@ function rules_ui_confirm_operations($op, $rules_config) {
 
   switch ($op) {
     case 'enable':
-      return array(t('Are you sure you want to enable the %plugin %label?', $vars), '');
+      return array(
+        t('Are you sure you want to enable the %plugin %label?', $vars),
+        '',
+      );
 
     case 'disable':
-      return array(t('Are you sure you want to disable the %plugin %label?', $vars), '');
+      return array(
+        t('Are you sure you want to disable the %plugin %label?', $vars),
+        '',
+      );
 
     case 'revert':
-      return array(t('Are you sure you want to revert the %plugin %label?', $vars), t('This action cannot be undone.'));
+      return array(
+        t('Are you sure you want to revert the %plugin %label?', $vars),
+        t('This action cannot be undone.'),
+      );
 
     case 'delete':
-      return array(t('Are you sure you want to delete the %plugin %label?', $vars), t('This action cannot be undone.'));
+      return array(
+        t('Are you sure you want to delete the %plugin %label?', $vars),
+        t('This action cannot be undone.'),
+      );
 
     default:
       return FALSE;
@@ -356,7 +368,10 @@ function rules_ui_delete_element($form, &$form_state, $rules_config, $rules_elem
     }
   }
 
-  $confirm_question = t('Are you sure you want to delete the %element_plugin %element_name?', array('%element_plugin' => $rules_element->plugin(), '%element_name' => $rules_element->label(), '%plugin' => $rules_config->plugin(), '%label' => $rules_config->label()));
+  $confirm_question = t('Are you sure you want to delete the %element_plugin %element_name?', array(
+    '%element_plugin' => $rules_element->plugin(),
+    '%element_name' => $rules_element->label(),
+  ));
   return confirm_form($form, $confirm_question, RulesPluginUI::path($rules_config->name), t('This action cannot be undone.'), t('Delete'), t('Cancel'));
 }
 

@@ -123,16 +123,15 @@
  *   - save: (optional) If this is set to TRUE, the provided variable is saved
  *     by rules when the rules evaluation ends. Only possible for savable data
  *     types. Defaults to FALSE.
- *
- *  The module has to provide an implementation for each action, being a
- *  function named as specified in the 'base' key or for the execution callback.
- *  All other possible callbacks are optional.
- *  Supported action callbacks by rules are defined and documented in the
- *  RulesPluginImplInterface. However any module may extend the action plugin
- *  based upon a defined interface using hook_rules_plugin_info(). All methods
- *  defined in those interfaces can be overridden by the action implementation.
- *  The callback implementations for those interfaces may reside in any file
- *  specified in hook_rules_file_info().
+ *   The module has to provide an implementation for each action, being a
+ *   function named as specified in the 'base' key or for the execution callback.
+ *   All other possible callbacks are optional.
+ *   Supported action callbacks by rules are defined and documented in the
+ *   RulesPluginImplInterface. However any module may extend the action plugin
+ *   based upon a defined interface using hook_rules_plugin_info(). All methods
+ *   defined in those interfaces can be overridden by the action implementation.
+ *   The callback implementations for those interfaces may reside in any file
+ *   specified in hook_rules_file_info().
  *
  * @see hook_rules_file_info()
  * @see rules_action_execution_callback()

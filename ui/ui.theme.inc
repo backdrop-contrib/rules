@@ -65,7 +65,13 @@ function theme_rules_ui_variable_form($variables) {
   $elements = $variables['element'];
 
   $table['#theme'] = 'table';
-  $table['#header'] = array(t('Data type'), t('Label'), t('Machine name'), t('Usage'), array('data' => t('Weight'), 'class' => array('tabledrag-hide')));
+  $table['#header'] = array(
+    t('Data type'),
+    t('Label'),
+    t('Machine name'),
+    t('Usage'),
+    array('data' => t('Weight'), 'class' => array('tabledrag-hide')),
+  );
   $table['#attributes']['id'] = 'rules-' . drupal_html_id($elements['#title']) . '-id';
 
   foreach (element_children($elements['items']) as $key) {

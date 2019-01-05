@@ -29,15 +29,30 @@ function rules_comment_event_info() {
     'comment_update' => $defaults + array(
       'label' => t('After updating an existing comment'),
       'variables' => array(
-        'comment' => array('type' => 'comment', 'label' => t('updated comment')),
-        'comment_unchanged' => array('type' => 'comment', 'label' => t('unchanged comment'), 'handler' => 'rules_events_entity_unchanged'),
+        'comment' => array(
+          'type' => 'comment',
+          'label' => t('updated comment'),
+        ),
+        'comment_unchanged' => array(
+          'type' => 'comment',
+          'label' => t('unchanged comment'),
+          'handler' => 'rules_events_entity_unchanged',
+        ),
       ),
     ),
     'comment_presave' => $defaults + array(
       'label' => t('Before saving a comment'),
       'variables' => array(
-        'comment' => array('type' => 'comment', 'label' => t('saved comment'), 'skip save' => TRUE),
-        'comment_unchanged' => array('type' => 'comment', 'label' => t('unchanged comment'), 'handler' => 'rules_events_entity_unchanged'),
+        'comment' => array(
+          'type' => 'comment',
+          'label' => t('saved comment'),
+          'skip save' => TRUE,
+        ),
+        'comment_unchanged' => array(
+          'type' => 'comment',
+          'label' => t('unchanged comment'),
+          'handler' => 'rules_events_entity_unchanged',
+        ),
       ),
     ),
     'comment_view' => $defaults + array(
@@ -74,6 +89,7 @@ class RulesCommentEventHandler extends RulesEventHandlerEntityBundle {
    * Returns the label to use for the bundle property.
    *
    * @return string
+   *   Returns the label to use for the bundle property.
    */
   protected function getBundlePropertyLabel() {
     return t('type');

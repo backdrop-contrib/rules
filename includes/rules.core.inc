@@ -107,6 +107,8 @@ class RulesEntityController extends EntityAPIControllerExportable {
    * @param $export
    *   A serialized string in JSON format as produced by the
    *   RulesPlugin::export() method, or the PHP export as usual PHP array.
+   * @param string $error_msg
+   *   The error message.
    */
   public function import($export, &$error_msg = '') {
     $export = is_array($export) ? $export : drupal_json_decode($export);
@@ -621,7 +623,7 @@ abstract class RulesPlugin extends RulesExtendable {
   /**
    * Returns info about parameters needed for executing the configured plugin.
    *
-   * @param $optional
+   * @param bool $optional
    *   Whether optional parameters should be included.
    *
    * @see self::pluginParameterInfo()
@@ -925,7 +927,7 @@ abstract class RulesPlugin extends RulesExtendable {
    * Returns the argument as configured in the element settings for the
    * parameter $name described with $info.
    *
-   * @param $name
+   * @param string $name
    *   The name of the parameter for which to get the argument.
    * @param $info
    *   Info about the parameter.
@@ -1361,9 +1363,9 @@ abstract class RulesPlugin extends RulesExtendable {
   /**
    * Exports a rule configuration.
    *
-   * @param $prefix
+   * @param string $prefix
    *   An optional prefix for each line.
-   * @param $php
+   * @param bool $php
    *   Optional. Set to TRUE to format the export using PHP arrays. By default
    *   JSON is used.
    *
@@ -1423,9 +1425,10 @@ abstract class RulesPlugin extends RulesExtendable {
    * Adds general attributes regarding the configuration and returns it in the
    * right format for export.
    *
-   * @param $prefix
+   * @param $export
+   * @param string $prefix
    *   An optional prefix for each line.
-   * @param $php
+   * @param bool $php
    *   Optional. Set to TRUE to format the export using PHP arrays. By default
    *   JSON is used.
    */
@@ -1488,9 +1491,9 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
   protected $infoLoaded = FALSE;
 
   /**
-   * @param $name
+   * @param string $name
    *   The plugin implementation's name.
-   * @param $info
+   * @param $settings
    *   Further information provided about the plugin. Optional.
    * @throws RulesException
    *   If validation of the passed settings fails RulesExceptions are thrown.
@@ -1829,8 +1832,15 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
   }
 
   /**
-   * Returns all include files for a module. If $all is set to FALSE the
-   * $module.rules.inc file isn't added.
+   * Returns all include files for a module.
+   *
+   * @param string $module
+   *   The module name.
+   * @param bool $all
+   *   If FALSE, the $module.rules.inc file isn't added.
+   *
+   * @return string[]
+   *   An array containing the names of all the include files for a module.
    */
   protected static function getIncludeFiles($module, $all = TRUE) {
     $files = (array) module_invoke($module, 'rules_file_info');
@@ -1917,7 +1927,7 @@ interface RulesTriggerableInterface {
   /**
    * Removes an event from the rule configuration.
    *
-   * @param $event
+   * @param string $event_name
    *   The name of the (configured) event to remove.
    *
    * @return RulesTriggerableInterface
@@ -1941,7 +1951,7 @@ interface RulesTriggerableInterface {
   /**
    * Gets the event settings associated with the given (configured) event.
    *
-   * @param $event_name
+   * @param string $event_name
    *   The (configured) event's name.
    *
    * @return array|null
@@ -2130,7 +2140,7 @@ abstract class RulesConditionHandlerBase extends RulesPluginHandlerBase implemen
 abstract class RulesActionHandlerBase extends RulesPluginHandlerBase implements RulesActionHandlerInterface {}
 
 /**
- * Provides default implementations of the methods of the RulesPluginImplInterface.
+ * Provides default implementations of all RulesPluginImplInterface methods.
  *
  * If a plugin implementation does not provide a function for a method, the
  * default method of this class will be invoked.
@@ -2369,7 +2379,7 @@ abstract class RulesContainerPlugin extends RulesPlugin implements IteratorAggre
   /**
    * Sorts all child elements by their weight.
    *
-   * @param $deep
+   * @param bool $deep
    *   If enabled a deep sort is performed, thus the whole element tree below
    *   this element is sorted.
    */
@@ -2698,7 +2708,11 @@ class RulesLog {
   }
 
   /**
-   * Checks the log for (error) messages with a log level equal or higher than the given one.
+   * Checks the log for error messages.
+   *
+   * @param int $logLevel
+   *   Lowest log level to return. Values lower than $logLevel will not be
+   *   returned.
    *
    * @return bool
    *   Whether the an error has been logged.
@@ -2783,9 +2797,10 @@ class RulesLog {
 }
 
 /**
- * A common exception for Rules.
+ * A base exception class for Rules.
  *
- * This class can be used to catch all exceptions thrown by Rules.
+ * This class can be used to catch all exceptions thrown by Rules, and it
+ * may be subclassed to describe more specific exceptions.
  */
 abstract class RulesException extends Exception {}
 
@@ -2805,15 +2820,15 @@ class RulesEvaluationException extends RulesException {
   public $keys = array();
 
   /**
-   * @param $msg
+   * @param string $msg
    *   The exception message containing placeholder as t().
-   * @param $args
+   * @param array $args
    *   Replacement arguments such as for t().
    * @param $element
    *   The element of a configuration causing the exception or an array
    *   consisting of the element and keys specifying a setting value causing
    *   the exception.
-   * @param $severity
+   * @param int $severity
    *   The RulesLog severity. Defaults to RulesLog::WARN.
    */
   public function __construct($msg, array $args = array(), $element = NULL, $severity = RulesLog::WARN) {
@@ -2876,9 +2891,9 @@ class RulesDependencyException extends RulesIntegrityException {}
 /**
  * Determines the plugin to be used for importing a child element.
  *
- * @param $key
+ * @param string $key
  *   The key to look for, e.g. 'OR' or 'DO'.
- * @param $default
+ * @param string $default
  *   The default to return if no special plugin can be found.
  */
 function _rules_import_get_plugin($key, $default = 'action') {
@@ -2894,7 +2909,7 @@ function _rules_import_get_plugin($key, $default = 'action') {
       }
     }
   }
-  // Cut of any leading NOT from the key.
+  // Cut off any leading NOT from the key.
   if (strpos($key, 'NOT ') === 0) {
     $key = substr($key, 4);
   }

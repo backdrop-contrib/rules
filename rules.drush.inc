@@ -18,7 +18,13 @@ function rules_drush_command() {
     'outputformat' => array(
       'default' => 'table',
       'pipe-format' => 'list',
-      'field-labels' => array('rule' => dt('Rule'), 'label' => dt('Label'), 'event' => dt('Event'), 'active' => dt('Active'), 'status' => dt('Status')),
+      'field-labels' => array(
+        'rule' => dt('Rule'),
+        'label' => dt('Label'),
+        'event' => dt('Event'),
+        'active' => dt('Active'),
+        'status' => dt('Status'),
+      ),
       'output-data-type' => 'format-table',
     ),
   );

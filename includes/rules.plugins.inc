@@ -10,6 +10,9 @@
  */
 class RulesAction extends RulesAbstractPlugin implements RulesActionInterface {
 
+  /**
+   * @var string
+   */
   protected $itemName = 'action';
 
   /**
@@ -77,7 +80,14 @@ class RulesAction extends RulesAbstractPlugin implements RulesActionInterface {
  */
 class RulesCondition extends RulesAbstractPlugin implements RulesConditionInterface {
 
+  /**
+   * @var string
+   */
   protected $itemName = 'condition';
+
+  /**
+   * @var bool
+   */
   protected $negate = FALSE;
 
   public function providesVariables() {
@@ -146,8 +156,15 @@ class RulesCondition extends RulesAbstractPlugin implements RulesConditionInterf
 class Rule extends RulesActionContainer {
 
   protected $conditions = NULL;
+
+  /**
+   * @var string
+   */
   protected $itemName = 'rule';
 
+  /**
+   * @var string
+   */
   public $label = 'unlabeled';
 
   public function __construct($variables = array(), $providesVars = array()) {
@@ -357,8 +374,19 @@ class Rule extends RulesActionContainer {
  */
 class RulesReactionRule extends Rule implements RulesTriggerableInterface {
 
+  /**
+   * @var string
+   */
   protected $itemName = 'reaction rule';
+
+  /**
+   * @var array
+   */
   protected $events = array();
+
+  /**
+   * @var array
+   */
   protected $eventSettings = array();
 
   /**
@@ -535,6 +563,9 @@ class RulesReactionRule extends Rule implements RulesTriggerableInterface {
  */
 class RulesAnd extends RulesConditionContainer {
 
+  /**
+   * @var string
+   */
   protected $itemName = 'and';
 
   public function evaluate(RulesState $state) {
@@ -559,6 +590,9 @@ class RulesAnd extends RulesConditionContainer {
  */
 class RulesOr extends RulesConditionContainer {
 
+  /**
+   * @var string
+   */
   protected $itemName = 'or';
 
   public function evaluate(RulesState $state) {
@@ -603,6 +637,9 @@ class RulesOr extends RulesConditionContainer {
  */
 class RulesLoop extends RulesActionContainer {
 
+  /**
+   * @var string
+   */
   protected $itemName = 'loop';
   protected $listItemInfo;
 
@@ -717,6 +754,9 @@ class RulesLoop extends RulesActionContainer {
  */
 class RulesActionSet extends RulesActionContainer {
 
+  /**
+   * @var string
+   */
   protected $itemName = 'action set';
 
 }
@@ -726,6 +766,9 @@ class RulesActionSet extends RulesActionContainer {
  */
 class RulesRuleSet extends RulesActionContainer {
 
+  /**
+   * @var string
+   */
   protected $itemName = 'rule set';
 
   /**
@@ -750,8 +793,16 @@ class RulesRuleSet extends RulesActionContainer {
  */
 class RulesEventSet extends RulesRuleSet {
 
+  /**
+   * @var string
+   */
   protected $itemName = 'event set';
-  // Event sets may recurse as we block recursions on rule-level.
+
+  /**
+   * Event sets may recurse as we block recursions on rule-level.
+   *
+   * @var bool
+   */
   public $recursion = TRUE;
 
   public function __construct($info = array()) {
@@ -769,7 +820,10 @@ class RulesEventSet extends RulesRuleSet {
   }
 
   /**
-   * Cache event-sets per event to allow efficient usage via rules_invoke_event().
+   * Rebuilds the event cache.
+   *
+   * We cache event-sets per event in order to allow efficient usage via
+   * rules_invoke_event().
    *
    * @see rules_get_cache()
    * @see rules_invoke_event()

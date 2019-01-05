@@ -708,7 +708,7 @@ function rules_rules_plugin_info() {
     'condition' => array(
       'class' => 'RulesCondition',
       'embeddable' => 'RulesConditionContainer',
-      'extenders' => array (
+      'extenders' => array(
         'RulesPluginImplInterface' => array(
           'class' => 'RulesAbstractPluginDefaults',
         ),
@@ -725,7 +725,7 @@ function rules_rules_plugin_info() {
     'action' => array(
       'class' => 'RulesAction',
       'embeddable' => 'RulesActionContainer',
-      'extenders' => array (
+      'extenders' => array(
         'RulesPluginImplInterface' => array(
           'class' => 'RulesAbstractPluginDefaults',
         ),
