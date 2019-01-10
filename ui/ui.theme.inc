@@ -204,7 +204,11 @@ function theme_rules_data_selector_help($variables) {
   );
   foreach (RulesData::matchingDataSelector($variables_info, $param_info) as $selector => $info) {
     $info += array('label' => '', 'description' => '');
-    $render['table']['#rows'][] = array(check_plain($selector), check_plain(drupal_ucfirst($info['label'])), check_plain($info['description']));
+    $render['table']['#rows'][] = array(
+      check_plain($selector),
+      check_plain(drupal_ucfirst($info['label'])),
+      check_plain($info['description']),
+    );
   }
   return drupal_render($render);
 }

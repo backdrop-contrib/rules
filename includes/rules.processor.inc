@@ -54,7 +54,7 @@ abstract class RulesDataProcessor {
   /**
    * Prepares the processor for parameters.
    *
-   * It turns the settings into a suiting processor object, which gets invoked
+   * It turns the settings into a suitable processor object, which gets invoked
    * on evaluation time.
    *
    * @param $setting

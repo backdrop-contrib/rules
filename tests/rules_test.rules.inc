@@ -9,10 +9,12 @@
  * Implements hook_rules_event_info().
  */
 function rules_test_rules_event_info() {
-  return array('rules_test_event' => array(
-    'label' => t('Test event'),
-    'class' => 'RulesTestEventHandler',
-  ));
+  return array(
+    'rules_test_event' => array(
+      'label' => t('Test event'),
+      'class' => 'RulesTestEventHandler',
+    )
+  );
 }
 
 /**
@@ -217,7 +219,11 @@ function rules_test_rules_action_info() {
       'base' => 'rules_test_type_save',
       'label' => t('Save test type'),
       'parameter' => array(
-        'node' => array('type' => 'rules_test_type', 'label' => t('Test content'), 'save' => TRUE),
+        'node' => array(
+          'type' => 'rules_test_type',
+          'label' => t('Test content'),
+          'save' => TRUE,
+        ),
       ),
       'group' => t('Node'),
     ),
@@ -289,14 +295,23 @@ function rules_test_rules_data_info_alter(&$data_info) {
  */
 class RulesTestTypeWrapper extends RulesIdentifiableDataWrapper implements RulesDataWrapperSavableInterface {
 
+  /**
+   * Overrides RulesIdentifiableDataWrapper::extractIdentifier().
+   */
   protected function extractIdentifier($data) {
     return $data->nid;
   }
 
+  /**
+   * Overrides RulesIdentifiableDataWrapper::load().
+   */
   protected function load($id) {
     return node_load($id);
   }
 
+  /**
+   * Implements RulesDataWrapperSavableInterface::save().
+   */
   public function save() {
     node_save($this->value());
   }

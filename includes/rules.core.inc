@@ -32,7 +32,7 @@ class RulesEntityController extends EntityAPIControllerExportable {
    * @see DrupalDefaultEntityController::attachLoad()
    */
   protected function attachLoad(&$queried_entities, $revision_id = FALSE) {
-    // Retrieve stdClass records and turn them in rules objects stored in 'data'
+    // Retrieve stdClass records and store them as rules objects in 'data'.
     $ids = array_keys($queried_entities);
     $result = db_select('rules_tags')
       ->fields('rules_tags', array('id', 'tag'))
@@ -1050,7 +1050,7 @@ abstract class RulesPlugin extends RulesExtendable {
             }
           }
         }
-        // In case of an exception or we were unable to get a wrapper, return FALSE.
+        // Return FALSE if there is no wrappper or we get an exception.
         catch (EntityMetadataWrapperException $e) {
           return FALSE;
         }
@@ -2820,6 +2820,8 @@ class RulesEvaluationException extends RulesException {
   public $keys = array();
 
   /**
+   * Constructor.
+   *
    * @param string $msg
    *   The exception message containing placeholder as t().
    * @param array $args

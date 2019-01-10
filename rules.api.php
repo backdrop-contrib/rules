@@ -180,14 +180,14 @@ function hook_rules_action_info() {
  *   - icon: (optional) The file path of an icon to use, relative to the module
  *     or specified icon path. The icon should be a transparent SVG containing
  *     no colors (only #fff). See https://www.drupal.org/node/2090265 for
- *     instructions on how to create a suiting icon.
+ *     instructions on how to create a suitable icon.
  *     Note that the icon is currently not used by Rules, however other UIs
  *     building upon Rules (like fluxkraft) do, and future releases of Rules
  *     might do as well. Consequently, the definition of an icon is optional.
  *     However, if both an icon font and icon is given, the icon is preferred.
  *   - icon path: (optional) The base path for the icon. Defaults to the
  *     providing module's directory.
- *   - icon font class: (optional) An icon font class referring to a suiting
+ *   - icon font class: (optional) An icon font class referring to a suitable
  *     icon. Icon font class names should map to the ones as defined by Font
  *     Awesome, while themes might want to choose to provide another icon font.
  *     See http://fortawesome.github.io/Font-Awesome/cheatsheet/.

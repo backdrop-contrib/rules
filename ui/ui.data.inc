@@ -139,7 +139,7 @@ class RulesDataUI {
   }
 
   /**
-   * Renders the value by making use of the label if an options list is available.
+   * Renders the value with a label if an options list is available.
    *
    * Used for data UI classes implementing the
    * RulesDataDirectInputFormInterface.

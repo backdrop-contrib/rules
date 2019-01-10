@@ -115,7 +115,10 @@ function rules_scheduler_menu() {
 }
 
 /**
- * Load a task by a given task ID.
+ * Loads a task by a given task ID.
+ *
+ * @param int $tid
+ *   The task ID.
  */
 function rules_scheduler_task_load($tid) {
   $result = db_select('rules_scheduler', 'r')
@@ -126,7 +129,10 @@ function rules_scheduler_task_load($tid) {
 }
 
 /**
- * Delete a task by a given task ID.
+ * Deletes a task by a given task ID.
+ *
+ * @param int $tid
+ *   The task ID.
  */
 function rules_scheduler_task_delete($tid) {
   db_delete('rules_scheduler')
@@ -137,7 +143,7 @@ function rules_scheduler_task_delete($tid) {
 /**
  * Schedule a task to be executed later on.
  *
- * @param $task
+ * @param array $task
  *   An array representing the task with the following keys:
  *   - config: The machine readable name of the to-be-scheduled component.
  *   - date: Timestamp when the component should be executed.

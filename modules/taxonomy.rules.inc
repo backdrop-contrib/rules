@@ -137,7 +137,7 @@ class RulesTaxonomyEventHandler extends RulesEventHandlerEntityBundle {
    * Returns the label to use for the bundle property.
    *
    * @return string
-   *   Returns the label to use for the bundle property.
+   *   The label to use for the bundle property.
    */
   protected function getBundlePropertyLabel() {
     return t('vocabulary');

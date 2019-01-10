@@ -10,6 +10,9 @@
  */
 class RulesI18nTestCase extends DrupalWebTestCase {
 
+  /**
+   * Declares test metadata.
+   */
   public static function getInfo() {
     return array(
       'name' => 'Rules I18n',
@@ -19,6 +22,9 @@ class RulesI18nTestCase extends DrupalWebTestCase {
     );
   }
 
+  /**
+   * Overrides DrupalWebTestCase::setUp().
+   */
   protected function setUp() {
     parent::setUp('rules_i18n');
     $this->admin_user = $this->drupalCreateUser(array('bypass node access', 'administer nodes', 'administer languages', 'administer content types', 'administer blocks', 'access administration pages'));

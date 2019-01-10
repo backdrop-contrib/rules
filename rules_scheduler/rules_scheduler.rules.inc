@@ -116,7 +116,9 @@ function rules_scheduler_action_schedule_info_alter(&$element_info, RulesPlugin 
 }
 
 /**
- * Validate callback for the schedule action to make sure the component exists and is not dirty.
+ * Validate callback for the schedule action.
+ *
+ * Makes sure the component exists and is not dirty.
  *
  * @see rules_element_invoke_component_validate()
  */
@@ -193,7 +195,7 @@ function rules_scheduler_action_delete($component_name = NULL, $task_identifier 
 }
 
 /**
- * Cancel scheduled task action validation callback.
+ * Cancels scheduled task action validation callback.
  */
 function rules_scheduler_action_delete_validate($element) {
   if (empty($element->settings['task']) && empty($element->settings['task:select']) &&

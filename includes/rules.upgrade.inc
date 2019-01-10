@@ -137,6 +137,9 @@ function rules_upgrade_confirm_clear_form($form, $form_state) {
   return confirm_form($form, $confirm_question, 'admin/config/workflow/rules/upgrade', $confirm_question_long, t('Delete data'), t('Cancel'));
 }
 
+/**
+ * Submit handler for deleting data.
+ */
 function rules_upgrade_confirm_clear_form_submit($form, &$form_state) {
   db_drop_table('rules_rules');
   db_drop_table('rules_sets');
@@ -220,9 +223,9 @@ function rules_upgrade_convert_rule_set($name, $cfg_old) {
 /**
  * Convert a single element.
  *
- * @param $element
+ * @param array $element
  *   The element to convert.
- * @param $target
+ * @param RulesPlugin $target
  *   The converted element to write to.
  */
 function rules_upgrade_convert_element(array $element, RulesPlugin $target) {
