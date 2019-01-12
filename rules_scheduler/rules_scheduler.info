@@ -9,5 +9,5 @@ files[] = includes/rules_scheduler.handler.inc
 files[] = includes/rules_scheduler_views_filter.inc
 
 ; Test cases
-files[] = rules_scheduler.test
+files[] = tests/rules_scheduler.test
 files[] = tests/rules_scheduler_test.inc
