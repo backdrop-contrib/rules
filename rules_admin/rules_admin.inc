@@ -190,7 +190,7 @@ function rules_admin_settings($form, &$form_state) {
   $form['debug']['rules_debug_log'] = array(
     '#type' => 'checkbox',
     '#title' => t('Log debug information to the system log'),
-    '#default_value' => variable_get('rules_debug_log', 0),
+    '#default_value' => variable_get('rules_debug_log', FALSE),
   );
   $form['debug']['rules_debug'] = array(
     '#type' => 'radios',
@@ -209,7 +209,7 @@ function rules_admin_settings($form, &$form_state) {
     '#states' => array(
       // Hide the regions settings when the debug log is disabled.
       'invisible' => array(
-        'input[name="rules_debug"]' => array('value' => '0'),
+        'input[name="rules_debug"]' => array('value' => 0),
       ),
     ),
   );

@@ -27,7 +27,7 @@ class RulesTestCase extends DrupalWebTestCase {
   protected function setUp() {
     parent::setUp('rules', 'rules_test');
     RulesLog::logger()->clear();
-    variable_set('rules_debug_log', 1);
+    variable_set('rules_debug_log', TRUE);
   }
 
   /**
@@ -963,7 +963,7 @@ class RulesTestDataCase extends DrupalWebTestCase {
    */
   protected function setUp() {
     parent::setUp('rules', 'rules_test');
-    variable_set('rules_debug_log', 1);
+    variable_set('rules_debug_log', TRUE);
     // Make sure we don't ran over issues with the node_load static cache.
     entity_get_controller('node')->resetCache();
   }
@@ -1116,7 +1116,7 @@ class RulesTriggerTestCase extends DrupalWebTestCase {
   protected function setUp() {
     parent::setUp('rules', 'rules_test');
     RulesLog::logger()->clear();
-    variable_set('rules_debug_log', 1);
+    variable_set('rules_debug_log', TRUE);
   }
 
   /**
@@ -1355,7 +1355,7 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
   protected function setUp() {
     parent::setUp('rules', 'rules_test', 'php', 'path');
     RulesLog::logger()->clear();
-    variable_set('rules_debug_log', 1);
+    variable_set('rules_debug_log', TRUE);
   }
 
   /**
