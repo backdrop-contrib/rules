@@ -27,8 +27,22 @@ function rules_install() {
  * Implements hook_uninstall().
  */
 function rules_uninstall() {
-  variable_del('rules_event_whitelist');
   variable_del('rules_debug');
+  variable_del('rules_debug_log');
+  variable_del('rules_log_errors');
+  variable_del('rules_log_level');
+
+  variable_del('rules_clean_path');
+  variable_del('rules_path_cleaning_callback');
+  variable_del('rules_path_lower_case');
+  variable_del('rules_path_replacement_char');
+  variable_del('rules_path_transliteration');
+
+  // Delete all the debug region variables and then clear the variables cache.
+  db_delete('variable')
+    ->condition('name', 'rules_debug_region_%', 'LIKE')
+    ->execute();
+  cache_clear_all('variables', 'cache_bootstrap');
 }
 
 /**
