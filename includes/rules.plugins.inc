@@ -220,8 +220,7 @@ class Rule extends RulesActionContainer {
    * Pass either an instance of the RulesConditionInterface or the arguments as
    * needed by rules_condition().
    *
-   * @return Rule
-   *   Returns $this to support chained usage.
+   * @return $this
    */
   public function condition($name, $settings = array()) {
     $this->conditions->condition($name, $settings);

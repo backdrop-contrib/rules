@@ -5,6 +5,9 @@
  * Rules tests.
  */
 
+/**
+ * Rules test cases.
+ */
 class RulesTestCase extends DrupalWebTestCase {
 
   /**
@@ -623,7 +626,7 @@ class RulesTestCase extends DrupalWebTestCase {
     // Customize action info using the settings.
     $rule->condition('data_is', array('data:select' => 'node:type', 'value' => 'page'))
          // Configure an condition using the body. As the body is a field,
-         // tis requires the bundle to be correctly asserted.
+         // this requires the bundle to be correctly asserted.
          ->condition(rules_condition('data_is', array('data:select' => 'node:body:value', 'value' => 'foo'))->negate())
          // The action also requires the page bundle in order to work.
          ->action($action);

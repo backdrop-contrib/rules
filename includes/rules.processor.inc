@@ -61,7 +61,7 @@ abstract class RulesDataProcessor {
    *   The processor settings which are to be prepared.
    * @param $param_info
    *   The info about the parameter to prepare the processor for.
-   * @param $var_info
+   * @param array $var_info
    *   An array of info about the available variables.
    */
   public static function prepareSetting(&$setting, $param_info, $var_info = array()) {
@@ -225,7 +225,7 @@ abstract class RulesDataProcessor {
    *
    * @param $settings
    *   The settings of the processor.
-   * @param $var_info
+   * @param array $var_info
    *   An array of info about the available variables.
    *
    * @return
@@ -338,9 +338,9 @@ abstract class RulesDataInputEvaluator extends RulesDataProcessor {
    *
    * @param string $text
    *   The text to evaluate later on.
-   * @param $variables
+   * @param array $variables
    *   An array of info about available variables.
-   * @param $param_info
+   * @param array $param_info
    *   (optional) An array of information about the handled parameter value.
    *   For backward compatibility, this parameter is not required.
    */
@@ -351,7 +351,7 @@ abstract class RulesDataInputEvaluator extends RulesDataProcessor {
    *
    * @param string $text
    *   The text to evaluate.
-   * @param $options
+   * @param array $options
    *   A keyed array of settings and flags to control the processing.
    *   Supported options are:
    *   - language: A language object to be used when processing.
@@ -371,9 +371,9 @@ abstract class RulesDataInputEvaluator extends RulesDataProcessor {
   /**
    * Provide some usage help for the evaluator.
    *
-   * @param $variables
+   * @param array $variables
    *   An array of info about available variables.
-   * @param $param_info
+   * @param array $param_info
    *   (optional) An array of information about the handled parameter value.
    *   For backward compatibility, this parameter is not required.
    *

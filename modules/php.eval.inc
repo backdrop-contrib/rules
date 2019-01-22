@@ -14,10 +14,21 @@
  */
 class RulesPHPEvaluator extends RulesDataInputEvaluator {
 
+  /**
+   * Overrides RulesDataProcessor::editAccess().
+   */
   public function editAccess() {
     return parent::editAccess() && (user_access('use PHP for settings') || drupal_is_cli());
   }
 
+  /**
+   * Helper function to find variables in PHP code.
+   *
+   * @param string $text
+   *   The PHP code.
+   * @param array $var_info
+   *   Array with variable names as keys.
+   */
   public static function getUsedVars($text, $var_info) {
     if (strpos($text, '<?') !== FALSE) {
       $used_vars = array();
@@ -132,7 +143,7 @@ function rules_execute_php_eval($code, $settings, $state, $element) {
  *
  * @param string $code
  *   The PHP code to run, including <?php and ?>
- * @param $arguments
+ * @param array $arguments
  *   Array containing variables to be extracted to the code.
  *
  * @return
@@ -157,7 +168,7 @@ function rules_php_eval($code, $arguments = array()) {
  *
  * @param string $code
  *   The PHP code to run, without <?php or ?>
- * @param $arguments
+ * @param array $arguments
  *   Array containing variables to be extracted to the code.
  *
  * @return

@@ -763,7 +763,7 @@ function hook_rules_data_processor_info_alter(&$processor_info) {
  * This hook is invoked during rules configuration loading, which is handled
  * by entity_load(), via classes RulesEntityController and EntityCRUDController.
  *
- * @param $configs
+ * @param array $configs
  *   An array of rules configurations being loaded, keyed by id.
  */
 function hook_rules_config_load($configs) {
@@ -903,10 +903,10 @@ function hook_default_rules_configuration_alter(&$configs) {
  * This hook is invoked by the entity module after default rules configurations
  * have been rebuilt; i.e. defaults have been saved to the database.
  *
- * @param $rules_configs
+ * @param array $rules_configs
  *   The array of default rules configurations which have been inserted or
  *   updated, keyed by name.
- * @param $originals
+ * @param array $originals
  *   An array of original rules configurations keyed by name; i.e. the rules
  *   configurations before the current defaults have been applied. For inserted
  *   rules configurations no original is available.

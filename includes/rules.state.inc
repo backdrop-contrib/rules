@@ -15,16 +15,22 @@ class RulesState {
 
   /**
    * Globally keeps the ids of rules blocked due to recursion prevention.
+   *
+   * @var array
    */
   static protected $blocked = array();
 
   /**
    * The known variables.
+   *
+   * @var array
    */
   public $variables = array();
 
   /**
    * Holds info about the variables.
+   *
+   * @var array
    */
   protected $info = array();
 
@@ -451,8 +457,8 @@ class RulesData {
    *   level of recursions is reached. Defaults to TRUE.
    *
    * @return array
-   *  An array of info about matching variables or properties that match, keyed
-   *  with the data selector.
+   *   An array of info about matching variables or properties that match, keyed
+   *   with the data selector.
    */
   public static function matchingDataSelector($source, $param_info, $prefix = '', $recursions = 2, $suggestions = TRUE) {
     // If an array of info is given, get entity metadata wrappers first.
@@ -484,7 +490,8 @@ class RulesData {
           $matches += self::matchingDataSelector($wrapper, $param_info, $prefix . $name . ':', $recursions - 1, $suggestions);
         }
         elseif ($suggestions) {
-          // We may not recurse any more, but indicate the possibility to recurse.
+          // We may not recurse any more,
+          // but indicate the possibility to recurse.
           $matches[$prefix . $name . ':'] = $wrapper->info();
           if (!is_array($source) && $source instanceof EntityListWrapper) {
             // Add some more possible list items.
@@ -675,7 +682,7 @@ abstract class RulesIdentifiableDataWrapper extends EntityStructureWrapper {
    *   The type of the passed data.
    * @param $data
    *   Optional. The data to wrap or its identifier.
-   * @param $info
+   * @param array $info
    *   Optional. Used internally to pass info about properties down the tree.
    */
   public function __construct($type, $data = NULL, $info = array()) {
@@ -756,6 +763,9 @@ abstract class RulesIdentifiableDataWrapper extends EntityStructureWrapper {
     return $vars;
   }
 
+  /**
+   * Prepare for unserialization.
+   */
   public function __wakeup() {
     if ($this->id !== FALSE) {
       // Make sure data is set, so the data will be loaded when needed.
@@ -782,7 +792,7 @@ abstract class RulesIdentifiableDataWrapper extends EntityStructureWrapper {
 }
 
 /**
- * Interface that allows custom wrapper classes to declare that they are savable.
+ * Used to declare custom wrapper classes as savable.
  */
 interface RulesDataWrapperSavableInterface {
 

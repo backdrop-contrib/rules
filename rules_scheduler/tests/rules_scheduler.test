@@ -5,6 +5,9 @@
  * Rules Scheduler tests.
  */
 
+/**
+ * Test cases for the Rules Scheduler module.
+ */
 class RulesSchedulerTestCase extends DrupalWebTestCase {
 
   /**

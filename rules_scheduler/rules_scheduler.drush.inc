@@ -21,7 +21,7 @@ function rules_scheduler_drush_command() {
     'examples' => array(
       'drush rusch' => 'Add scheduled tasks to the queue.',
       'drush rusch --claim' => 'Add scheduled tasks to the queue and claim items for the default amount of time.',
-      'drush rusch --claim=30' => 'Add schedules tasks to the queue and claim items for 30 seconds.',
+      'drush rusch --claim=30' => 'Add scheduled tasks to the queue and claim items for 30 seconds.',
     ),
   );
 

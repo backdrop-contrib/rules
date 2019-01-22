@@ -857,8 +857,7 @@ abstract class RulesPlugin extends RulesExtendable {
    * "Configured right" means all needed variables are available in the
    * element's scope and dependent modules are enabled.
    *
-   * @return RulesPlugin
-   *   Returns $this to support chained usage.
+   * @return $this
    *
    * @throws RulesIntegrityException
    *   In case of a failed integrity check, a RulesIntegrityException exception
@@ -2502,8 +2501,7 @@ abstract class RulesActionContainer extends RulesContainerPlugin implements Rule
    * Pass in either an instance of the RulesActionInterface or the arguments
    * as needed by rules_action().
    *
-   * @return RulesActionContainer
-   *   Returns $this to support chained usage.
+   * @return $this
    */
   public function action($name, $settings = array()) {
     $action = (is_object($name) && $name instanceof RulesActionInterface) ? $name : rules_action($name, $settings);
@@ -2575,8 +2573,7 @@ abstract class RulesConditionContainer extends RulesContainerPlugin implements R
    * Pass in either an instance of the RulesConditionInterface or the arguments
    * as needed by rules_condition().
    *
-   * @return RulesConditionContainer
-   *   Returns $this to support chained usage.
+   * @return $this
    */
   public function condition($name, $settings = array()) {
     $condition = (is_object($name) && $name instanceof RulesConditionInterface) ? $name : rules_condition($name, $settings);

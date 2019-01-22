@@ -13,7 +13,7 @@ function rules_test_rules_event_info() {
     'rules_test_event' => array(
       'label' => t('Test event'),
       'class' => 'RulesTestEventHandler',
-    )
+    ),
   );
 }
 
