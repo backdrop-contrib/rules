@@ -66,6 +66,33 @@ class RulesUiTestCase extends DrupalWebTestCase {
     $this->assertNoRaw("&amp;#039;", 'Apostrophe is not HTML-encoded.');
   }
 
+  /**
+   * Tests that the title for embedded container plugins displays properly.
+   *
+   * @see https://www.drupal.org/project/rules/issues/3028444
+   */
+  public function testContainerPluginLabel() {
+    // Create a simple user account with permission to create a rule.
+    $user = $this->drupalCreateUser(array('access administration pages', 'administer rules'));
+    $this->drupalLogin($user);
+
+    // First we need an event.
+    $this->drupalGet('admin/config/workflow/rules/reaction/add');
+    $edit = array(
+      'settings[label]' => 'Test node event',
+      'settings[name]' => 'test_node_event',
+      'event' => 'node_insert',
+    );
+    $this->drupalPost(NULL, $edit, 'Save');
+    $this->assertText('Editing reaction rule', 'Rule edit page is shown.');
+
+    // Now add an OR condition container.
+    $this->clickLink('Add or');
+    $this->assertText('Add a new condition set (OR)', 'Condition set add confirmation is shown.');
+    $this->drupalPost(NULL, array(), 'Continue');
+    $this->assertRaw('<div class="rules-element-label">OR</div>', 'Condition set label is shown.');
+  }
+
 }
 
 /**
