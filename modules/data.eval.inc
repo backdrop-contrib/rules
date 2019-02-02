@@ -460,5 +460,5 @@ function rules_data_text_comparison($text, $text2, $op = 'contains') {
 }
 
 /**
- * @}
+ * @} End of "addtogroup rules"
  */

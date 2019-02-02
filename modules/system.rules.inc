@@ -303,5 +303,5 @@ function rules_system_evaluator_info() {
 }
 
 /**
- * @}
+ * @} End of "addtogroup rules"
  */

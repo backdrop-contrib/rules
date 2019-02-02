@@ -753,5 +753,5 @@ function rules_condition_data_list_count_is_operator_options() {
 }
 
 /**
- * @}
+ * @} End of "addtogroup rules"
  */

@@ -286,5 +286,5 @@ function _rules_system_token_map_type($type) {
 }
 
 /**
- * @}
+ * @} End of "addtogroup rules"
  */

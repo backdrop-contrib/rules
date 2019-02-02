@@ -157,7 +157,7 @@ if (!class_exists('FacesExtendable', FALSE)) {
      * implementation.
      *
      * @param $interface
-     *   Optional. An interface to test for. If it's omitted, all interfaces
+     *   (optional) An interface to test for. If it's omitted, all interfaces
      *   that the object can be faced as are returned.
      *
      * @return bool

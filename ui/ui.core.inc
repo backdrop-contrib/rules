@@ -16,11 +16,11 @@ interface RulesPluginUIInterface {
    * For rule elements that are part of a configuration this method just adds
    * the elements configuration form.
    *
-   * @param $form
+   * @param array $form
    *   The form array where to add the form.
-   * @param $form_state
+   * @param array $form_state
    *   The current form state.
-   * @param $options
+   * @param array $options
    *   An optional array of options with the known keys:
    *    - 'show settings': Whether to include the 'settings' fieldset for
    *      editing configuration settings like the label or categories. Defaults
@@ -46,8 +46,10 @@ interface RulesPluginUIInterface {
   /**
    * Validate the configuration form of this rule element.
    *
-   * @param $form
-   * @param $form_state
+   * @param array $form
+   *   The form array.
+   * @param array $form_state
+   *   The current form state.
    */
   public function form_validate($form, &$form_state);
 
@@ -58,8 +60,10 @@ interface RulesPluginUIInterface {
    * put the updated configuration in the form state. For saving changes
    * permanently, just call $config->save() afterwards.
    *
-   * @param $form
-   * @param $form_state
+   * @param array $form
+   *   The form array.
+   * @param array $form_state
+   *   The current form state.
    */
   public function form_submit($form, &$form_state);
 
@@ -92,6 +96,9 @@ class RulesElementMap {
   protected $index = array();
   protected $counter = 0;
 
+  /**
+   * Constructor.
+   */
   public function __construct(RulesPlugin $config) {
     $this->configuration = $config->root();
   }
@@ -158,7 +165,8 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
    *
    * All forms that want to display Rules (overview) forms need to set this
    * variable. This is necessary in order to get correct operation links,
-   * paths, redirects, breadcrumbs etc. for the form() and overviewTable() methods.
+   * paths, redirects, breadcrumbs, etc. for the form() and overviewTable()
+   * methods.
    *
    * @see RulesUIController
    * @see rules_admin_reaction_overview()
@@ -175,14 +183,14 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
   }
 
   /**
-   * Returns the form values for the given form, possible being only a part of the whole form.
+   * Returns the state values for $form, possibly only a part of the whole form.
    *
    * In case the form is embedded somewhere, this function figures out the
    * location of its form values and returns them for further use.
    *
-   * @param $form
+   * @param array $form
    *   A form array, or an array of form elements to get the value for.
-   * @param $form_state
+   * @param array $form_state
    *   The form state as usual.
    */
   public static function &getFormStateValues($form, &$form_state) {
@@ -527,7 +535,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
   /**
    * Provides a matrix permission for the component based in the existing roles.
    *
-   * @return
+   * @return array
    *   Form elements with the matrix of permissions for a component.
    */
   protected function settingsFormPermissionMatrix() {
@@ -568,6 +576,12 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
     return $form;
   }
 
+  /**
+   * @param array $form
+   *   The form array where to add the form.
+   * @param array $form_state
+   *   The current form state.
+   */
   public function settingsFormExtractValues($form, &$form_state) {
     $form_values = RulesPluginUI::getFormStateValues($form['settings'], $form_state);
     $this->element->label = $form_values['label'];
@@ -610,6 +624,12 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
     $this->element->access_exposed = isset($form_values['access']['access_exposed']) ? $form_values['access']['access_exposed'] : FALSE;
   }
 
+  /**
+   * @param array $form
+   *   The form array where to add the form.
+   * @param array $form_state
+   *   The current form state.
+   */
   public function settingsFormValidate($form, &$form_state) {
     $form_values = RulesPluginUI::getFormStateValues($form['settings'], $form_state);
     if ($form['settings']['name']['#default_value'] != $form_values['name'] && rules_config_load($this->element->name)) {
@@ -617,6 +637,12 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
     }
   }
 
+  /**
+   * @param array $form
+   *   The form array where to add the form.
+   * @param array $form_state
+   *   The current form state.
+   */
   public function settingsFormSubmit($form, &$form_state) {
     if (isset($form_state['values']['settings']['access']) && !empty($this->element->access_exposed)) {
       // Save the permission matrix.
@@ -673,9 +699,9 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
   /**
    * Returns the name of class for the given data type.
    *
-   * @param $data_type
+   * @param string $data_type
    *   The name of the data type
-   * @param $parameter_info
+   * @param array $parameter_info
    *   (optional) An array of info about the to be configured parameter. If
    *   given, this array is complemented with data type defaults also.
    */
@@ -862,6 +888,12 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
     return RulesUICategory::getOptions($item_type, $items = NULL);
   }
 
+  /**
+   * @param array $form
+   *   The form array where to add the form.
+   * @param array $form_state
+   *   The current form state.
+   */
   public static function formDefaults(&$form, &$form_state) {
     form_load_include($form_state, 'inc', 'rules', 'ui/ui.forms');
     // Add our own css.
@@ -922,6 +954,12 @@ class RulesAbstractPluginUI extends RulesPluginUI {
     $this->element->call('form_alter', array(&$form, &$form_state, $options));
   }
 
+  /**
+   * @param array $form
+   *   The form array where to add the form.
+   * @param array $form_state
+   *   The current form state.
+   */
   public function form_extract_values($form, &$form_state) {
     parent::form_extract_values($form, $form_state);
     $form_values = RulesPluginUI::getFormStateValues($form, $form_state);
@@ -930,6 +968,12 @@ class RulesAbstractPluginUI extends RulesPluginUI {
     }
   }
 
+  /**
+   * @param array $form
+   *   The form array where to add the form.
+   * @param array $form_state
+   *   The current form state.
+   */
   public function form_validate($form, &$form_state) {
     parent::form_validate($form, $form_state);
     // Validate the edited element and throw validation errors if it fails.
@@ -1106,6 +1150,9 @@ class RulesContainerPluginUI extends RulesPluginUI {
  */
 class RulesConditionContainerUI extends RulesContainerPluginUI {
 
+  /**
+   * Implements RulesPluginUIInterface::form().
+   */
   public function form(&$form, &$form_state, $options = array(), $iterator = NULL) {
     parent::form($form, $form_state, $options, $iterator);
     // Add the add-* operation links.
@@ -1137,6 +1184,12 @@ class RulesConditionContainerUI extends RulesContainerPluginUI {
     );
   }
 
+  /**
+   * @param array $form
+   *   The form array where to add the form.
+   * @param array $form_state
+   *   The current form state.
+   */
   public function form_extract_values($form, &$form_state) {
     parent::form_extract_values($form, $form_state);
     $form_values = RulesPluginUI::getFormStateValues($form, $form_state);
@@ -1152,6 +1205,9 @@ class RulesConditionContainerUI extends RulesContainerPluginUI {
  */
 class RulesActionContainerUI extends RulesContainerPluginUI {
 
+  /**
+   * Implements RulesPluginUIInterface::form().
+   */
   public function form(&$form, &$form_state, $options = array(), $iterator = NULL) {
     parent::form($form, $form_state, $options, $iterator);
     // Add the add-* operation links.
@@ -1229,10 +1285,10 @@ class RulesUICategory {
    * Returns an array of options to use with a selectfor the items specified
    * in the given hook.
    *
-   * @param $item_type
+   * @param string $item_type
    *   The item type to get options for. One of 'data', 'event', 'condition' and
    *   'action'.
-   * @param $items
+   * @param array|null $items
    *   (optional) An array of items to restrict the options to.
    *
    * @return array

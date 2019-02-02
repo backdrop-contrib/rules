@@ -182,5 +182,5 @@ function rules_condition_entity_field_access(EntityDrupalWrapper $wrapper, $fiel
 }
 
 /**
- * @}
+ * @} End of "addtogroup rules"
  */

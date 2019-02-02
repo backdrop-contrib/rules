@@ -337,5 +337,5 @@ function rules_element_invoke_component_access_callback($type, $name) {
 }
 
 /**
- * @}
+ * @} End of "addtogroup rules"
  */

@@ -104,7 +104,7 @@ class RulesEntityController extends EntityAPIControllerExportable {
   /**
    * Overridden to work with Rules' custom export format.
    *
-   * @param $export
+   * @param string $export
    *   A serialized string in JSON format as produced by the
    *   RulesPlugin::export() method, or the PHP export as usual PHP array.
    * @param string $error_msg
@@ -332,10 +332,16 @@ abstract class RulesExtendable extends FacesExtendable {
 
   /**
    * The name of the item this class represents in the info hook.
+   *
+   * @var string
    */
   protected $itemName;
 
   protected $cache;
+
+  /**
+   * @var array
+   */
   protected $itemInfo = array();
 
   public function __construct() {
@@ -440,11 +446,15 @@ abstract class RulesPlugin extends RulesExtendable {
 
   /**
    * An array of settings for this element.
+   *
+   * @var array
    */
   public $settings = array();
 
   /**
    * Info about this element. Usage depends on the plugin.
+   *
+   * @var array
    */
   protected $info = array();
 
@@ -456,6 +466,10 @@ abstract class RulesPlugin extends RulesExtendable {
   protected $parent = NULL;
 
   protected $cache = NULL;
+
+  /**
+   * @var array
+   */
   protected $hook = 'plugin_info';
 
   /**
@@ -548,7 +562,7 @@ abstract class RulesPlugin extends RulesExtendable {
    * configuration. To iterate over the children only, just regularly iterate
    * over the object.
    *
-   * @param $mode
+   * @param int $mode
    *   (optional) The iteration mode used. See
    *   RecursiveIteratorIterator::construct(). Defaults to SELF_FIRST.
    *
@@ -639,7 +653,7 @@ abstract class RulesPlugin extends RulesExtendable {
   }
 
   /**
-   * Returns the about variables the plugin provides for later evaluated elements.
+   * Returns info about variables 'provided' by the plugin.
    *
    * Note that this method returns info about the provided variables as defined
    * by the plugin. Thus this resembles the original info, which may be
@@ -1365,7 +1379,7 @@ abstract class RulesPlugin extends RulesExtendable {
    * @param string $prefix
    *   An optional prefix for each line.
    * @param bool $php
-   *   Optional. Set to TRUE to format the export using PHP arrays. By default
+   *   (optional) Set to TRUE to format the export using PHP arrays. By default
    *   JSON is used.
    *
    * @return
@@ -1428,7 +1442,7 @@ abstract class RulesPlugin extends RulesExtendable {
    * @param string $prefix
    *   An optional prefix for each line.
    * @param bool $php
-   *   Optional. Set to TRUE to format the export using PHP arrays. By default
+   *   (optional) Set to TRUE to format the export using PHP arrays. By default
    *   JSON is used.
    */
   protected function returnExport($export, $prefix = '', $php = FALSE) {
@@ -1493,7 +1507,7 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
    * @param string $name
    *   The plugin implementation's name.
    * @param $settings
-   *   Further information provided about the plugin. Optional.
+   *   (optional) Further information provided about the plugin.
    * @throws RulesException
    *   If validation of the passed settings fails RulesExceptions are thrown.
    */
