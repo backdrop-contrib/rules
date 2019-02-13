@@ -273,7 +273,7 @@ function rules_entity_type_options($key = NULL) {
   $types = array();
   foreach ($info as $type => $entity_info) {
     if (empty($entity_info['configuration']) && empty($entity_info['exportable'])) {
-      if (!isset($key) || entity_type_supports($type, $key)) {
+      if (!isset($key) || entity_plus_type_supports($type, $key)) {
         $types[$type] = $entity_info['label'];
       }
     }
