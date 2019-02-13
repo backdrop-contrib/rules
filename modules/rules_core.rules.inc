@@ -53,7 +53,7 @@ function rules_rules_core_data_info() {
       'label' => t('formatted text'),
       'ui class' => 'RulesDataUITextFormatted',
       'wrap' => TRUE,
-      'property info' => entity_property_text_formatted_info(),
+      'property info' => entity_plus_property_text_formatted_info(),
     ),
     'decimal' => array(
       'label' => t('decimal number'),
@@ -162,7 +162,7 @@ function rules_rules_core_data_info() {
  */
 function rules_rules_core_data_info_alter(&$data_info) {
   foreach ($data_info as $type => $info) {
-    if (!entity_property_list_extract_type($type)) {
+    if (!entity_plus_property_list_extract_type($type)) {
       $list_type = "list<$type>";
       if (!isset($data_info[$list_type])) {
 	    if(isset($info['label'])){
