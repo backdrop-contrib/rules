@@ -883,7 +883,7 @@ function rules_config_load_multiple($names = array(), $conditions = array()) {
  */
 function rules_config_load($name) {
   module_load_include('inc', 'rules', 'includes/entity.functions');
-  return entity_plus_load('rules_config', $name);
+  return entity_load('rules_config', $name);
 }
 
 /**
