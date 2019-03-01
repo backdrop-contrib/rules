@@ -103,7 +103,7 @@ function rules_user_cancel_methods() {
  */
 function rules_user_integration_access($type, $name) {
   if ($type == 'event' || $type == 'condition') {
-    return entity_access('view', 'user');
+    return entity_plus_access('view', 'user');
   }
   // Else return admin access.
   return user_access('administer users');

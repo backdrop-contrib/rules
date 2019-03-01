@@ -183,7 +183,7 @@ function rules_entity_action_info() {
  */
 function rules_action_entity_createfetch_access(RulesAbstractPlugin $element) {
   $op = $element->getElementName() == 'entity_create' ? 'create' : 'view';
-  return entity_access($op, $element->settings['type']);
+  return entity_plus_access($op, $element->settings['type']);
 }
 
 /**
@@ -193,7 +193,7 @@ function rules_action_entity_query_access(RulesAbstractPlugin $element) {
   if (!rules_action_entity_createfetch_access($element)) {
     return FALSE;
   }
-  $properties = entity_get_all_property_info($element->settings['type']);
+  $properties = entity_plus_get_all_property_info($element->settings['type']);
   if (isset($element->settings['property']) && isset($properties[$element->settings['property']]['access callback'])) {
     return call_user_func($properties[$element->settings['property']]['access callback'], 'view', $element->settings['property'], $element->settings['type'], NULL, NULL);
   }
@@ -228,7 +228,7 @@ function rules_action_entity_savedelete_access(RulesAbstractPlugin $element) {
 function rules_action_entity_query_property_options_list(RulesAbstractPlugin $element) {
   $element->settings += array('type' => NULL);
   if ($element->settings['type']) {
-    $properties = entity_get_all_property_info($element->settings['type']);
+    $properties = entity_plus_get_all_property_info($element->settings['type']);
     return rules_extract_property($properties, 'label');
   }
 }
@@ -485,7 +485,7 @@ function rules_condition_entity_has_field_assertions($element) {
     $type = $wrapper->type();
     $field_property = $element->settings['field'];
     // Get all possible properties and check whether we have one for the field.
-    $properties = entity_get_all_property_info($type == 'entity' ? NULL : $type);
+    $properties = entity_plus_get_all_property_info($type == 'entity' ? NULL : $type);
 
     if (isset($properties[$field_property])) {
       $assertion = array('property info' => array($field_property => $properties[$field_property]));

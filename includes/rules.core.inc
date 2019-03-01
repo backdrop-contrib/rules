@@ -1422,7 +1422,7 @@ abstract class RulesPlugin extends RulesExtendable {
       $export_cfg[$this->name]['ACCESS_EXPOSED'] = $this->access_exposed;
     };
     $export_cfg[$this->name] += $export;
-    return $php ? entity_var_export($export_cfg, $prefix) : entity_var_json_export($export_cfg, $prefix);
+    return $php ? entity_plus_var_export($export_cfg, $prefix) : entity_plus_var_json_export($export_cfg, $prefix);
   }
 
   /**

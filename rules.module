@@ -1779,7 +1779,7 @@ function rules_entity_integration_event_access($type, $event_name) {
   // Cut of _insert/_update/.. from the event name.
   $entity_type = substr($event_name, 0, strrpos($event_name, '_'));
 
-  $result = entity_access('view', $entity_type);
+  $result = entity_plus_access('view', $entity_type);
   // If no access callback is given, just grant access for viewing.
   return isset($result) ? $result : TRUE;
 }

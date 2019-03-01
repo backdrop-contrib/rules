@@ -486,7 +486,7 @@ function hook_rules_data_info() {
       'label' => t('formatted text'),
       'ui class' => 'RulesDataUITextFormatted',
       'wrap' => TRUE,
-      'property info' => entity_property_text_formatted_info(),
+      'property info' => entity_plus_property_text_formatted_info(),
     ),
   );
 }

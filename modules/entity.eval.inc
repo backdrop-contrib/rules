@@ -52,7 +52,7 @@ function rules_action_entity_fetch_info_alter(&$element_info, RulesAbstractPlugi
  * Action: Query entities.
  */
 function rules_action_entity_query($type, $property, $value, $limit) {
-  $return = entity_property_query($type, $property, $value, $limit);
+  $return = entity_plus_property_query($type, $property, $value, $limit);
   return array('entity_fetched' => array_values($return));
 }
 
@@ -87,7 +87,7 @@ function rules_action_entity_create($args, $element) {
     }
   }
   try {
-    $data = entity_property_values_create_entity($args['type'], $values);
+    $data = entity_plus_property_values_create_entity($args['type'], $values);
     return array('entity_created' => $data);
   }
   catch (EntityMetadataWrapperException $e) {
