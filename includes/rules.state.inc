@@ -115,7 +115,7 @@ class RulesState {
    * Returns whether the given wrapper is savable.
    */
   public function isSavable($wrapper) {
-    return ($wrapper instanceof EntityBackdropWrapper && entity_type_supports($wrapper->type(), 'save')) || $wrapper instanceof RulesDataWrapperSavableInterface;
+    return ($wrapper instanceof EntityBackdropWrapper && entity_plus_type_supports($wrapper->type(), 'save')) || $wrapper instanceof RulesDataWrapperSavableInterface;
   }
 
   /**
@@ -410,7 +410,7 @@ class RulesData  {
         $cache['data_info'][$type]['ancestors'] += $cache['data_info'][$parent]['ancestors'];
       }
       // For special lists like list<node> add in "list" as valid parent.
-      if (entity_property_list_extract_type($type)) {
+      if (entity_plus_property_list_extract_type($type)) {
         $cache['data_info'][$type]['ancestors']['list'] = TRUE;
       }
     }

@@ -1237,7 +1237,7 @@ abstract class RulesPlugin extends RulesExtendable {
    * @return
    *   TRUE if the configuration has the status, else FALSE.
    *
-   * @see entity_has_status()
+   * @see entity_plus_has_status()
    */
   public function hasStatus($status) {
     return $this->isRoot() && isset($this->status) && ($this->status & $status) == $status;
