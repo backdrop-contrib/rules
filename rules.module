@@ -793,9 +793,9 @@ function rules_rules_plugin_info() {
 }
 
 /**
- * Implementation of hook_entity_plus_info().
+ * Implementation of hook_entity_info().
  */
-function rules_entity_plus_info() {
+function rules_entity_info() {
   return array(
     'rules_config' => array(
       'label' => t('Rules configuration'),
@@ -858,7 +858,7 @@ function rules_hook_info() {
  * from the database. The entities are loaded into memory and will not require
  * database access if loaded again during the same page request.
  *
- * @see hook_entity_plus_info()
+ * @see hook_entity_info()
  * @see RulesEntityController
  *
  * @param $names
