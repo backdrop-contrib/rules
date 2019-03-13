@@ -1810,6 +1810,7 @@ function rules_autoload_info() {
     'RulesDependencyException' => 'includes/rules.core.inc',
     'RulesElementMap' => 'ui/ui.core.inc',
     'RulesEntityController' => 'includes/rules.core.inc',
+    'RulesConfigEntity' => 'includes/rules.core.inc',
     'RulesEvaluationException' => 'includes/rules.core.inc',
     'RulesEventHandlerBase' => 'includes/rules.event.inc',
     'RulesEventDefaultHandler' => 'includes/rules.event.inc',
