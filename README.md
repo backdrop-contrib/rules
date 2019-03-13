@@ -63,6 +63,18 @@ See the LICENSE.txt file in this directory for complete text.
 
 ## Current Maintainers
 
+- Graham Oliver github.com/Graham-72
+
+Seeking additional maintainers.
+
+## Acknowledgement
+
+This port to Backdrop would not, of course, be possible without
+all the work done by the developers and maintainers of the Drupal module.
+
+
+## Credits
+
 ### For Drupal:
 
   - Wolfgang Ziegler (fago) (lead maintainer)
@@ -72,14 +84,6 @@ See the LICENSE.txt file in this directory for complete text.
 
   - Graham Oliver github.com/Graham-72
 
-
-## Acknowledgement
-
-This port to Backdrop would not, of course, be possible without
-all the work done by the developers and maintainers of the Drupal module.
-
-
-## Credits
 
 The Drupal 7 project has been sponsored by drunomics, epiqo
 and Google Summer of Code.
