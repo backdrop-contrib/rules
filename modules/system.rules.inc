@@ -203,7 +203,7 @@ function rules_system_action_info() {
           'type' => 'token',
           'label' => t('Language'),
           'description' => t('If specified, the language used for getting the mail message and subject.'),
-          'options list' => 'entity_metadata_language_list',
+          'options list' => 'entity_plus_metadata_language_list',
           'optional' => TRUE,
           'default value' => LANGUAGE_NONE,
           'default mode' => 'selector',
@@ -219,7 +219,7 @@ function rules_system_action_info() {
         'roles' => array(
           'type' => 'list<integer>',
           'label' => t('Roles'),
-          'options list' => 'entity_metadata_user_roles',
+          'options list' => 'entity_plus_metadata_user_roles',
           'description' => t('Select the roles whose users should receive the mail.'),
         ),
         'subject' => array(

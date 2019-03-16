@@ -139,7 +139,7 @@ function rules_data_list_info_alter(&$element_info, RulesAbstractPlugin $element
   // Update the required type for the list item if it is known.
   $element->settings += array('list:select' => NULL);
   if ($wrapper = $element->applyDataSelector($element->settings['list:select'])) {
-    if ($type = entity_property_list_extract_type($wrapper->type())) {
+    if ($type = entity_plus_property_list_extract_type($wrapper->type())) {
       $info = $wrapper->info();
       $element_info['parameter']['item']['type'] = $type;
       $element_info['parameter']['item']['options list']  = !empty($info['options list']) ? 'rules_data_selector_options_list' : FALSE;
@@ -176,7 +176,7 @@ function rules_action_variable_add_info_alter(&$element_info, RulesAbstractPlugi
 
     // For lists, we default to an empty list so subsequent actions can add
     // items.
-    if (entity_property_list_extract_type($type)) {
+    if (entity_plus_property_list_extract_type($type)) {
       $element_info['parameter']['value']['default value'] = array();
     }
   }

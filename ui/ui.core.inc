@@ -436,7 +436,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
       // The string 'rules_' is pre-pended to machine names, so the
       // maxlength must be less than the field length of 64 characters.
       '#maxlength' => 58,
-      '#disabled' => entity_has_status('rules_config', $this->element, ENTITY_IN_CODE) && !(isset($form_state['op']) && $form_state['op'] == 'clone'),
+      '#disabled' => entity_plus_has_status('rules_config', $this->element, ENTITY_IN_CODE) && !(isset($form_state['op']) && $form_state['op'] == 'clone'),
       '#machine_name' => array(
         'exists' => 'rules_config_load',
         'source' => array('settings', 'label'),

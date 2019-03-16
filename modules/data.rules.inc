@@ -666,7 +666,7 @@ function rules_condition_data_is_form_alter(&$form, &$form_state, $options, Rule
     $info = $element->pluginParameterInfo();
     $data_info = $info['value'];
     if ($element->settings['op'] == 'IN') {
-      $data_info['type'] = entity_property_list_extract_type($data_info['type']);
+      $data_info['type'] = entity_plus_property_list_extract_type($data_info['type']);
     }
 
     if (!RulesData::typesMatch($data_info, array('type' => array('decimal', 'date')))) {

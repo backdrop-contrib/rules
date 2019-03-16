@@ -83,7 +83,7 @@ function rules_rules_condition_info() {
  */
 function rules_rules_event_info() {
   $items = array();
-  foreach (entity_crud_get_info() as $type => $info) {
+  foreach (entity_plus_crud_get_info() as $type => $info) {
     // By default we enable the controller only for non-configuration.
     $configuration = !empty($info['configuration']) || !empty($info['exportable']);
     $info += array('rules controller class' => $configuration ? FALSE : 'RulesEntityEventController');

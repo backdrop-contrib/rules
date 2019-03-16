@@ -14,7 +14,7 @@ require_once dirname(__FILE__) . '/faces.inc';
 /**
  * Make sure loaded rule configs are instantiated right.
  */
-class RulesEntityController extends EMWControllerExportable {
+class RulesEntityController extends EntityPlusControllerExportable {
 
   /**
    * Overridden.
@@ -1237,7 +1237,7 @@ abstract class RulesPlugin extends RulesExtendable {
    * @return
    *   TRUE if the configuration has the status, else FALSE.
    *
-   * @see entity_has_status()
+   * @see entity_plus_has_status()
    */
   public function hasStatus($status) {
     return $this->isRoot() && isset($this->status) && ($this->status & $status) == $status;
@@ -1422,7 +1422,7 @@ abstract class RulesPlugin extends RulesExtendable {
       $export_cfg[$this->name]['ACCESS_EXPOSED'] = $this->access_exposed;
     };
     $export_cfg[$this->name] += $export;
-    return $php ? entity_var_export($export_cfg, $prefix) : entity_var_json_export($export_cfg, $prefix);
+    return $php ? entity_plus_var_export($export_cfg, $prefix) : entity_plus_var_json_export($export_cfg, $prefix);
   }
 
   /**
@@ -2162,7 +2162,7 @@ abstract class RulesContainerPlugin extends RulesPlugin implements IteratorAggre
         if (empty($var_info['handler']) && (!isset($var_info['parameter']) || $var_info['parameter'])) {
           $params[$name] = $var_info;
           // For lists allow empty variables by default.
-          if (entity_property_list_extract_type($var_info['type'])) {
+          if (entity_plus_property_list_extract_type($var_info['type'])) {
             $params[$name] += array('allow null' => TRUE);
           }
         }

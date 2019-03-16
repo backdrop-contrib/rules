@@ -23,7 +23,7 @@ function rules_i18n_rules_action_info() {
         'type' => 'token',
         'label' => t('Language'),
         'description' => t('The language to translate the text into.'),
-        'options list' => 'entity_metadata_language_list',
+        'options list' => 'entity_plus_metadata_language_list',
         'default mode' => 'select',
       ),
     ),
@@ -48,7 +48,7 @@ function rules_i18n_rules_action_info() {
         'type' => 'token',
         'label' => t('Language'),
         'description' => t('The language to translate the value into.'),
-        'options list' => 'entity_metadata_language_list',
+        'options list' => 'entity_plus_metadata_language_list',
       ),
     ),
     'provides' => array(

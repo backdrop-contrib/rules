@@ -103,7 +103,7 @@ function rules_user_cancel_methods() {
  */
 function rules_user_integration_access($type, $name) {
   if ($type == 'event' || $type == 'condition') {
-    return entity_access('view', 'user');
+    return entity_plus_access('view', 'user');
   }
   // Else return admin access.
   return user_access('administer users');
@@ -239,14 +239,14 @@ function rules_user_action_info() {
  * User integration role actions access callback.
  */
 function rules_user_role_change_access() {
-  return entity_metadata_user_roles() && user_access('administer permissions');
+  return entity_plus_metadata_user_roles() && user_access('administer permissions');
 }
 
 /**
  * Options list callback for user roles.
  */
 function rules_user_roles_options_list($element) {
-  return entity_metadata_user_roles('roles', array(), $element instanceof RulesConditionInterface ? 'view' : 'edit');
+  return entity_plus_metadata_user_roles('roles', array(), $element instanceof RulesConditionInterface ? 'view' : 'edit');
 }
 
 /**

@@ -1,6 +1,6 @@
 name = Rules
 description = React on events and conditionally evaluate actions.
-dependencies[] = entity_metadata_wrapper
+dependencies[] = entity_plus
 dependencies[] = entity_ui
 package = Rules
 backdrop = 1.x
