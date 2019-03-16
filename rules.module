@@ -799,6 +799,7 @@ function rules_entity_info() {
   return array(
     'rules_config' => array(
       'label' => t('Rules configuration'),
+      'entity class' => 'RulesConfigEntity',
       'controller class' => 'RulesEntityController',
       'base table' => 'rules_config',
       'fieldable' => TRUE,
@@ -1851,6 +1852,7 @@ function rules_autoload_info() {
     'RulesDependencyException' => 'includes/rules.core.inc',
     'RulesElementMap' => 'ui/ui.core.inc',
     'RulesEntityController' => 'includes/rules.core.inc',
+    'RulesConfigEntity' => 'includes/rules.core.inc',
     'RulesEvaluationException' => 'includes/rules.core.inc',
     'RulesEventHandlerBase' => 'includes/rules.event.inc',
     'RulesEventDefaultHandler' => 'includes/rules.event.inc',
