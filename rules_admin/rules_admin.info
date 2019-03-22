@@ -7,3 +7,4 @@ configure = admin/config/workflow/rules
 
 ; Test cases
 files[] = tests/rules_admin.test
+files[] = tests/rules_admin_minimal_profile.test
