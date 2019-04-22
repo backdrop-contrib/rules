@@ -83,6 +83,7 @@ all the work done by the developers and maintainers of the Drupal module.
 ### Port to Backdrop:
 
   - Graham Oliver github.com/Graham-72
+  - Other contributors : @docwilmot; @laryn; @ herbdool
 
 
 The Drupal 7 project has been sponsored by drunomics, epiqo
