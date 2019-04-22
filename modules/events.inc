@@ -65,7 +65,7 @@ function rules_entity_presave($entity, $type) {
       rules_invoke_event('node_presave', $entity);
       break;
     case 'taxonomy_term':
-      rules_invoke_event('taxonomy_term_presave--' . $entity->vocabulary_machine_name, $entity);
+      rules_invoke_event('taxonomy_term_presave--' . $entity->vocabulary, $entity);
       rules_invoke_event('taxonomy_term_presave', $entity);
       break;
     case 'taxonomy_vocabulary':
@@ -89,7 +89,7 @@ function rules_entity_update($entity, $type) {
       rules_invoke_event('node_update', $entity);
       break;
     case 'taxonomy_term':
-      rules_invoke_event('taxonomy_term_update--' . $entity->vocabulary_machine_name, $entity);
+      rules_invoke_event('taxonomy_term_update--' . $entity->vocabulary, $entity);
       rules_invoke_event('taxonomy_term_update', $entity);
       break;
     case 'taxonomy_vocabulary':
@@ -113,7 +113,7 @@ function rules_entity_insert($entity, $type) {
       rules_invoke_event('node_insert', $entity);
       break;
     case 'taxonomy_term':
-      rules_invoke_event('taxonomy_term_insert--' . $entity->vocabulary_machine_name, $entity);
+      rules_invoke_event('taxonomy_term_insert--' . $entity->vocabulary, $entity);
       rules_invoke_event('taxonomy_term_insert', $entity);
       break;
     case 'taxonomy_vocabulary':
@@ -137,7 +137,7 @@ function rules_entity_delete($entity, $type) {
       rules_invoke_event('node_delete', $entity);
       break;
     case 'taxonomy_term':
-      rules_invoke_event('taxonomy_term_delete--' . $entity->vocabulary_machine_name, $entity);
+      rules_invoke_event('taxonomy_term_delete--' . $entity->vocabulary, $entity);
       rules_invoke_event('taxonomy_term_delete', $entity);
       break;
     case 'taxonomy_vocabulary':
