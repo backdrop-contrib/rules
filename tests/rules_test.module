@@ -14,7 +14,7 @@ function rules_test_entity_property_info_alter(&$info) {
   $properties['no_access_user'] = array(
     'label' => t("Logged in user"),
     'description' => t("The currently logged in user."),
-    'getter callback' => 'entity_metadata_system_get_properties',
+    'getter callback' => 'entity_plus_metadata_system_get_properties',
     'access callback' => 'rules_test_no_access',
     'type' => 'user',
   );

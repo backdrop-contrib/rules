@@ -479,7 +479,7 @@ function rules_flush_caches() {
   // rules_modules_enabled() and rules_modules_disabled(), so we do not need
   // to do it again.
   if (current_path() != 'admin/modules/list/confirm') {
-    entity_defaults_rebuild();
+    entity_plus_defaults_rebuild();
   }
   return array('cache_rules');
 }
@@ -535,7 +535,7 @@ function &rules_wrap_data($data = NULL, $info, $force = FALSE) {
     $info += array_intersect_key($cache['data_info'][$info['type']], $wrapper_keys);
   }
   // If a list is given, also add in the info of the item type.
-  $list_item_type = entity_property_list_extract_type($info['type']);
+  $list_item_type = entity_plus_property_list_extract_type($info['type']);
   if ($list_item_type && isset($cache['data_info'][$list_item_type])) {
     $info += array_intersect_key($cache['data_info'][$list_item_type], $wrapper_keys);
   }
@@ -799,6 +799,7 @@ function rules_entity_info() {
   return array(
     'rules_config' => array(
       'label' => t('Rules configuration'),
+      'entity class' => 'RulesConfigEntity',
       'controller class' => 'RulesEntityController',
       'base table' => 'rules_config',
       'fieldable' => TRUE,
@@ -926,7 +927,7 @@ function rules_get_components($label = FALSE, $type = NULL, $conditions = array(
  *   An array of entity IDs.
  */
 function rules_config_delete(array $ids) {
-  return entity_get_controller('rules_config')->delete($ids);
+  return entity_plus_get_controller('rules_config')->delete($ids);
 }
 
 /**
@@ -1466,7 +1467,7 @@ function rules_element_info() {
  * Implements hook_modules_enabled().
  */
 function rules_modules_enabled($modules) {
-  _entity_defaults_rebuild('rules_config');
+  _entity_plus_defaults_rebuild('rules_config');
   // Re-enable Rules configurations that are dirty, because they require one of
   // the enabled the modules.
   $query = db_select('rules_dependencies', 'rd');
@@ -1534,13 +1535,13 @@ function rules_modules_disabled($modules) {
   }
   rules_clear_cache();
 
-  _entity_defaults_rebuild('rules_config');
+  _entity_plus_defaults_rebuild('rules_config');
 }
 
 /**
  * Access callback for dealing with Rules configurations.
  *
- * @see entity_access()
+ * @see entity_plus_access()
  */
 function rules_config_access($op, $rules_config = NULL, $account = NULL) {
   if (user_access('bypass rules access', $account)) {
@@ -1706,7 +1707,7 @@ function rules_tokens($type, $tokens, $data, $options = array()) {
     );
     // Entity tokens uses metadata wrappers as values for 'struct' types.
     $wrapper = entity_metadata_wrapper('struct', array('value' => $data[$type]), $info);
-    return entity_token_tokens('struct', $tokens, array('struct' => $wrapper), $options);
+    return entity_plus_token_tokens('struct', $tokens, array('struct' => $wrapper), $options);
   }
 }
 
@@ -1726,7 +1727,7 @@ function rules_get_entity_metadata_wrapper_all_properties(RulesAbstractPlugin $e
  */
 function rules_entity_metadata_wrapper_all_properties_callback(EntityMetadataWrapper $wrapper, $property_info) {
   $info = $wrapper->info();
-  $properties = entity_get_all_property_info($info['type']);
+  $properties = entity_plus_get_all_property_info($info['type']);
   $property_info['properties'] += $properties;
   return $property_info;
 }
@@ -1779,7 +1780,7 @@ function rules_entity_integration_event_access($type, $event_name) {
   // Cut of _insert/_update/.. from the event name.
   $entity_type = substr($event_name, 0, strrpos($event_name, '_'));
 
-  $result = entity_access('view', $entity_type);
+  $result = entity_plus_access('view', $entity_type);
   // If no access callback is given, just grant access for viewing.
   return isset($result) ? $result : TRUE;
 }
@@ -1851,6 +1852,7 @@ function rules_autoload_info() {
     'RulesDependencyException' => 'includes/rules.core.inc',
     'RulesElementMap' => 'ui/ui.core.inc',
     'RulesEntityController' => 'includes/rules.core.inc',
+    'RulesConfigEntity' => 'includes/rules.core.inc',
     'RulesEvaluationException' => 'includes/rules.core.inc',
     'RulesEventHandlerBase' => 'includes/rules.event.inc',
     'RulesEventDefaultHandler' => 'includes/rules.event.inc',

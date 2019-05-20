@@ -850,7 +850,7 @@ function rules_ui_element_integer_list_validate($element, &$form_state) {
  */
 function rules_ui_element_token_validate($element) {
   $value = $element['#value'];
-  if (isset($value) && $value !== '' && !entity_property_verify_data_type($value, 'token')) {
+  if (isset($value) && $value !== '' && !entity_plus_property_verify_data_type($value, 'token')) {
     form_error($element, t('%name may only contain lowercase letters, numbers, and underscores and has to start with a letter.', array('%name' => isset($element['#title']) ? $element['#title'] : t('Element'))));
   }
 }
@@ -860,7 +860,7 @@ function rules_ui_element_token_validate($element) {
  */
 function rules_ui_element_token_list_validate($element, &$form_state) {
   foreach ($element['#value'] as $value) {
-    if ($value !== '' && !entity_property_verify_data_type($value, 'token')) {
+    if ($value !== '' && !entity_plus_property_verify_data_type($value, 'token')) {
       form_error($element, t('Each value may only contain lowercase letters, numbers, and underscores and has to start with a letter.'));
     }
   }

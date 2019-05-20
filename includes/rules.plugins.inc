@@ -622,7 +622,7 @@ class RulesLoop extends RulesActionContainer {
       if ($info = $this->getArgumentInfo('list')) {
         // Pass through the variable info keys like property info.
         $this->listItemInfo = array_intersect_key($info, array_flip(array('type', 'property info', 'bundle')));
-        $this->listItemInfo['type'] = isset($info['type']) ? entity_property_list_extract_type($info['type']) : 'unknown';
+        $this->listItemInfo['type'] = isset($info['type']) ? entity_plus_property_list_extract_type($info['type']) : 'unknown';
       }
       else {
         $this->listItemInfo = array('type' => 'unknown');

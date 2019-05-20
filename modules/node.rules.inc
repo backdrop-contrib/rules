@@ -129,7 +129,7 @@ function rules_node_action_info() {
  */
 function rules_node_integration_access($type, $name) {
   if ($type == 'event' || $type == 'condition') {
-    return entity_access('view', 'node');
+    return entity_plus_access('view', 'node');
   }
 }
 

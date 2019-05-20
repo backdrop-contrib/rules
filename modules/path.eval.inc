@@ -134,13 +134,13 @@ function rules_path_clean_ctools($path) {
 }
 
 /**
- * Pathauto path cleaning callback.
+ * Path cleaning callback.
  *
  * @see rules_admin_settings()
  */
-function rules_path_clean_pathauto($path) {
-  module_load_include('inc', 'pathauto');
-  return pathauto_cleanstring($path);
+function rules_path_clean_path($path) {
+  module_load_include('inc', 'path');
+  return path_clean_string($path);
 }
 
 /**

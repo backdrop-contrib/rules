@@ -157,18 +157,13 @@ function rules_admin_settings($form, &$form_state) {
     if (module_exists('ctools')) {
       $options['rules_path_clean_ctools'] = t('CTools');
     }
-    if (module_exists('pathauto')) {
-      $options['rules_path_clean_pathauto'] = t('Pathauto');
-      $pathauto_help = t("Note that Pathauto's URL path cleaning method can be configured at <a href='!url'>admin/config/search/path/settings</a>.", array('!url' => url('admin/config/search/path/settings')));
-    }
-    else {
-      $pathauto_help = t('Install the <a href="http://drupal.org/project/pathauto">Pathauto module</a> in order to get a configurable URL path cleaning method.');
-    }
+    $options['rules_path_clean_path'] = t('Path');
+    $path_help = t("Note that Path's URL path cleaning method can be configured at <a href='!url'>admin/config/urls/path/patterns/settings</a>.", array('!url' => url('admin/config/urls/path/patterns/settings')));
 
     $form['path']['rules_path_cleaning_callback'] = array(
       '#type' => 'select',
       '#title' => t('URL path cleaning method'),
-      '#description' => t('Choose the path cleaning method to be applied when generating URL path aliases.') . ' ' . $pathauto_help,
+      '#description' => t('Choose the path cleaning method to be applied when generating URL path aliases.') . ' ' . $path_help,
       '#default_value' => config_get('rules.settings','rules_path_cleaning_callback'),
       '#options' => $options,
     );
@@ -224,15 +219,18 @@ function rules_admin_settings($form, &$form_state) {
 
 // Add a submit function to process config
 function rules_admin_settings_submit($form, &$form_state) {
-    $config = config('rules.settings');
-    $config->set('rules_path_cleaning_callback', $form_state['values']['rules_path_cleaning_callback']);
-    $config->set('rules_log_errors', $form_state['values']['rules_log_errors']);
-    $config->set('rules_debug_log', $form_state['values']['rules_debug_log']);
-    $config->set('rules_debug', $form_state['values']['rules_debug']);
-    $config->set('rules_debug_region_' . $theme_default, $form_state['values']['rules_debug_region_' . $theme_default]);
-    $config->set('rules_debug_region_' . $admin_theme, $form_state['values']['rules_debug_region_' . $admin_theme]);
-    $config->save();
-    backdrop_set_message(t('The configuration options have been saved.'));
+  $theme_default = config_get('rules.settings','theme_default');
+  $admin_theme = config_get('rules.settings','admin_theme');
+
+  $config = config('rules.settings');
+  $config->set('rules_path_cleaning_callback', $form_state['values']['rules_path_cleaning_callback']);
+  $config->set('rules_log_errors', $form_state['values']['rules_log_errors']);
+  $config->set('rules_debug_log', $form_state['values']['rules_debug_log']);
+  $config->set('rules_debug', $form_state['values']['rules_debug']);
+  $config->set('rules_debug_region_' . $theme_default, $form_state['values']['rules_debug_region_' . $theme_default]);
+  $config->set('rules_debug_region_' . $admin_theme, $form_state['values']['rules_debug_region_' . $admin_theme]);
+  $config->save();
+  backdrop_set_message(t('The configuration options have been saved.'));
 }
 
 

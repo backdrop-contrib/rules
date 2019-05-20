@@ -152,7 +152,7 @@ class RulesDataUI {
   public static function renderOptionsLabel($value, $name, $info, RulesPlugin $element) {
     if (!empty($info['options list'])) {
       $element->call('loadBasicInclude');
-      $options = entity_property_options_flatten(call_user_func($info['options list'], $element, $name));
+      $options = entity_plus_property_options_flatten(call_user_func($info['options list'], $element, $name));
       if (!is_array($value) && isset($options[$value])) {
         $value = $options[$value];
       }
@@ -588,7 +588,7 @@ class RulesDataUIListEntity extends RulesDataUIListInteger {
     $form = parent::inputForm($name, $info, $settings, $element);
     if (empty($info['options list'])) {
 
-      $entity_info = entity_get_info(entity_property_list_extract_type($info['type']));
+      $entity_info = entity_get_info(entity_plus_property_list_extract_type($info['type']));
       if (!empty($entity_info['entity keys']['name'])) {
         $form[$name]['#element_validate'] = array('rules_ui_element_token_list_validate');
       }

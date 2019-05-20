@@ -925,7 +925,7 @@ class RulesTestDataCase extends BackdropWebTestCase {
       'machine_name' => 'foo',
     ));
     entity_save('taxonomy_vocabulary', $vocab);
-    $term_wrapped = entity_property_values_create_entity('taxonomy_term', array(
+    $term_wrapped = entity_plus_property_values_create_entity('taxonomy_term', array(
       'name' => $this->randomName(),
       'vocabulary' => $vocab,
     ))->save();
@@ -1420,7 +1420,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     $this->assertTrue($result, 'Entity is of bundle condition has been met.');
 
     // Also test a full rule so the integrity check must work.
-    $term_wrapped = entity_property_values_create_entity('taxonomy_term', array(
+    $term_wrapped = entity_plus_property_values_create_entity('taxonomy_term', array(
       'name' => $this->randomName(),
       'vocabulary' => 1,
     ))->save();
@@ -1483,12 +1483,12 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
 
 
 
-    $node = entity_property_values_create_entity('node', array(
+    $node = entity_plus_property_values_create_entity('node', array(
       'type' => 'article',
       'author' => $user,
       'title' => 'foo',
     ))->value();
-    $term_wrapped = entity_property_values_create_entity('taxonomy_term', array(
+    $term_wrapped = entity_plus_property_values_create_entity('taxonomy_term', array(
       'name' => $this->randomName(),
       'vocabulary' => 1,
     ))->save();
@@ -1537,7 +1537,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
    * Test integration for the taxonomy module.
    */
   function testTaxonomyIntegration() {
-    $term = entity_property_values_create_entity('taxonomy_term', array(
+    $term = entity_plus_property_values_create_entity('taxonomy_term', array(
       'name' => $this->randomName(),
       'vocabulary' => 1,
     ))->value();
@@ -1594,11 +1594,11 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     );
     field_create_instance($instance);
 
-    $term1 = entity_property_values_create_entity('taxonomy_term', array(
+    $term1 = entity_plus_property_values_create_entity('taxonomy_term', array(
       'name' => $this->randomName(),
       'vocabulary' => 1,
     ))->save();
-    $term2 = entity_property_values_create_entity('taxonomy_term', array(
+    $term2 = entity_plus_property_values_create_entity('taxonomy_term', array(
       'name' => $this->randomName(),
       'vocabulary' => 1,
     ))->save();
@@ -1617,7 +1617,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
 
     // Test an action set for merging term parents, which is provided as default
     // config.
-    $term = entity_property_values_create_entity('taxonomy_term', array(
+    $term = entity_plus_property_values_create_entity('taxonomy_term', array(
       'name' => $this->randomName(),
       'vocabulary' => 1,
       'parent' => array($term1->value()),
@@ -1918,7 +1918,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     $this->assertTrue($path['alias'] == 'test', 'Node URL alias has been created.');
 
     // Test term alias action.
-    $term = entity_property_values_create_entity('taxonomy_term', array(
+    $term = entity_plus_property_values_create_entity('taxonomy_term', array(
       'name' => $this->randomName(),
       'vocabulary' => 1,
     ))->value();
