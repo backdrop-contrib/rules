@@ -15,7 +15,7 @@ function rules_condition_user_has_role($account, $roles, $operation = 'AND') {
   switch ($operation) {
     case 'OR':
       foreach ($roles as $role) {
-        if (isset($account->roles[$role])) {
+        if (in_array($role, $account->roles)) {
           return TRUE;
         }
       }
@@ -23,7 +23,7 @@ function rules_condition_user_has_role($account, $roles, $operation = 'AND') {
 
     case 'AND':
       foreach ($roles as $role) {
-        if (!isset($account->roles[$role])) {
+        if (!in_array($role, $account->roles)) {
           return FALSE;
         }
       }
