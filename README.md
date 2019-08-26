@@ -1,31 +1,33 @@
 # Rules
 
-This module is an incomplete port to Backdrop of the Drupal 
+This module is a port to Backdrop of the Drupal 
 contributed module Rules version 7.x-2.9
 
 The Rules module allows site administrators to define conditionally executed
 actions based on occurring events (known as reactive or ECA rules).
 
 The Drupal version of Rules makes extensive use of classes and functions
-provided by the Drupal contributed module Entity API. Because Backdrop
-includes an entity module in core, the required additional elements have
-been integrated within this port of Rules for Backdrop, placing them in the
-includes folder with file name prefix ext.
+provided by the Drupal contributed module Entity API. Backdrop
+includes an entity module in core but this does not provide all the required
+functions. These are now available in the Entity Plus contributed module
+which is requirement.
 
-Because of this significant difference it will not be possible to upgrade
-Rules directly from a Drupal 7 to a Backdrop installation, however it should
-be possible to export rules from Drupal and import them into Backdrop.
+At the moment it may not be possible to upgrade Rules directly from a 
+Drupal 7 to a Backdrop installation, however it should be possible 
+to export rules from Drupal and import them into Backdrop.
 
 
 ## Status
 
-This port to Backdrop is not yet complete.
+This port to Backdrop is in active use and reported issues are being addressed.
 
 
 ## Installation
 
 Install this module using the official Backdrop CMS instructions at
-https://backdropcms.org/guide/modules
+https://backdropcms.org/guide/modules.
+
+Also install the required Entity Plus module.
 
 Rules has four component modules, each with separate activation:
   + Rules
@@ -37,6 +39,22 @@ Rules has four component modules, each with separate activation:
 Then visit the configuration page at Administration >
 Configuration > Category > Rules (admin/config/category/rules)
 and enter the required information.
+
+
+## Debug Information
+
+An administrative setting enables debug information to be shown when 
+rules are evaluated and is visible for users having the permission 
+'Access the Rules debug log'. It is displayed in a pre-defined custom
+block 'Rules Log' which the site administrator must configure in the
+layout by adding it to their preferred region (e.g. the footer). When doing
+this the administrator should also set the Visibility condition for this
+block to be 'User: Permission  --  Access the Rules debug log'.
+
+There is also an administrative option to include this Log debug 
+information in the site's system log along with other 
+notifications, warnings and error reports.
+
 
 ## Tests
 

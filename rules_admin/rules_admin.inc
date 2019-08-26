@@ -227,8 +227,6 @@ function rules_admin_settings_submit($form, &$form_state) {
   $config->set('rules_log_errors', $form_state['values']['rules_log_errors']);
   $config->set('rules_debug_log', $form_state['values']['rules_debug_log']);
   $config->set('rules_debug', $form_state['values']['rules_debug']);
-  $config->set('rules_debug_region_' . $theme_default, $form_state['values']['rules_debug_region_' . $theme_default]);
-  $config->set('rules_debug_region_' . $admin_theme, $form_state['values']['rules_debug_region_' . $admin_theme]);
   $config->save();
   backdrop_set_message(t('The configuration options have been saved.'));
 }
