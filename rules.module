@@ -1327,23 +1327,6 @@ function rules_menu_add_element_title($array) {
   }
 }
 
-/**
- * Pre-render callback for the debug log, which renders and then clears it.
- */
-function rules_debug_log_pre_render($elements) {
-  $logger = RulesLog::logger();
-  if ($log = $logger->render()) {
-    $logger = RulesLog::logger();
-    $logger->clear();
-    $elements[] = array('#markup' => $log);
-    $elements['#theme_wrappers'] = array('rules_log');
-    // Log the rules log to the system log if enabled.
-    if (config_get('rules.settings', 'rules_debug_log')) {
-      watchdog('rules', 'Rules debug information: !log', array('!log' => $log), WATCHDOG_NOTICE);
-    }
-  }
-  return $elements;
-}
 
 /**
  * Implements hook_backdrop_goto_alter().
