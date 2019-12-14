@@ -455,6 +455,8 @@ function rules_action_data_calc_operator_options(RulesPlugin $element, $param_na
   if (($info = $element->getArgumentInfo('input_1')) && $info['type'] == 'date') {
     unset($options['*']);
     unset($options['/']);
+    unset($options['min']);
+    unset($options['max']);
   }
   return $options;
 }
