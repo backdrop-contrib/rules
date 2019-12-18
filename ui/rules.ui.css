@@ -44,6 +44,7 @@ ul.rules-operations-add li {
 
 .rules-elements-table {
   margin-bottom: 3em;
+  position: relative;
 }
 /* We cannot set a positive margin-top for rules tables as the table drag link
    should be positioned directly on top of the table. Thus we use a large bottom
@@ -144,13 +145,7 @@ div.rules-debug-log-head {
 }
 
 form input.rules-switch-button {
-  -moz-border-radius: 5px 5px 5px 5px;
   cursor: pointer;
-  font-size: 0.8em;
-  font-weight: normal;
-  margin-bottom: 1em;
-  padding: 2px;
-  text-align: center;
 }
 
 .rules-form-heading {
