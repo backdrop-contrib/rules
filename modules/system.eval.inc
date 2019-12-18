@@ -106,9 +106,13 @@ function rules_action_mail_to_users_of_role($roles, $subject, $message, $from = 
     $result = db_query('SELECT mail FROM {users} WHERE uid > 0');
   }
   else {
-    $rids = implode(',', $roles);
     // Avoid sending emails to members of two or more target role groups.
-    $result = db_query("SELECT DISTINCT u.mail FROM {users} u INNER JOIN {users_roles} r ON u.uid = r.uid WHERE r.role IN ('. $rids .')");
+    $query = db_select('users', 'u')
+    ->distinct(TRUE)
+    ->fields('u', array('mail'));
+    $query->innerJoin('users_roles', 'r', 'u.uid = r.uid');
+    $query->condition('r.role', $roles, 'IN');
+    $result = $query->execute();
   }
 
   // Now, actually send the mails.
