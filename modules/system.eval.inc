@@ -17,6 +17,20 @@ function rules_action_drupal_message($message, $status, $repeat) {
 }
 
 /**
+ * Action: Write a watchdog db log message.
+ */
+function rules_action_drupal_watchdog($type, $message, $severity, $link_text, $link_path) {
+  if (!empty($link_path)) {
+    // Use $link_path for the text if no specific text was supplied.
+    $link = l(!empty($link_text) ? $link_text : $link_path, url($link_path));
+  }
+  else {
+    $link = NULL;
+  }
+  watchdog($type, $message, array(), $severity, $link);
+}
+
+/**
  * Action: Page redirect.
  *
  * @see rules_page_build()

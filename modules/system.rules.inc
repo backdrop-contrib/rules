@@ -128,6 +128,44 @@ function rules_system_action_info() {
       'base' => 'rules_action_drupal_message',
       'access callback' => 'rules_system_integration_access',
     ),
+    'drupal_watchdog' => array(
+      'label' => t('Logs a message to the system dblog'),
+      'group' => t('System'),
+      'parameter' => array(
+        'type' => array(
+          'type' => 'text',
+          'label' => t('Type'),
+          'description' => t('The category to which this message belongs, displayed in the first column of the dblog.'),
+        ),
+        'message' => array(
+          'type' => 'text',
+          'label' => t('Message'),
+          'description' => t('The text of the message.'),
+          'translatable' => TRUE,
+        ),
+        'severity' => array(
+          'type' => 'token',
+          'label' => t('Severity'),
+          'options list' => 'watchdog_severity_levels',
+          'default value' => WATCHDOG_NOTICE,
+          'optional' => TRUE,
+        ),
+        'link_text' => array(
+          'type' => 'text',
+          'label' => t('Link text'),
+          'description' => t('The text to display for the link (optional)'),
+          'optional' => TRUE,
+        ),
+        'link_path' => array(
+          'type' => 'uri',
+          'label' => t('Link path'),
+          'description' => t('A Drupal path or path alias. Enter (optional) queries after "?" and (optional) anchor after "#".'),
+          'optional' => TRUE,
+        ),
+      ),
+      'base' => 'rules_action_drupal_watchdog',
+      'access callback' => 'rules_system_integration_access',
+    ),
     'redirect' => array(
       'label' => t('Page redirect'),
       'group' => t('System'),
