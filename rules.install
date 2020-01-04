@@ -190,6 +190,17 @@ function rules_schema() {
 }
 
 /**
+ * Remove settings that are now obtained from system.core
+ */
+function rules_update_1001() {
+  $config = config('rules.settings');
+  $config->clear('theme_default');
+  $config->clear('admin_theme');
+  $config->clear('site_mail');
+  $config->save();
+}
+
+/**
  * Move book settings from variables to config.
  */
 function rules_update_1000() {
@@ -200,15 +211,12 @@ function rules_update_1000() {
   $config->set('rules_debug_log', update_variable_get('rules_debug_log', '0'));
   $config->set('rules_debug', update_variable_get('rules_log_debug', 'RulesLog::WARN'));
   $config->set('rules_debug_region', update_variable_get('rules_debug_region', ''));
-  $config->set('theme_default', update_variable_get('theme_default', 'bartik'));
-  $config->set('admin_theme', update_variable_get('admin_theme', 'seven'));
   $config->set('language_content_type_page', update_variable_get('language_content_type_page', '1'));
   $config->set('rules_path_cleaning_callback', update_variable_get('rules_path_cleaning_callback', 'rules_path_default_cleaning_method'));
   $config->set('rules_path_replacement_char', update_variable_get('rules_path_replacement_char', '-'));
   $config->set('rules_path_lower_case', update_variable_get('rules_path_lower_case', 'TRUE'));
   $config->set('rules_clean_path', update_variable_get('rules_clean_path', 'array("/[^a-zA-Z0-9\-_]+/", $replace)'));
   $config->set('rules_path_transliteration', update_variable_get('rules_path_transliteration', 'TRUE'));
-  $config->set('site_mail', update_variable_get('site_mail', "ini_get('sendmail_from')"));
   $config->save();
 
   // Delete variables.

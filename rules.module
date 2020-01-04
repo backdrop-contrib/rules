@@ -1307,7 +1307,7 @@ function rules_menu_add_element_title($array) {
 function rules_debug_log_region() {
   // If there is no setting for the current theme use the default theme setting.
   global $theme_key;
-  $theme_default = config_get('rules.settings', 'theme_default');
+  $theme_default = config_get('system.core', 'theme_default');
   return config_get('rules.settings', 'rules_debug_region_', config_get('rules.settings', 'rules_debug_region_', 'help'));
 }
 

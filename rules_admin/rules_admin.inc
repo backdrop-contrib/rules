@@ -202,8 +202,8 @@ function rules_admin_settings($form, &$form_state) {
   );
 
 
-  $theme_default = config_get('rules.settings','theme_default');
-  $admin_theme = config_get('rules.settings','admin_theme');
+  $theme_default = config_get('system.core','theme_default');
+  $admin_theme = config_get('system.core','admin_theme');
 
   // Add a submit button
   $form['actions']['#type'] = 'actions';
@@ -219,8 +219,8 @@ function rules_admin_settings($form, &$form_state) {
 
 // Add a submit function to process config
 function rules_admin_settings_submit($form, &$form_state) {
-  $theme_default = config_get('rules.settings','theme_default');
-  $admin_theme = config_get('rules.settings','admin_theme');
+  $theme_default = config_get('system.core','theme_default');
+  $admin_theme = config_get('system.core','admin_theme');
 
   $config = config('rules.settings');
   $config->set('rules_path_cleaning_callback', $form_state['values']['rules_path_cleaning_callback']);
