@@ -173,8 +173,8 @@ function rules_admin_settings($form, &$form_state) {
     '#type' => 'radios',
     '#title' => t('Logging of Rules evaluation errors'),
     '#options' => array(
-      'RulesLog::WARN' => t('Log all warnings and errors'),
-      'RulesLog::ERROR' => t('Log errors only'),
+      RulesLog::WARN => t('Log all warnings and errors'),
+      RulesLog::ERROR => t('Log errors only'),
     ),
     '#default_value' => config_get('rules.settings','rules_log_errors'),
     '#description' => t('Evaluations errors are logged to the system log.'),
@@ -195,8 +195,8 @@ function rules_admin_settings($form, &$form_state) {
     '#default_value' => config_get('rules.settings','rules_debug'),
     '#options' => array(
       0 => t('Never'),
-      'RulesLog::WARN' => t('In case of errors'),
-      'RulesLog::INFO' => t('Always'),
+      RulesLog::WARN => t('In case of errors'),
+      RulesLog::INFO => t('Always'),
     ),
     '#description' => t('Debug information is only shown when rules are evaluated and is visible for users having the permission <a href="!url">%link</a>.', array('%link' => t('Access the Rules debug log'), '!url' => url('admin/people/permissions', array('fragment' => 'module-rules')))),
   );
