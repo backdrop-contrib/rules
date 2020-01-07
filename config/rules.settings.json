@@ -4,7 +4,6 @@
   "rules_log_level": "self::INFO",
   "rules_debug_log": "0",
   "rules_debug": "FALSE",
-  "rules_debug_region": "",
   "theme_default": "bartik",
   "admin_theme": "seven",
   "language_content_type_page": "1",

@@ -1302,62 +1302,6 @@ function rules_menu_add_element_title($array) {
 }
 
 /**
- * Returns the current region for the debug log.
- */
-function rules_debug_log_region() {
-  // If there is no setting for the current theme use the default theme setting.
-  global $theme_key;
-  $theme_default = config_get('rules.settings', 'theme_default');
-  return config_get('rules.settings', 'rules_debug_region_', config_get('rules.settings', 'rules_debug_region_', 'help'));
-}
-
-/**
- * Implements hook_page_build() to add the rules debug log to the page bottom.
- */
-function rules_page_build(&$page) {
-  // Invoke a the page redirect, in case the action has been executed.
-  // @see rules_action_backdrop_goto()
-  if (isset($GLOBALS['_rules_action_backdrop_goto_do'])) {
-    list($url, $force) = $GLOBALS['_rules_action_backdrop_goto_do'];
-    backdrop_goto($url);
-  }
-
-  if (isset($_SESSION['rules_debug'])) {
-    $region = rules_debug_log_region();
-    foreach ($_SESSION['rules_debug'] as $log) {
-      $page[$region]['rules_debug'][] = array(
-        '#markup' => $log,
-      );
-      $page[$region]['rules_debug']['#theme_wrappers'] = array('rules_log');
-    }
-    unset($_SESSION['rules_debug']);
-  }
-
-  if (rules_show_debug_output()) {
-    $region = rules_debug_log_region();
-    $page[$region]['rules_debug']['#pre_render'] = array('rules_debug_log_pre_render');
-  }
-}
-
-/**
- * Pre-render callback for the debug log, which renders and then clears it.
- */
-function rules_debug_log_pre_render($elements) {
-  $logger = RulesLog::logger();
-  if ($log = $logger->render()) {
-    $logger = RulesLog::logger();
-    $logger->clear();
-    $elements[] = array('#markup' => $log);
-    $elements['#theme_wrappers'] = array('rules_log');
-    // Log the rules log to the system log if enabled.
-    if (config_get('rules.settings', 'rules_debug_log')) {
-      watchdog('rules', 'Rules debug information: !log', array('!log' => $log), WATCHDOG_NOTICE);
-    }
-  }
-  return $elements;
-}
-
-/**
  * Implements hook_backdrop_goto_alter().
  *
  * @see rules_action_backdrop_goto()
@@ -1757,6 +1701,41 @@ function rules_entity_integration_event_access($type, $event_name) {
   $result = entity_plus_access('view', $entity_type);
   // If no access callback is given, just grant access for viewing.
   return isset($result) ? $result : TRUE;
+}
+
+/**
+ * Implements hook_block_info().
+ *
+ * This hook declares the blocks provided by the rules module.
+ */
+function rules_block_info() {
+  $blocks['rules_log'] = array(
+    // info: The name of the block.
+    'info' => t('Rules Log'),
+    'description' => 'This block displays the log output from Rules.',
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ *
+ * This hook generates the contents of rules blocks.
+ */
+function rules_block_view($delta = '', $settings = array(), $contexts = array()) {
+  // The $delta parameter tells us which block is being requested.
+
+  switch ($delta) {
+    case 'rules_log':
+      $log_display = t('No log information at present.');
+      if (!empty($_SESSION['rules_debug'])) {
+        $log_display = $_SESSION['rules_debug'][0];
+        unset($_SESSION['rules_debug']);
+      }
+      $block['subject'] = t("Log generated in Rules module.");
+      $block['content'] = $log_display;
+  }
+  return $block;
 }
 
 /**

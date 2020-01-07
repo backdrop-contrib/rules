@@ -5,3 +5,4 @@ dependencies[] = entity_ui
 package = Rules
 backdrop = 1.x
 type = module
+stylesheets[all][] = rules.css
