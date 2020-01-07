@@ -114,7 +114,7 @@ function rules_action_user_send_account_email($account, $email_type) {
     if ($email_type == 'register_pending_approval') {
       // If a user registered requiring admin approval, notify the admin, too.
       // We use the site default language for this.
-      backdrop_mail('user', 'register_pending_approval_admin', config_get('rules.settings','site_mail'), language_default(), $params);
+      backdrop_mail('user', 'register_pending_approval_admin', config_get('system.core','site_mail'), language_default(), $params);
     }
 
     $result = empty($mail) ? NULL : $mail['result'];

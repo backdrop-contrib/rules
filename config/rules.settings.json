@@ -1,17 +1,14 @@
 {
   "_config_name": "rules.settings",
-  "rules_log_errors": "RulesLog::WARN",
-  "rules_log_level": "self::INFO",
-  "rules_debug_log": "0",
-  "rules_debug": "FALSE",
-  "theme_default": "bartik",
-  "admin_theme": "seven",
+  "rules_log_errors": 2,
+  "rules_log_level": 1,
+  "rules_debug_log": 0,
+  "rules_debug": 0,
   "language_content_type_page": "1",
   "rules_path_cleaning_callback": "rules_path_default_cleaning_method",
   "rules_path_replacement_char": "-",
   "rules_path_lower_case": "TRUE",
   "rules_clean_path": " ",
   "rules_path_transliteration": "TRUE",
-  "site_mail": "ini_get('sendmail_from')",
   "entity_cache_tables_created": " "
 }
