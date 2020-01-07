@@ -40,6 +40,20 @@ Then visit the configuration page at Administration >
 Configuration > Category > Rules (admin/config/category/rules)
 and enter the required information.
 
+## Debug Information
+
+An administrative setting enables debug information to be shown when 
+rules are evaluated and is visible for users having the permission 
+'Access the Rules debug log'. It is displayed in a pre-defined custom
+block 'Rules Log' which the site administrator must configure in the
+layout by adding it to their preferred region (e.g. the footer). When doing
+this the administrator should also set the Visibility condition for this
+block to be 'User: Permission  --  Access the Rules debug log'.
+
+There is also an administrative option to include this Log debug 
+information in the site's system log along with other 
+notifications, warnings and error reports.
+
 ## Tests
 
 There are six inbuilt tests:

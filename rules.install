@@ -210,7 +210,6 @@ function rules_update_1000() {
   $config->set('rules_log_level', update_variable_get('rules_log_level', 'self::INFO'));
   $config->set('rules_debug_log', update_variable_get('rules_debug_log', '0'));
   $config->set('rules_debug', update_variable_get('rules_log_debug', 'RulesLog::WARN'));
-  $config->set('rules_debug_region', update_variable_get('rules_debug_region', ''));
   $config->set('language_content_type_page', update_variable_get('language_content_type_page', '1'));
   $config->set('rules_path_cleaning_callback', update_variable_get('rules_path_cleaning_callback', 'rules_path_default_cleaning_method'));
   $config->set('rules_path_replacement_char', update_variable_get('rules_path_replacement_char', '-'));

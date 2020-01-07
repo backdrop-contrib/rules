@@ -154,9 +154,6 @@ function rules_admin_settings($form, &$form_state) {
     $options = array(
       'rules_path_default_cleaning_method' => t('Rules (built in)'),
     );
-    if (module_exists('ctools')) {
-      $options['rules_path_clean_ctools'] = t('CTools');
-    }
     $options['rules_path_clean_path'] = t('Path');
     $path_help = t("Note that Path's URL path cleaning method can be configured at <a href='!url'>admin/config/urls/path/patterns/settings</a>.", array('!url' => url('admin/config/urls/path/patterns/settings')));
 
@@ -201,10 +198,6 @@ function rules_admin_settings($form, &$form_state) {
     '#description' => t('Debug information is only shown when rules are evaluated and is visible for users having the permission <a href="!url">%link</a>.', array('%link' => t('Access the Rules debug log'), '!url' => url('admin/people/permissions', array('fragment' => 'module-rules')))),
   );
 
-
-  $theme_default = config_get('system.core','theme_default');
-  $admin_theme = config_get('system.core','admin_theme');
-
   // Add a submit button
   $form['actions']['#type'] = 'actions';
   $form['actions']['submit'] = array(
@@ -219,17 +212,13 @@ function rules_admin_settings($form, &$form_state) {
 
 // Add a submit function to process config
 function rules_admin_settings_submit($form, &$form_state) {
-  $theme_default = config_get('system.core','theme_default');
-  $admin_theme = config_get('system.core','admin_theme');
-
   $config = config('rules.settings');
   $config->set('rules_path_cleaning_callback', $form_state['values']['rules_path_cleaning_callback']);
   $config->set('rules_log_errors', $form_state['values']['rules_log_errors']);
   $config->set('rules_debug_log', $form_state['values']['rules_debug_log']);
   $config->set('rules_debug', $form_state['values']['rules_debug']);
-  $config->set('rules_debug_region_' . $theme_default, $form_state['values']['rules_debug_region_' . $theme_default]);
-  $config->set('rules_debug_region_' . $admin_theme, $form_state['values']['rules_debug_region_' . $admin_theme]);
   $config->save();
+
   backdrop_set_message(t('The configuration options have been saved.'));
 }
 
