@@ -25,5 +25,5 @@ files[] = ui/ui.plugins.inc
 files[] = tests/rules.test
 files[] = tests/rules_test.rules.inc
 
-dependencies[] = entity_token
 dependencies[] = entity
+dependencies[] = entity_token
