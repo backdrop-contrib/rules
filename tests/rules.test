@@ -1612,10 +1612,10 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     $rule->integrityCheck()->execute();
 
     $text = RulesLog::logger()->render();
-    $pos = strpos($text, RulesTestCase::t('Evaluating the action %entity_fetch.', array('entity_fetch')));
+    $pos = strpos($text, RulesTestCase::t('Evaluating the action %entity_fetch.', array('entity_fetch' => 'Fetch entity by id')));
     $pos = ($pos !== FALSE) ? strpos($text, RulesTestCase::t('Added the provided variable %node of type %node', array('node')), $pos) : FALSE;
     $pos = ($pos !== FALSE) ? strpos($text, RulesTestCase::t('Saved %node of type %node.', array('node')), $pos) : FALSE;
-    $pos = ($pos !== FALSE) ? strpos($text, RulesTestCase::t('Evaluating the action %entity_delete.', array('entity_delete')), $pos) : FALSE;
+    $pos = ($pos !== FALSE) ? strpos($text, RulesTestCase::t('Evaluating the action %entity_delete.', array('entity_delete' => 'Delete entity')), $pos) : FALSE;
     $this->assertTrue($pos !== FALSE, 'Data has been fetched, saved and deleted.');
     // debug(RulesLog::logger()->render());
 
