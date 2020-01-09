@@ -1871,7 +1871,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     $settings = array('to' => 'mail@example.com', 'subject' => 'subject', 'message' => 'hello.');
     rules_action('mail', $settings)->execute();
     $this->assertMail('to', 'mail@example.com', 'Mail has been sent.');
-    $this->assertMail('from', config_get('rules.settings','site_mail'), 'Default from address has been used');
+    $this->assertMail('from', config_get('system.core','site_mail'), 'Default from address has been used');
 
     rules_action('mail', $settings + array('from' => 'sender@example.com'))->execute();
     $this->assertMail('from', 'sender@example.com', 'Specified from address has been used');
