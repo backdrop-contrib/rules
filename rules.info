@@ -25,5 +25,6 @@ files[] = ui/ui.plugins.inc
 files[] = tests/rules.test
 files[] = tests/rules_test.rules.inc
 
+dependencies[] = system (>= 7.40)
 dependencies[] = entity
-dependencies[] = entity_token
+dependencies[] = entity:entity_token
