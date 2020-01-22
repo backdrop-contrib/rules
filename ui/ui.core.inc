@@ -1120,7 +1120,7 @@ class RulesContainerPluginUI extends RulesPluginUI {
           '#theme' => 'rules_content_group',
           '#caption' => t('Tags'),
           'tags' => array(
-            '#markup' => check_plain(drupal_implode_tags($this->element->tags)),
+            '#markup' => implode(', ', array_map(function($entry) { return l($entry, '/admin/config/workflow/rules', array('query' => array('event' => '0', 'tag' => $entry))); }, $this->element->tags)),
           ),
         );
       }
