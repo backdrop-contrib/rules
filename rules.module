@@ -935,7 +935,7 @@ function rules_get_components($label = FALSE, $type = NULL, $conditions = array(
  *   An array of entity IDs.
  */
 function rules_config_delete(array $ids) {
-  return entity_plus_get_controller('rules_config')->delete($ids);
+  return entity_get_controller('rules_config')->delete($ids);
 }
 
 /**
