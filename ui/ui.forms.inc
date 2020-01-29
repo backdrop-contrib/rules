@@ -101,12 +101,51 @@ function rules_ui_form_clone_rules_config($form, &$form_state, $rules_config, $b
 function rules_ui_form_export_rules_config($form, &$form_state, $rules_config, $base_path) {
   $form['export'] = array(
     '#type' => 'textarea',
-    '#title' => t('Export'),
+    '#title' => t('Export this rule by copying from here'),
     '#description' => t('For importing copy the content of the text area and paste it into the import page.'),
-    '#rows' => 25,
+    '#rows' => 15,
     '#default_value' => $rules_config->export(),
   );
+  $form['filename'] = array(
+    '#type' => 'textfield',
+    '#title' => t('or download as a json file'),
+    '#description' => t('download the content of the text area as this JSON file.'),
+    '#default_value' => $rules_config->name . '.json',
+  );
+  $form['download'] = array(
+    '#type' => 'submit',
+    '#value' => t('download'),
+    '#title' => t('Export as file'),
+    '#validate' => array(),
+    '#submit' => array('rules_ui_form_export_rules_config_submit'),
+  );
+  $form['cancel'] = array(
+    '#type' => 'link',
+    '#title' => t('Cancel'),
+    '#href' => 'admin/config/workflow/rules',
+    '#weight' => 1,
+  );
+
   return $form;
+}
+
+function rules_ui_form_export_rules_config_submit($form, &$form_state) {
+  // within $form_state['values'], 'export' is the json as a text string
+  // and 'filename' is the json file name.
+  $config = $form_state['values']['export']; // the json text
+  $fname = $form_state['values']['filename']; // the json file name
+  backdrop_set_message(t('Your Rules config file has been downloaded.'));
+  watchdog('rules', t('Config file downloaded.'), NULL, WATCHDOG_INFO);
+  $file_path = file_create_filename($fname, file_directory_temp());
+  $filename = str_replace(file_directory_temp() . '/', '', $file_path);
+  file_put_contents($file_path, $config);
+  $headers = array(
+    'Content-Disposition' => 'attachment; filename=' . $fname,
+    'Content-type' => 'application/json',
+  );
+  file_transfer('temporary://' . $filename, $headers);
+  file_unmanaged_delete($file_path);
+
 }
 
 /**
@@ -529,7 +568,7 @@ function rules_ui_import_form($form, &$form_state, $base_path) {
   RulesPluginUI::formDefaults($form, $form_state);
   $form['import'] = array(
     '#type' => 'textarea',
-    '#title' => t('Import'),
+    '#title' => t('Import - paste'),
     '#description' => t('Paste an exported Rules configuration here.'),
     '#rows' => 20,
   );
@@ -595,6 +634,84 @@ function rules_ui_import_form_submit($form, &$form_state) {
   backdrop_set_message(t('Imported @entity %label.', $vars));
   $form_state['redirect'] = RulesPluginUI::$basePath;
 }
+
+
+/**
+ * Import file form for rule configurations.
+ * Adapted from the form for pasting a configuration.
+ */
+function rules_ui_import_file_form($form, &$form_state, $base_path) {
+  RulesPluginUI::$basePath = $base_path;
+  RulesPluginUI::formDefaults($form, $form_state);
+  $form['import'] = array(
+    '#type' => 'file',
+    '#title' => t('Import - upload'),
+    '#description' => t('Upload a Rules configuration file.'),
+  );
+  $form['overwrite'] = array(
+    '#title' => t('Overwrite'),
+    '#type' => 'checkbox',
+    '#description' => t('If checked, any existing configuration with the same identifier will be replaced by the import.'),
+    '#default_value' => FALSE,
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Import'),
+  );
+  return $form;
+}
+
+/**
+ * Validation callback for the import file form.
+ * Uploads a json file then imports as for pasted configurations.
+ */
+function rules_ui_import_file_form_validate($form, &$form_state)
+{
+  $file = file_save_upload('import', array(
+    'file_validate_extensions' => array('json'),
+  ));
+  if ($file) {
+    $uri = $file->uri;
+    $rule_json = file_get_contents($uri);
+    // Create entity
+    if ($rules_config = rules_import($rule_json, $error_msg)) {
+      // Store the successfully imported entity in $form_state.
+      $form_state['rules_config'] = $rules_config;
+      if (!$form_state['values']['overwrite']) {
+        // Check for existing entities with the same identifier.
+        if (rules_config_load($rules_config->name)) {
+          $vars = array('@entity' => t('Rules configuration'), '%label' => $rules_config->label());
+          form_set_error('import', t('Import of @entity %label failed, a @entity with the same machine name already exists. Check the overwrite option to replace it.', $vars));
+        }
+      }
+      try {
+        $rules_config->integrityCheck();
+      } catch (RulesIntegrityException $e) {
+        form_set_error('import', t('Integrity check for the imported configuration failed. Error message: %message.', array('%message' => $e->getMessage())));
+      }
+      if (!user_access('bypass rules access') && !$rules_config->access()) {
+        form_set_error('import', t('You have insufficient access permissions for importing this Rules configuration.'));
+      }
+    }else {
+      form_set_error('import', t('Import failed.'));
+      if ($error_msg) {
+        backdrop_set_message($error_msg, 'error');
+      }
+    }
+  }
+}
+
+/**
+ * Submit callback for the import file form.
+ */
+function rules_ui_import_file_form_submit($form, &$form_state) {
+  $rules_config = $form_state['rules_config'];
+  $vars = array('@entity' => t('Rules configuration'), '%label' => $rules_config->label());
+  watchdog('rules_config', 'Imported @entity %label.', $vars);
+  backdrop_set_message(t('Imported @entity %label.', $vars));
+  $form_state['redirect'] = RulesPluginUI::$basePath;
+}
+
 
 /**
  * FAPI process callback for the data selection widget.

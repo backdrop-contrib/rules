@@ -27,9 +27,18 @@ function rules_admin_menu() {
     'weight' => 0,
   );
   $items[$reaction_path . '/import'] = array(
-    'title' => 'Import rule',
+    'title' => 'Import - paste',
     'page callback' => 'backdrop_get_form',
     'page arguments' => array('rules_ui_import_form', $reaction_path),
+    'access arguments' => array('administer rules'),
+    'file' => 'ui/ui.forms.inc',
+    'file path' => backdrop_get_path('module', 'rules'),
+    'type' => MENU_LOCAL_ACTION,
+  );
+  $items[$reaction_path . '/import_file'] = array(
+    'title' => 'Import - file',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('rules_ui_import_file_form', $reaction_path),
     'access arguments' => array('administer rules'),
     'file' => 'ui/ui.forms.inc',
     'file path' => backdrop_get_path('module', 'rules'),
