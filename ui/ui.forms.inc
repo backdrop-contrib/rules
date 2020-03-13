@@ -575,13 +575,23 @@ function rules_ui_import_form_validate($form, &$form_state) {
   if ($rules_config = rules_import($form_state['values']['import'], $error_msg)) {
     // Store the successfully imported entity in $form_state.
     $form_state['rules_config'] = $rules_config;
-    if (!$form_state['values']['overwrite']) {
-      // Check for existing entities with the same identifier.
-      if (rules_config_load($rules_config->name)) {
+
+    // Check for existing entities with the same identifier.
+    if ($existing_config = rules_config_load($rules_config->name)) {
+      // Don't import and overwrite the existing configuration unless the user
+      // has checked the 'overwrite' box.
+      if (!$form_state['values']['overwrite']) {
         $vars = array('@entity' => t('Rules configuration'), '%label' => $rules_config->label());
         form_set_error('import', t('Import of @entity %label failed, a @entity with the same machine name already exists. Check the overwrite option to replace it.', $vars));
       }
+      // Don't import if the existing configuration has the status ENTITY_FIXED
+      // because that means the configuration can't be modified.
+      if ($existing_config->status == ENTITY_FIXED) {
+        $vars = array('@entity' => t('Rules configuration'), '%label' => $rules_config->label());
+        form_set_error('import', t("Import of @entity %label failed, a @entity with the same machine name already exists and is marked as ENTITY_FIXED meaning it can't be mofified.", $vars));
+      }
     }
+
     try {
       $rules_config->integrityCheck();
     }
@@ -609,6 +619,9 @@ function rules_ui_import_form_submit($form, &$form_state) {
   if ($existing_config = rules_config_load($rules_config->name)) {
     // Copy DB id and remove the new indicator to overwrite the existing record.
     $rules_config->id = $existing_config->id;
+    // Set the ENTITY_CUSTOM bit in the status bitmask, because the
+    // configuration has now been customized by the import.
+    $rules_config->status = $existing_config->status | ENTITY_CUSTOM;
     unset($rules_config->is_new);
   }
   $rules_config->save();

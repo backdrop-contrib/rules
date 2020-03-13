@@ -93,4 +93,123 @@ class RulesUiTestCase extends DrupalWebTestCase {
     $this->assertRaw('<div class="rules-element-label">OR</div>', 'Condition set label is shown.');
   }
 
+  /**
+   * Tests overriding and reverting configurations.
+   *
+   * Verify that when we overwrite a default rule with an import, the status of
+   * that rule is overridden.
+   *
+   * @see https://www.drupal.org/project/rules/issues/2027717#comment-12904190
+   */
+  public function testOverrideStatus() {
+    // Create a simple user account with permission to create a rule.
+    $user = $this->drupalCreateUser(array(
+      'access administration pages',
+      'administer rules',
+      'bypass rules access',
+    ));
+    $this->drupalLogin($user);
+
+    // The rules_test module defines the rule 'rules_test_default_1' in code.
+    // Ensure this rule has status equals ENTITY_IN_CODE.
+    $rule = rules_config_load('rules_test_default_1');
+    $this->assertTrue(
+      $rule->hasStatus(ENTITY_IN_CODE),
+      'Rule defined in hook_default_rules_configuration() has status ENTITY_IN_CODE.'
+    );
+
+    // Verify the code-provided rule appears in the UI.
+    $this->drupalGet('admin/config/workflow/rules');
+    $this->assertText(
+      'example default rule',
+      'Example default rule is defined in code.'
+    );
+    $this->assertText(
+      'rules_test_default_1',
+      'Machine name shows up in UI.'
+    );
+
+    // Now we need to overwrite the 'rules_test_default_1' rule in the
+    // database by importing a rule with the same id and forcing the overwrite.
+    // First check that importing fails if the 'overwrite' box is not checked.
+    $this->drupalGet('admin/config/workflow/rules/reaction/import');
+    $edit = array(
+      'import' => $this->getTestRuleExport('rules_test_default_1'),
+      'overwrite' => FALSE,
+    );
+    $this->drupalPost(NULL, $edit, 'Import');
+    $this->assertText(
+      'Import of Rules configuration example imported default rule failed, a Rules configuration with the same machine name already exists. Check the overwrite option to replace it.',
+      'Rule overwrite failed.'
+    );
+
+    // Now set the 'overwrite' checkbox to force the overwrite and resubmit.
+    $edit = array(
+      'import' => $this->getTestRuleExport('rules_test_default_1'),
+      'overwrite' => TRUE,
+    );
+    $this->drupalPost(NULL, $edit, 'Import');
+
+    // Verify that the overwritten rule now has a status of ENTITY_OVERRIDDEN.
+    $this->assertText(
+      'example imported default rule',
+      'New example default rule has been imported.'
+    );
+    $this->assertText(
+      'rules_test_default_1',
+      'Machine name shows up in UI.'
+    );
+    $this->assertText(
+      'Overridden',
+      'Example default rule has overridden status.'
+    );
+
+    // Clear cache and ensure the rule is still overridden.
+    cache_clear_all();
+    // Visit reaction rules listing page to force refresh.
+    $this->clickLink('Rules');
+    $this->assertText(
+      'example imported default rule',
+      'Rule label unchanged after cache clear.'
+    );
+    $this->assertText(
+      'Overridden',
+      'Rule overridden status unchanged after cache clear.'
+    );
+
+    // A 'revert' link should now be available for the overridden rule.
+    $this->assertText('revert', 'Revert link is now present.');
+
+    // Revert the overridden rule and verify it's back to its original status.
+    $this->clickLink('revert');
+    $this->drupalPost(NULL, array(), 'Confirm');
+    $this->assertText('example default rule', 'Example default rule original label restored.');
+    $this->assertText('Reverted reaction rule example imported default rule to the defaults', 'Example default rule was reverted.');
+    $this->assertNoText('revert', 'Revert link is not present.');
+  }
+
+  /**
+   * Helper function to return a known JSON encoded rule export.
+   *
+   * @param string $machine_name
+   *   The machine name of the returned rule.
+   */
+  protected function getTestRuleExport($machine_name) {
+    return '{ "' . $machine_name . '" : {
+    "LABEL" : "example imported default rule",
+    "PLUGIN" : "reaction rule",
+    "ACTIVE" : false,
+    "OWNER" : "rules",
+    "TAGS" : [ "Admin", "Tag2" ],
+    "REQUIRES" : [ "rules" ],
+    "ON" : { "node_update" : [] },
+    "IF" : [
+      { "NOT data_is" : { "data" : [ "node:status" ], "value" : true } },
+      { "data_is" : { "data" : [ "node:type" ], "value" : "page" } }
+    ],
+    "DO" : [ { "drupal_message" : { "message" : "A node has been updated." } } ]
+  }
+}';
+  }
+
 }
