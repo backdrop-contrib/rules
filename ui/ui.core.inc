@@ -207,8 +207,9 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
   }
 
   /**
-   * Implements RulesPluginUIInterface. Generates the element edit form.
+   * Implements RulesPluginUIInterface::form().
    *
+   * Generates the element edit form.
    * Note: Make sure that you set RulesPluginUI::$basePath before using this
    * method, otherwise paths, links, redirects etc. won't be correct.
    */

@@ -144,7 +144,7 @@ class RulesDataUI {
    * Used for data UI classes implementing the
    * RulesDataDirectInputFormInterface.
    *
-   * In case an options list is available, the the usual render() method won't
+   * In case an options list is available, the usual render() method won't
    * be invoked, instead the selected entry is rendered via this method.
    *
    * @todo for Drupal 8: Refactor to avoid implementations have to care about

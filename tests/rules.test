@@ -1866,7 +1866,6 @@ class RulesIntegrationTestCase extends DrupalWebTestCase {
     $rule->condition('php_eval', array('code' => 'return TRUE;'))
          ->action('php_eval', array('code' => 'drupal_set_message("Executed-" . $var_name->title);'))
          ->action('drupal_message', array('message' => 'Title: <?php echo $var_name->title; ?> Token: [var_name:title]'));
-
     $rule->execute($node);
     $rule->access();
     RulesLog::logger()->checkLog();

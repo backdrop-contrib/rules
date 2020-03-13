@@ -300,7 +300,7 @@ function rules_action_data_set_form_alter(&$form, &$form_state, $options, RulesA
     );
     $form_state['rules_element_step'] = 'data_value';
     // Clear the parameter mode for the value parameter, so its gets the proper
-    // default value based upon the type of the the selected data on rebuild.
+    // default value based upon the type of the selected data on rebuild.
     unset($form_state['parameter_mode']['value']);
   }
   else {
