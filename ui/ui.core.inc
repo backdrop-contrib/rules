@@ -747,7 +747,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
           '#markup' => '[' . $this->element->settings[$name . ':select'] . ']',
         );
       }
-      elseif (isset($this->element->settings[$name]) && (!isset($parameter['default value']) || $parameter['default value'] != $this->element->settings[$name])) {
+      elseif (isset($this->element->settings[$name])) {
         $class = $this->getDataTypeClass($parameter['type'], $parameter);
         $method = empty($parameter['options list']) ? 'render' : 'renderOptionsLabel';
         // We cannot use method_exists() here as it would trigger a PHP bug.
@@ -1120,7 +1120,7 @@ class RulesContainerPluginUI extends RulesPluginUI {
           '#theme' => 'rules_content_group',
           '#caption' => t('Tags'),
           'tags' => array(
-            '#markup' => check_plain(drupal_implode_tags($this->element->tags)),
+            '#markup' => implode(', ', array_map(function($entry) { return l($entry, '/admin/config/workflow/rules', array('query' => array('event' => '0', 'tag' => $entry))); }, $this->element->tags)),
           ),
         );
       }
