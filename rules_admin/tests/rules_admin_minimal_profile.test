@@ -16,6 +16,9 @@
  */
 class RulesAdminMinimalProfileTestCase extends DrupalWebTestCase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected $profile = 'minimal';
 
   /**

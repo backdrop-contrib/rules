@@ -73,8 +73,7 @@ function rules_action_breadcrumb_set(array $titles, array $paths) {
   foreach ($titles as $i => $title) {
     // Skip empty titles.
     if ($title = trim($title)) {
-      // Output plaintext instead of a link if there is a title
-      // without a path.
+      // Output plaintext instead of a link if there is a title without a path.
       $path = trim($paths[$i]);
       if (!empty($paths[$i]) && $paths[$i] != '<none>') {
         $trail[] = l($title, trim($paths[$i]));
@@ -132,7 +131,8 @@ function rules_action_mail_to_users_of_role($roles, $subject, $message, $from = 
   );
   // Set a unique key for this mail.
   $name = isset($element->root()->name) ? $element->root()->name : 'unnamed';
-  $key = 'rules_action_mail_to_users_of_role_' . $name . '_' . $element->elementId();  $languages = language_list();
+  $key = 'rules_action_mail_to_users_of_role_' . $name . '_' . $element->elementId();
+  $languages = language_list();
 
   $message = array('result' => TRUE);
   foreach ($result as $row) {

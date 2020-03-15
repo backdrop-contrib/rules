@@ -54,7 +54,7 @@ function rules_system_event_info() {
 function rules_system_data_info() {
   return array(
     'log_entry' => array(
-      'label' => t('watchdog log entry'),
+      'label' => t('Watchdog log entry'),
       'wrap' => TRUE,
       'property info' => _rules_system_watchdog_log_entry_info(),
     ),
@@ -74,7 +74,7 @@ function _rules_system_watchdog_log_entry_info() {
     ),
     'message' => array(
       'type' => 'text',
-      'label' => ('Log message'),
+      'label' => t('Log message'),
       'getter callback' => 'rules_system_log_get_message',
       'sanitized' => TRUE,
     ),

@@ -2122,7 +2122,7 @@ abstract class RulesPluginHandlerBase extends FacesExtender implements RulesPlug
   }
 
   /**
-   * Implements RulesPluginImplInterface.
+   * Implements RulesPluginImplInterface::access().
    */
   public function access() {
     return TRUE;
@@ -2708,6 +2708,20 @@ class RulesLog {
   }
 
   /**
+   * Gets an array of logged messages.
+   */
+  public function get() {
+    return $this->log;
+  }
+
+  /**
+   * Clears the logged messages.
+   */
+  public function clear() {
+    $this->log = array();
+  }
+
+  /**
    * Checks the log and throws an exception if there were any problems.
    */
   public function checkLog($logLevel = self::WARN) {
@@ -2735,13 +2749,6 @@ class RulesLog {
       }
     }
     return FALSE;
-  }
-
-  /**
-   * Gets an array of logged messages.
-   */
-  public function get() {
-    return $this->log;
   }
 
   /**
@@ -2796,13 +2803,6 @@ class RulesLog {
       $line++;
     }
     return theme('item_list', array('items' => $output));
-  }
-
-  /**
-   * Clears the logged messages.
-   */
-  public function clear() {
-    $this->log = array();
   }
 
 }
