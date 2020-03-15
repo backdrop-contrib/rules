@@ -490,19 +490,21 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
       $weight = 0;
       $provides = $this->element->providesVariables();
       foreach ($this->element->componentVariables() as $name => $var_info) {
-        $form['settings']['vars']['items'][$name] = RulesPluginUI::getVariableForm($name, $var_info, isset($provides[$name]));
-        $form['settings']['vars']['items'][$name]['weight']['#default_value'] = $weight++;
+        $form['settings']['vars']['items'][$name] = array(
+          'weight' => array('#default_value' => $weight++),
+        ) + RulesPluginUI::getVariableForm($name, $var_info, isset($provides[$name]));
       }
-      // Always add three empty forms.
-      for ($i = 0; $i < 3; $i++) {
-        $form['settings']['vars']['items'][$i] = RulesPluginUI::getVariableForm();
-        $form['settings']['vars']['items'][$i]['weight']['#default_value'] = $weight++;
-      }
+      // Add one empty row in case user wants to add an additional variable.
+      $form['settings']['vars']['items'][] = array(
+        'weight' => array('#default_value' => $weight++),
+      ) + RulesPluginUI::getVariableForm();
+
+      // Submit button will cause a form rebuild using the currently-entered
+      // values. If a variable has been added, a new empty row will also appear.
       $form['settings']['vars']['more'] = array(
         '#type' => 'submit',
         '#value' => t('Add more'),
-        // Enable AJAX once #756762 is fixed.
-        // '#ajax' => rules_ui_form_default_ajax('none'),
+        '#ajax' => rules_ui_form_default_ajax('none'),
         '#limit_validation_errors' => array(array('vars')),
         '#submit' => array('rules_form_submit_rebuild'),
       );
