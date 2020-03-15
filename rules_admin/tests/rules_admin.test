@@ -207,6 +207,48 @@ class RulesUiTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Tests setting component permissions in the UI.
+   *
+   * @see https://www.drupal.org/project/rules/issues/2340505
+   */
+  public function testComponentPermissions() {
+    // Create a simple user account with permission to create a rule.
+    $user = $this->drupalCreateUser(array(
+      'access administration pages',
+      'administer rules',
+      'bypass rules access',
+    ));
+    $this->drupalLogin($user);
+
+    // The rules_test module defines the component 'rules_test_action_set'.
+    // Verify that this code-provided component appears in the UI.
+    $this->drupalGet('admin/config/workflow/rules/components');
+    $this->assertText(
+      'rules_test_action_set',
+      'Test component is defined.'
+    );
+
+    // Visit the component edit page.
+    $this->clickLink('rules_test_action_set');
+    $this->assertText(
+      'Configure access for using this component with a permission.',
+      'Enable component permission checkbox is present.'
+    );
+    $this->assertText(
+      'Use Rules component rules_test_action_set',
+      'Permission configuration form is present.'
+    );
+
+    // Try to enable permissions on this component and set a component
+    // permission at the same time.
+    $edit = array(
+      'settings[access][access_exposed]' => TRUE,
+      'settings[access][permissions][matrix][checkboxes][1][use Rules component rules_test_action_set]' => TRUE,
+    );
+    $this->drupalPost(NULL, $edit, 'Save changes');
+  }
+
+  /**
    * Tests overriding and reverting configurations.
    *
    * Verify that when we overwrite a default rule with an import, the status of
@@ -296,8 +338,14 @@ class RulesUiTestCase extends DrupalWebTestCase {
     // Revert the overridden rule and verify it's back to its original status.
     $this->clickLink('revert');
     $this->drupalPost(NULL, array(), 'Confirm');
-    $this->assertText('example default rule', 'Example default rule original label restored.');
-    $this->assertText('Reverted reaction rule example imported default rule to the defaults', 'Example default rule was reverted.');
+    $this->assertText(
+      'example default rule',
+      'Example default rule original label restored.'
+    );
+    $this->assertText(
+      'Reverted reaction rule example imported default rule to the defaults',
+      'Example default rule was reverted.'
+    );
     $this->assertNoText('revert', 'Revert link is not present.');
   }
 

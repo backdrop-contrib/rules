@@ -407,14 +407,19 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
    * Implements RulesPluginUIInterface.
    */
   public function form_submit($form, &$form_state) {
+    // Need to save the element first, before trying to set the component
+    // permissions in settingsFormSubmit(), because hook_permission() needs
+    // to be able to load the modified element from the DB in order to work
+    // properly.
+    // @see https://www.drupal.org/project/rules/issues/2340505
+    $this->element->save();
     if (!empty($form['settings'])) {
       $this->settingsFormSubmit($form, $form_state);
     }
-    $this->element->save();
   }
 
   /**
-   * Adds the configuration settings form (label, tags, description, ..).
+   * Adds the configuration settings form (label, tags, description, ...).
    */
   public function settingsForm(&$form, &$form_state) {
     $form_values = RulesPluginUI::getFormStateValues($form, $form_state);
@@ -650,7 +655,13 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
     if (isset($form_state['values']['settings']['access']) && !empty($this->element->access_exposed)) {
       // Save the permission matrix.
       foreach ($form_state['values']['settings']['access']['permissions']['matrix']['checkboxes'] as $rid => $value) {
-        user_role_change_permissions($rid, $value);
+        // Need to account for the case where the machine name has been changed,
+        // because then the $value array variable will be keyed with the wrong
+        // permission name. So here we recompute the permission name to use as
+        // a key and extract the value from the $value array.
+        $component_permission = rules_permissions_by_component(array($this->element));
+        $component_permission_name = key($component_permission);
+        user_role_change_permissions($rid, array($component_permission_name => current($value)));
       }
     }
   }
