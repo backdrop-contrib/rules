@@ -109,13 +109,13 @@ function rules_system_action_info() {
           'type' => 'token',
           'label' => t('Message type'),
           'options list' => 'rules_action_backdrop_message_types',
-          'default value' => 'status',
+          'default value' => 'info',
           'optional' => TRUE,
         ),
         'repeat' => array(
           'type' => 'boolean',
           'label' => t('Repeat message'),
-          'description' => t("If disabled and the message has been already shown, then the message won't be repeated."),
+          'description' => t("If set to 'False' and the message has been already shown, then the message won't be repeated."),
           'default value' => TRUE,
           'optional' => TRUE,
           'restriction' => 'input',
@@ -279,9 +279,15 @@ function rules_system_integration_access($type, $name) {
  */
 function rules_action_backdrop_message_types() {
   return array(
-    'status' => t('Status'),
-    'warning' => t('Warning'),
-    'error' => t('Error'),
+    'emergency'  => t('Emergency'),
+    'alert'      => t('Alert'),
+    'critical'   => t('Critical'),
+    'error'      => t('Error'),
+    'warning'    => t('Warning'),
+    'notice'     => t('Notice'),
+    'info'       => t('Info'),
+    'debug'      => t('Debug'),
+    'status'     => t('Status'),
   );
 }
 

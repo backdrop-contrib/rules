@@ -43,16 +43,11 @@ function rules_condition_user_is_blocked($account) {
  */
 function rules_action_user_add_role($account, $roles) {
   if ($account->uid || !empty($account->is_new)) {
-    // Get role list (minus the anonymous)
-    $role_list = user_roles(TRUE);
-
-    foreach ($roles as $role) {
-      $account->roles[$role] = $role_list[$role];
-    }
-    if (!empty($account->is_new) && $account->uid) {
-      // user_save() inserts roles after invoking hook_user_insert() anyway, so
-      // we skip saving to avoid errors due saving them twice.
-      return FALSE;
+    foreach ($roles as $role_name) {
+      // If the user does not have this role, add it.
+      if (!in_array($role_name, $account->roles)) {
+        $account->roles[] = $role_name;
+      }
     }
   }
   else {
@@ -65,16 +60,11 @@ function rules_action_user_add_role($account, $roles) {
  */
 function rules_action_user_remove_role($account, $roles) {
   if ($account->uid || !empty($account->is_new)) {
-    foreach ($roles as $role) {
+    foreach ($roles as $role_name) {
       // If the user has this role, remove it.
-      if (isset($account->roles[$role])) {
-        unset($account->roles[$role]);
+      if (($key = array_search($role_name, $account->roles)) !== false) {
+        unset($account->roles[$key]);
       }
-    }
-    if (!empty($account->is_new) && $account->uid) {
-      // user_save() inserts roles after invoking hook_user_insert() anyway, so
-      // we skip saving to avoid errors due saving them twice.
-      return FALSE;
     }
   }
   else {
