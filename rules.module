@@ -928,15 +928,6 @@ function rules_get_components($label = FALSE, $type = NULL, $conditions = array(
   return $items;
 }
 
-/**
- * Delete rule configurations from database.
- *
- * @param $ids
- *   An array of entity IDs.
- */
-function rules_config_delete(array $ids) {
-  return entity_get_controller('rules_config')->delete($ids);
-}
 
 /**
  * Ensures the configuration's 'dirty' flag is up to date by running an integrity check.
