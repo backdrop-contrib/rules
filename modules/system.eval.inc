@@ -89,7 +89,7 @@ function rules_action_breadcrumb_set(array $titles, array $paths) {
 /**
  * Action Implementation: Send mail.
  */
-function rules_action_mail($to, $subject, $message, $from = NULL, $langcode, $settings, RulesState $state, RulesPlugin $element) {
+function rules_action_mail($to, $subject, $message, $from, $langcode, $settings, RulesState $state, RulesPlugin $element) {
   $to = str_replace(array("\r", "\n"), '', $to);
   $from = !empty($from) ? str_replace(array("\r", "\n"), '', $from) : NULL;
   $params = array(
@@ -112,7 +112,7 @@ function rules_action_mail($to, $subject, $message, $from = NULL, $langcode, $se
 /**
  * Action: Send mail to all users of a specific role group(s).
  */
-function rules_action_mail_to_users_of_role($roles, $subject, $message, $from = NULL, $settings, RulesState $state, RulesPlugin $element) {
+function rules_action_mail_to_users_of_role($roles, $subject, $message, $from, $settings, RulesState $state, RulesPlugin $element) {
   $from = !empty($from) ? str_replace(array("\r", "\n"), '', $from) : NULL;
 
   // All authenticated users, which is everybody.
