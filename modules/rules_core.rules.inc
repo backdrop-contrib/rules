@@ -145,6 +145,7 @@ function rules_rules_core_data_info() {
   }
 
   if (module_exists('taxonomy')) {
+    $return['taxonomy_vocabulary']['label'] = t('Taxonomy Vocabulary');
     // For exportability identify vocabularies by name.
     $return['taxonomy_vocabulary']['wrapper class'] = 'RulesTaxonomyVocabularyWrapper';
     $return['taxonomy_vocabulary']['ui class'] = 'RulesDataUITaxonomyVocabulary';
