@@ -40,6 +40,10 @@ Then visit the configuration page at Administration >
 Configuration > Category > Rules (admin/config/category/rules)
 and enter the required information.
 
+## Documentation
+
+Additional documentation is located in [the Wiki](https://github.com/backdrop-contrib/rules/wiki/Documentation).
+
 ## Debug Information
 
 An administrative setting enables debug information to be shown when 
