@@ -42,7 +42,7 @@ and enter the required information.
 
 ## Documentation
 
-Additional documentation is located in [the Wiki](https://github.com/backdrop-contrib/rules/wiki/Documentation).
+Additional documentation is located in [the Wiki](https://github.com/backdrop-contrib/rules/wiki).
 
 ## Debug Information
 
