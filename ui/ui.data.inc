@@ -91,7 +91,7 @@ class RulesDataUI {
       // Make the autocomplete textfield big enough so that it can display
       // descriptions without word wraps.
       '#size' => 75,
-      '#description' => t("The data selector helps you drill down into the data available to Rules. <em>To make entity fields appear in the data selector, you may have to use the condition 'entity has field' (or 'content is of type').</em> More useful tips about data selection is available in <a href='@url'>the online documentation</a>.",
+      '#description' => t("The data selector helps you drill down into the data available to Rules. <em>To make entity fields appear in the data selector, you may have to use the condition 'Entity has field' (or 'Entity is of bundle').</em> More useful tips about data selection is available in <a href='@url'>the online documentation</a>.",
         array('@url' => rules_external_help('data-selection'))),
     );
 
