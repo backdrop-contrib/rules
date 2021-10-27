@@ -936,7 +936,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
       ->fields('rules_tags', array('tag'))
       ->groupBy('tag')
       ->execute()
-      ->fetchCol('tag');
+      ->fetchCol();
     return drupal_map_assoc($result);
   }
 

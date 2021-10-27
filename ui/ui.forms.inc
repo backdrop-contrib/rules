@@ -988,7 +988,7 @@ function rules_autocomplete_tags($tags_typed = '') {
       ->groupBy('rt.tag')
       ->range(0, 10)
       ->execute()
-      ->fetchCol('rt.tag');
+      ->fetchCol();
 
     $prefix = count($tags_typed) ? drupal_implode_tags($tags_typed) . ', ' : '';
 
