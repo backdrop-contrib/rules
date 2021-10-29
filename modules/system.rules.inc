@@ -279,15 +279,10 @@ function rules_system_integration_access($type, $name) {
  */
 function rules_action_backdrop_message_types() {
   return array(
-    'emergency'  => t('Emergency'),
-    'alert'      => t('Alert'),
-    'critical'   => t('Critical'),
+    'info'       => t('Info'),
+    'status'     => t('Status'),
     'error'      => t('Error'),
     'warning'    => t('Warning'),
-    'notice'     => t('Notice'),
-    'info'       => t('Info'),
-    'debug'      => t('Debug'),
-    'status'     => t('Status'),
   );
 }
 
