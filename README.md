@@ -84,8 +84,8 @@ See the LICENSE.txt file in this directory for complete text.
 ## Current Maintainers
 
 - Graham Oliver github.com/Graham-72
-
-Seeking additional maintainers.
+- [Laryn Kragt Bakker](https://github.com/laryn) - [CEDC.org](https://cedc.org)
+- Seeking additional maintainers
 
 ## Acknowledgement
 
