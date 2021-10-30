@@ -782,16 +782,12 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
    */
   public function operations() {
     $name = $this->element->root()->name;
-    $render = array(
-      '#theme' => 'links__rules',
-    );
-    $render['#attributes']['class'][] = 'rules-operations';
-    $render['#attributes']['class'][] = 'action-links';
-    $render['#links']['edit'] = array(
+    $render = array('data' => array('#type' => 'dropbutton'));
+    $render['data']['#links']['edit'] = array(
       'title' => t('edit'),
       'href' => RulesPluginUI::path($name, 'edit', $this->element),
     );
-    $render['#links']['delete'] = array(
+    $render['data']['#links']['delete'] = array(
       'title' => t('delete'),
       'href' => RulesPluginUI::path($name, 'delete', $this->element),
     );

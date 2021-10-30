@@ -102,23 +102,17 @@ class RulesReactionRuleUI extends RulesRuleUI {
       $event_handler = rules_get_event_handler($event_name, $this->rule->getEventSettings($event_name));
 
       $event_operations = array(
-        '#theme' => 'links__rules',
-        '#attributes' => array(
-          'class' => array(
-            'rules-operations',
-            'action-links',
-            'rules_rule_event',
-          ),
-        ),
-        '#links' => array(
-          'delete_event' => array(
-            'title' => t('delete'),
-            'href' => RulesPluginUI::path($this->rule->name, 'delete/event/' . $event_name),
-            'query' => backdrop_get_destination(),
+        'data' => array(
+          '#type' => 'dropbutton',
+          '#links' => array(
+            'delete_event' => array(
+              'title' => t('delete'),
+              'href' => RulesPluginUI::path($this->rule->name, 'delete/event/' . $event_name),
+              'query' => backdrop_get_destination(),
+            ),
           ),
         ),
       );
-
       $form['events']['table']['#rows'][$event_name] = array(
         'data' => array(
           $event_handler->summary(),
