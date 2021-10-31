@@ -106,21 +106,41 @@ function rules_events_node_variables($node_label, $update = FALSE) {
 function rules_node_action_info() {
   $defaults = array(
     'parameter' => array(
-      'node' => array('type' => 'node', 'label' => t('Content'), 'save' => TRUE),
+      'node' => array(
+        'type' => 'node',
+        'label' => t('Content'),
+        'save' => TRUE,
+      ),
     ),
     'category' => 'node',
     'access callback' => 'rules_node_admin_access',
+    'group' => t('Content'),
   );
-  // Add support for hand-picked core actions.
-  $core_actions = node_action_info();
-  $actions = array('node_publish_action', 'node_unpublish_action', 'node_make_sticky_action', 'node_make_unsticky_action', 'node_promote_action', 'node_unpromote_action');
-  foreach ($actions as $base) {
-    $action_name = str_replace('_action', '', $base);
-    $items[$action_name] = $defaults + array(
-      'label' => $core_actions[$base]['label'],
-      'base' => $base,
-    );
-  }
+  $items['node_publish'] = $defaults + array(
+    'label' => t('Publish content'),
+    'base' => 'rules_action_node_publish',
+  );
+  $items['node_unpublish'] = $defaults + array(
+    'label' => t('Unpublish content'),
+    'base' => 'rules_action_node_unpublish',
+  );
+  $items['node_make_sticky'] = $defaults + array(
+    'label' => t('Make content sticky'),
+    'base' => 'rules_action_node_make_sticky',
+  );
+  $items['node_make_unsticky'] = $defaults + array(
+    'label' => t('Make content unsticky'),
+    'base' => 'rules_action_node_make_unsticky',
+  );
+  $items['node_promote'] = $defaults + array(
+    'label' => t('Promote content'),
+    'base' => 'rules_action_node_promote',
+  );
+  $items['node_unpromote'] = $defaults + array(
+    'label' => t('Unpromote content'),
+    'base' => 'rules_action_node_unpromote',
+  );
+
   return $items;
 }
 

@@ -8,6 +8,92 @@
  * @{
  */
 
+ /**
+ * Action: Sets the status of a node to 1 (published).
+ *
+ * @param Node $node
+ *   A node entity.
+ * @param $context
+ *   Contextual information about the triggered action.
+ *
+ * @ingroup actions
+ */
+function rules_action_node_publish(Node $node, $context = array()) {
+    $node->status = NODE_PUBLISHED;
+    $node->save();
+  }
+
+/**
+ * Action: Sets the status of a node to 0 (unpublished).
+ *
+ * @param Node $node
+ *   A node entity.
+ * @param $context
+ *   Contextual information about the triggered action..
+ *
+ * @ingroup actions
+ */
+function rules_action_node_unpublish(Node $node, $context = array()) {
+    $node->status = NODE_NOT_PUBLISHED;
+    $node->save();
+  }
+
+/**
+ * Action: Sets the sticky-at-top-of-list property of a node to 1.
+ *
+ * @param Node $node
+ *   A node entity.
+ * @param $context
+ *   Contextual information about the triggered action.
+ *
+ * @ingroup actions
+ */
+function rules_action_node_make_sticky(Node $node, $context = array()) {
+    $node->sticky = NODE_STICKY;
+    $node->save();
+  }
+
+/**
+ * Action: Sets the sticky-at-top-of-list property of a node to 0.
+ *
+ * @param Node $node
+ *   A node entity.
+ */
+function rules_action_node_make_unsticky(Node $node, $context = array()) {
+    $node->sticky = NODE_NOT_STICKY;
+    $node->save();
+  }
+
+/**
+ * Action: Sets the promote property of a node to 1.
+ *
+ * @param Node $node
+ *   A node entity.
+ * @param $context
+ *   Contextual information about the triggered action.
+ *
+ * @ingroup actions
+ */
+function rules_action_node_promote(Node $node, $context = array()) {
+    $node->promote = NODE_PROMOTED;
+    $node->save();
+  }
+
+  /**
+ * Action: Sets the promote property of a node to 0.
+ *
+ * @param Node $node
+ *   A node entity.
+ * @param $context
+ *   Contextual information about the triggered action.
+ *
+ * @ingroup actions
+ */
+function rules_action_node_unpromote(Node $node, $context = array()) {
+    $node->promote = NODE_NOT_PROMOTED;
+    $node->save();
+  }
+
 /**
  * Base class providing node condition defaults.
  */
