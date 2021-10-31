@@ -109,7 +109,7 @@ function rules_test_rules_action_info() {
       'callbacks' => array(
         'help' => 'rules_test_custom_help',
       ),
-      'base' => 'node_publish_action',
+      'base' => 'rules_action_node_publish',
     ),
     'rules_node_publish_action_save' => array(
       'label' => t('Publish content'),
@@ -120,7 +120,7 @@ function rules_test_rules_action_info() {
           'save' => TRUE,
         ),
       ),
-      'base' => 'node_publish_action',
+      'base' => 'rules_action_node_publish',
     ),
     'rules_node_make_sticky_action' => array(
       'label' => t('Make content sticky'),
@@ -131,7 +131,7 @@ function rules_test_rules_action_info() {
           'save' => TRUE,
         ),
       ),
-      'base' => 'node_make_sticky_action',
+      'base' => 'rules_action_make_sticky',
     ),
     // The same action again requiring a 'page' node.
     'rules_node_page_make_sticky_action' => array(
@@ -144,7 +144,7 @@ function rules_test_rules_action_info() {
           'bundles' => array('page'),
         ),
       ),
-      'base' => 'node_make_sticky_action',
+      'base' => 'rules_action_make_sticky',
     ),
     'rules_action_test_reference' => array(
       'label' => t('Change argument passed by reference'),
