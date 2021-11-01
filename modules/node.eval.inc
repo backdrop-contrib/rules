@@ -5,6 +5,7 @@
  * Contains rules integration for the node module needed during evaluation.
  *
  * @addtogroup rules
+ *
  * @{
  */
 
@@ -108,10 +109,11 @@ abstract class RulesNodeConditionBase extends RulesConditionHandlerBase {
       'access callback' => 'rules_node_integration_access',
     );
   }
+
 }
 
 /**
- * Condition: Check for selected content types
+ * Condition: Check for selected content types.
  */
 class RulesNodeConditionType extends RulesNodeConditionBase {
 
@@ -144,9 +146,10 @@ class RulesNodeConditionType extends RulesNodeConditionBase {
   /**
    * Provides the content type of a node as asserted metadata.
    */
-  function assertions() {
+  public function assertions() {
     return array('node' => array('bundle' => $this->element->settings['type']));
   }
+
 }
 
 /**
@@ -170,6 +173,7 @@ class RulesNodeConditionPublished extends RulesNodeConditionBase {
   public function execute($node) {
     return $node->status == 1;
   }
+
 }
 
 /**
@@ -193,10 +197,11 @@ class RulesNodeConditionSticky extends RulesNodeConditionBase {
   public function execute($node) {
     return $node->sticky == 1;
   }
+
 }
 
 /**
- * Condition: Check if the node is promoted to the frontpage
+ * Condition: Check if the node is promoted to the frontpage.
  */
 class RulesNodeConditionPromoted extends RulesNodeConditionBase {
 
@@ -216,8 +221,9 @@ class RulesNodeConditionPromoted extends RulesNodeConditionBase {
   public function execute($node) {
     return $node->promote == 1;
   }
+
 }
 
 /**
- * @}
+ * @} End of "addtogroup rules"
  */
