@@ -903,7 +903,18 @@ function rules_hook_info() {
  */
 function rules_config_load_multiple($names = array(), $conditions = array()) {
   module_load_include('inc', 'rules', 'includes/entity.functions');
-  return entity_load_multiple_by_name('rules_config', $names, $conditions);
+  $entity_type = 'rules_config';
+  $entities = entity_load($entity_type, $names, $conditions);
+  $info = entity_get_info($entity_type);
+  if (!isset($info['entity keys']['name'])) {
+    return $entities;
+  }
+  $ret = array();
+  foreach ($entities as $entity) {
+    $key = isset($entity->$property) ? $entity->$property : NULL;
+    $ret[$key] = $entity;
+  }
+  return $ret;
 }
 
 /**
@@ -1297,7 +1308,7 @@ function rules_permission() {
   // Fetch all components to generate the access keys.
   $conditions['plugin'] = array_keys(rules_filter_array(rules_fetch_data('plugin_info'), 'component', TRUE));
   $conditions['access_exposed'] = 1;
-  $components = entity_load('rules_config', FALSE, $conditions);
+  $components = entity_load_multiple('rules_config', FALSE, $conditions);
   $perms += rules_permissions_by_component($components);
 
   return $perms;

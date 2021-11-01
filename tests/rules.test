@@ -259,7 +259,7 @@ class RulesTestCase extends BackdropWebTestCase {
 
     // Delete.
     $rule2->delete();
-    $this->assertEqual(entity_load('rules_config', FALSE, array('id' => $rule->id)), array(), 'Deleted.');
+    $this->assertEqual(entity_load_multiple('rules_config', FALSE, array('id' => $rule->id)), array(), 'Deleted.');
 
     // Tests CRUD for tags - making sure the tags are stored properly..
     $rule = $this->createTestRule();
@@ -284,7 +284,7 @@ class RulesTestCase extends BackdropWebTestCase {
     $rule2 = $this->createTestRule();
     $rule2->tags = array($this->randomName());
     $rule2->save();
-    $loaded = entity_load('rules_config', FALSE, array('tags' => array($rule->tags[0], $rule2->tags[0])));
+    $loaded = entity_load_multiple('rules_config', FALSE, array('tags' => array($rule->tags[0], $rule2->tags[0])));
     $this->assertTrue($loaded[$rule->id]->id == $rule->id && $loaded[$rule2->id]->id == $rule2->id, 'Loading configs by tags');
     // Try deleting.
     $rule->delete();

@@ -20,7 +20,7 @@ function rules_action_entity_fetch($type, $id, $revision) {
     $conditions = array($info['entity keys']['revision'] => $revision);
   }
 
-  $return = entity_load($type, array($id), isset($conditions) ? $conditions : array());
+  $return = entity_load_multiple($type, array($id), isset($conditions) ? $conditions : array());
   $entity = reset($return);
   if (!$entity) {
     throw new RulesEvaluationException('Unable to load @entity with id "@id"', array('@id' => $id, '@entity' => $type));

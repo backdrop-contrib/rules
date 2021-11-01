@@ -207,7 +207,7 @@ class RulesUIController {
       RulesPluginUI::$basePath = current_path();
     }
 
-    $entities = entity_load('rules_config', FALSE, $conditions);
+    $entities = entity_load_multiple('rules_config', FALSE, $conditions);
     ksort($entities);
 
     // Prepare some variables used by overviewTableRow().
