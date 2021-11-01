@@ -11,18 +11,6 @@
 class RulesI18nTestCase extends BackdropWebTestCase {
 
   /**
-   * Declares test metadata.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Rules I18n',
-      'description' => 'Tests translating Rules configs.',
-      'group' => 'Rules',
-      'dependencies' => array('i18n_string'),
-    );
-  }
-
-  /**
    * Overrides BackdropWebTestCase::setUp().
    */
   protected function setUp() {
@@ -42,7 +30,7 @@ class RulesI18nTestCase extends BackdropWebTestCase {
   /**
    * Copied from i18n module (class Backdropi18nTestCase).
    *
-   * We cannot extend from Backdropi18nTestCase as else the test-bot would die.
+   * We cannot extend from Backdropi18nTestCase or the test-bot would die.
    */
   public function addLanguage($language_code) {
     // Check to make sure that language has not already been installed.

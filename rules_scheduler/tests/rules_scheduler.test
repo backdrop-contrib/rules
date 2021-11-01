@@ -11,17 +11,6 @@
 class RulesSchedulerTestCase extends BackdropWebTestCase {
 
   /**
-   * Declares test metadata.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Rules Scheduler tests',
-      'description' => 'Test scheduling components.',
-      'group' => 'Rules',
-    );
-  }
-
-  /**
    * Overrides BackdropWebTestCase::setUp().
    */
   protected function setUp() {
