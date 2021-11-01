@@ -58,7 +58,7 @@ function rules_action_backdrop_goto($url, $force = FALSE, $destination = FALSE) 
     unset($_GET['destination']);
   }
   // We don't invoke backdrop_goto() right now, as this would end the the current
-  // page execution unpredictly for modules. So we'll take over backdrop_goto()
+  // page execution unpredictably for modules. So we'll take over backdrop_goto()
   // calls from somewhere else via hook_backdrop_goto_alter() and make sure
   // a backdrop_goto() is invoked before the page is output with
   // rules_page_build().
