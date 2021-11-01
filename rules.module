@@ -286,7 +286,10 @@ function rules_fetch_data($hook) {
     }
     // Support class discovery.
     if (isset($discover[$hook])) {
-      $data[$hook] += rules_discover_plugins($discover[$hook]);
+      $discovered_plugins = rules_discover_plugins($discover[$hook]);
+      if (is_array($discovered_plugins)) {
+        $data[$hook] += $discovered_plugins;
+      }
     }
     backdrop_alter('rules_' . $hook, $data[$hook]);
   }
@@ -904,7 +907,10 @@ function rules_hook_info() {
 function rules_config_load_multiple($names = array(), $conditions = array()) {
   module_load_include('inc', 'rules', 'includes/entity.functions');
   $entity_type = 'rules_config';
-  $entities = entity_load($entity_type, $names, $conditions);
+  if (empty($names)) {
+    $names = FALSE;
+  }
+  $entities = entity_load_multiple($entity_type, $names, $conditions);
   $info = entity_get_info($entity_type);
   if (!isset($info['entity keys']['name'])) {
     return $entities;
@@ -1307,9 +1313,11 @@ function rules_permission() {
 
   // Fetch all components to generate the access keys.
   $conditions['plugin'] = array_keys(rules_filter_array(rules_fetch_data('plugin_info'), 'component', TRUE));
-  $conditions['access_exposed'] = 1;
-  $components = entity_load_multiple('rules_config', FALSE, $conditions);
-  $perms += rules_permissions_by_component($components);
+  if (!empty($conditions['plugin'])) {
+    $conditions['access_exposed'] = 1;
+    $components = entity_load_multiple('rules_config', FALSE, $conditions);
+    $perms += rules_permissions_by_component($components);
+  }
 
   return $perms;
 }
