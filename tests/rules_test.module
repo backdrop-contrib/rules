@@ -5,6 +5,8 @@
  * Rules test module.
  */
 
+ module_load_include('inc', 'rules_test', 'rules_test.rules');
+
 /**
  * Implements hook_entity_property_info_alter() to add a property without
  * access.

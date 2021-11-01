@@ -18,7 +18,7 @@ class RulesPHPEvaluator extends RulesDataInputEvaluator {
    * Overrides RulesDataProcessor::editAccess().
    */
   public function editAccess() {
-    return parent::editAccess() && (user_access('use PHP for settings') || drupal_is_cli());
+    return parent::editAccess() && (user_access('use PHP for settings') || backdrop_is_cli());
   }
 
   /**
@@ -112,7 +112,7 @@ class RulesPHPDataProcessor extends RulesDataProcessor {
    * Overrides RulesDataProcessor::editAccess().
    */
   public function editAccess() {
-    return parent::editAccess() && (user_access('use PHP for settings') || drupal_is_cli());
+    return parent::editAccess() && (user_access('use PHP for settings') || backdrop_is_cli());
   }
 
   /**

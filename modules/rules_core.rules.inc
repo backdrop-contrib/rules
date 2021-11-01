@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Rules integration with Drupal core.
+ * Rules integration with Backdrop core.
  *
  * Provides data types, conditions, and actions to invoke configured components.
  *

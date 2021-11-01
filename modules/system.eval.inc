@@ -19,7 +19,7 @@ function rules_action_backdrop_message($message, $status, $repeat) {
 /**
  * Action: Write a watchdog db log message.
  */
-function rules_action_drupal_watchdog($type, $message, $severity, $link_text, $link_path) {
+function rules_action_backdrop_watchdog($type, $message, $severity, $link_text, $link_path) {
   if (!empty($link_path)) {
     // Use $link_path for the text if no specific text was supplied.
     $link = l(!empty($link_text) ? $link_text : $link_path, url($link_path));

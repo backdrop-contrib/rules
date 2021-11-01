@@ -8,7 +8,7 @@
 /**
  * Test cases for the Rules Scheduler module.
  */
-class RulesSchedulerTestCase extends DrupalWebTestCase {
+class RulesSchedulerTestCase extends BackdropWebTestCase {
 
   /**
    * Declares test metadata.
@@ -22,7 +22,7 @@ class RulesSchedulerTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Overrides DrupalWebTestCase::setUp().
+   * Overrides BackdropWebTestCase::setUp().
    */
   protected function setUp() {
     parent::setUp('rules_scheduler', 'rules_scheduler_test');
@@ -104,11 +104,11 @@ class RulesSchedulerTestCase extends DrupalWebTestCase {
     $this->assertFalse($node->status, 'The component has been properly scheduled.');
 
     // Create a simple user account with permission to see the dblog.
-    $user = $this->drupalCreateUser(array('access site reports'));
-    $this->drupalLogin($user);
+    $user = $this->backdropCreateUser(array('access site reports'));
+    $this->backdropLogin($user);
 
     // View the database log.
-    $this->drupalGet('admin/reports/dblog');
+    $this->backdropGet('admin/reports/dblog');
 
     // Can't use
     // $this->clickLink('Rules debug information: " Scheduled evaluation...')
@@ -122,7 +122,7 @@ class RulesSchedulerTestCase extends DrupalWebTestCase {
     // Strip off /?q= from href.
     $href = explode('=', $links[1]['href']);
     // Click the link for the RulesLog entry.
-    $this->drupalGet($href[1]);
+    $this->backdropGet($href[1]);
     $this->assertRaw(RulesTestCase::t('Not evaluating reaction rule %unlabeled to prevent recursion.', array('unlabeled' => $rule->name)), "Scheduled recursion prevented.");
     RulesLog::logger()->checkLog();
   }

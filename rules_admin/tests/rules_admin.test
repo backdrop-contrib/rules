@@ -8,7 +8,7 @@
 /**
  * Tests for creating rules through the UI.
  */
-class RulesUiTestCase extends DrupalWebTestCase {
+class RulesUiTestCase extends BackdropWebTestCase {
 
   /**
    * Declares test metadata.
@@ -22,7 +22,7 @@ class RulesUiTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Overrides DrupalWebTestCase::setUp().
+   * Overrides BackdropWebTestCase::setUp().
    */
   protected function setUp() {
     parent::setUp('rules', 'rules_admin', 'rules_test');
@@ -37,17 +37,17 @@ class RulesUiTestCase extends DrupalWebTestCase {
    */
   public function testConditionLabel() {
     // Create a simple user account with permission to create a rule.
-    $user = $this->drupalCreateUser(array('access administration pages', 'administer rules'));
-    $this->drupalLogin($user);
+    $user = $this->backdropCreateUser(array('access administration pages', 'administer rules'));
+    $this->backdropLogin($user);
 
     // First we need an event.
-    $this->drupalGet('admin/config/workflow/rules/reaction/add');
+    $this->backdropGet('admin/config/workflow/rules/reaction/add');
     $edit = array(
       'settings[label]' => 'Test node event',
       'settings[name]' => 'test_node_event',
       'event' => 'node_insert',
     );
-    $this->drupalPost(NULL, $edit, 'Save');
+    $this->backdropPost(NULL, $edit, 'Save');
     $this->assertText('Editing reaction rule', 'Rule edit page is shown.');
 
     // Now add a condition with a special character in the label.
@@ -56,13 +56,13 @@ class RulesUiTestCase extends DrupalWebTestCase {
     $edit = array(
       'element_name' => 'rules_test_condition_apostrophe',
     );
-    $this->drupalPost(NULL, $edit, 'Continue');
+    $this->backdropPost(NULL, $edit, 'Continue');
 
     // Negate the condition, as this is how it gets improperly HTML encoded.
     $edit = array(
       'negate' => TRUE,
     );
-    $this->drupalPost(NULL, $edit, 'Save');
+    $this->backdropPost(NULL, $edit, 'Save');
     $this->assertNoRaw("&amp;#039;", 'Apostrophe is not HTML-encoded.');
   }
 
@@ -73,23 +73,23 @@ class RulesUiTestCase extends DrupalWebTestCase {
    */
   public function testContainerPluginLabel() {
     // Create a simple user account with permission to create a rule.
-    $user = $this->drupalCreateUser(array('access administration pages', 'administer rules'));
-    $this->drupalLogin($user);
+    $user = $this->backdropCreateUser(array('access administration pages', 'administer rules'));
+    $this->backdropLogin($user);
 
     // First we need an event.
-    $this->drupalGet('admin/config/workflow/rules/reaction/add');
+    $this->backdropGet('admin/config/workflow/rules/reaction/add');
     $edit = array(
       'settings[label]' => 'Test node event',
       'settings[name]' => 'test_node_event',
       'event' => 'node_insert',
     );
-    $this->drupalPost(NULL, $edit, 'Save');
+    $this->backdropPost(NULL, $edit, 'Save');
     $this->assertText('Editing reaction rule', 'Rule edit page is shown.');
 
     // Now add an OR condition container.
     $this->clickLink('Add or');
     $this->assertText('Add a new condition set (OR)', 'Condition set add confirmation is shown.');
-    $this->drupalPost(NULL, array(), 'Continue');
+    $this->backdropPost(NULL, array(), 'Continue');
     $this->assertRaw('<div class="rules-element-label">OR</div>', 'Condition set label is shown.');
   }
 
@@ -100,12 +100,12 @@ class RulesUiTestCase extends DrupalWebTestCase {
    */
   public function testComponentVariables() {
     // Create a simple user account with permission to create a rule.
-    $user = $this->drupalCreateUser(array(
+    $user = $this->backdropCreateUser(array(
       'access administration pages',
       'administer rules',
       'bypass rules access',
     ));
-    $this->drupalLogin($user);
+    $this->backdropLogin($user);
 
     // Variables cannot be set/changed for code-provided components, so we must
     // build our test component here.
@@ -116,7 +116,7 @@ class RulesUiTestCase extends DrupalWebTestCase {
     $action_set->save('rules_test_variables');
 
     // Verify that our test component appears in the UI.
-    $this->drupalGet('admin/config/workflow/rules/components');
+    $this->backdropGet('admin/config/workflow/rules/components');
     $this->assertText(
       'rules_test_variables',
       'Test component is defined.'
@@ -159,7 +159,7 @@ class RulesUiTestCase extends DrupalWebTestCase {
       'settings[vars][items][0][label]' => 'Integer value',
       'settings[vars][items][0][name]' => 'integer_value',
     );
-    $this->drupalPost(NULL, $edit, 'Save changes');
+    $this->backdropPost(NULL, $edit, 'Save changes');
     $this->assertFieldByName(
       'settings[vars][items][node][label]',
       'Input node',
@@ -183,7 +183,7 @@ class RulesUiTestCase extends DrupalWebTestCase {
       'settings[vars][items][0][label]' => 'Decimal value',
       'settings[vars][items][0][name]' => 'decimal_value',
     );
-    $this->drupalPostAjax(NULL, $edit, array('op' => 'Add more'));
+    $this->backdropPostAjax(NULL, $edit, array('op' => 'Add more'));
     $this->assertFieldByName(
       'settings[vars][items][node][label]',
       'Input node',
@@ -213,16 +213,16 @@ class RulesUiTestCase extends DrupalWebTestCase {
    */
   public function testComponentPermissions() {
     // Create a simple user account with permission to create a rule.
-    $user = $this->drupalCreateUser(array(
+    $user = $this->backdropCreateUser(array(
       'access administration pages',
       'administer rules',
       'bypass rules access',
     ));
-    $this->drupalLogin($user);
+    $this->backdropLogin($user);
 
     // The rules_test module defines the component 'rules_test_action_set'.
     // Verify that this code-provided component appears in the UI.
-    $this->drupalGet('admin/config/workflow/rules/components');
+    $this->backdropGet('admin/config/workflow/rules/components');
     $this->assertText(
       'rules_test_action_set',
       'Test component is defined.'
@@ -245,7 +245,7 @@ class RulesUiTestCase extends DrupalWebTestCase {
       'settings[access][access_exposed]' => TRUE,
       'settings[access][permissions][matrix][checkboxes][1][use Rules component rules_test_action_set]' => TRUE,
     );
-    $this->drupalPost(NULL, $edit, 'Save changes');
+    $this->backdropPost(NULL, $edit, 'Save changes');
   }
 
   /**
@@ -258,12 +258,12 @@ class RulesUiTestCase extends DrupalWebTestCase {
    */
   public function testOverrideStatus() {
     // Create a simple user account with permission to create a rule.
-    $user = $this->drupalCreateUser(array(
+    $user = $this->backdropCreateUser(array(
       'access administration pages',
       'administer rules',
       'bypass rules access',
     ));
-    $this->drupalLogin($user);
+    $this->backdropLogin($user);
 
     // The rules_test module defines the rule 'rules_test_default_1' in code.
     // Ensure this rule has status equals ENTITY_IN_CODE.
@@ -274,7 +274,7 @@ class RulesUiTestCase extends DrupalWebTestCase {
     );
 
     // Verify the code-provided rule appears in the UI.
-    $this->drupalGet('admin/config/workflow/rules');
+    $this->backdropGet('admin/config/workflow/rules');
     $this->assertText(
       'example default rule',
       'Example default rule is defined in code.'
@@ -287,12 +287,12 @@ class RulesUiTestCase extends DrupalWebTestCase {
     // Now we need to overwrite the 'rules_test_default_1' rule in the
     // database by importing a rule with the same id and forcing the overwrite.
     // First check that importing fails if the 'overwrite' box is not checked.
-    $this->drupalGet('admin/config/workflow/rules/reaction/import');
+    $this->backdropGet('admin/config/workflow/rules/reaction/import');
     $edit = array(
       'import' => $this->getTestRuleExport('rules_test_default_1'),
       'overwrite' => FALSE,
     );
-    $this->drupalPost(NULL, $edit, 'Import');
+    $this->backdropPost(NULL, $edit, 'Import');
     $this->assertText(
       'Import of Rules configuration example imported default rule failed, a Rules configuration with the same machine name already exists. Check the overwrite option to replace it.',
       'Rule overwrite failed.'
@@ -303,7 +303,7 @@ class RulesUiTestCase extends DrupalWebTestCase {
       'import' => $this->getTestRuleExport('rules_test_default_1'),
       'overwrite' => TRUE,
     );
-    $this->drupalPost(NULL, $edit, 'Import');
+    $this->backdropPost(NULL, $edit, 'Import');
 
     // Verify that the overwritten rule now has a status of ENTITY_OVERRIDDEN.
     $this->assertText(
@@ -337,7 +337,7 @@ class RulesUiTestCase extends DrupalWebTestCase {
 
     // Revert the overridden rule and verify it's back to its original status.
     $this->clickLink('revert');
-    $this->drupalPost(NULL, array(), 'Confirm');
+    $this->backdropPost(NULL, array(), 'Confirm');
     $this->assertText(
       'example default rule',
       'Example default rule original label restored.'
@@ -368,7 +368,7 @@ class RulesUiTestCase extends DrupalWebTestCase {
       { "NOT data_is" : { "data" : [ "node:status" ], "value" : true } },
       { "data_is" : { "data" : [ "node:type" ], "value" : "page" } }
     ],
-    "DO" : [ { "drupal_message" : { "message" : "A node has been updated." } } ]
+    "DO" : [ { "backdrop_message" : { "message" : "A node has been updated." } } ]
   }
 }';
   }

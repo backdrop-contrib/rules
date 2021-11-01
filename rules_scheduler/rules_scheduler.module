@@ -7,6 +7,8 @@
 
 define('RULES_SCHEDULER_PATH', 'admin/config/workflow/rules/schedule');
 
+module_load_include('inc', 'rules_scheduler', 'rules_scheduler.rules');
+
 /**
  * Implements hook_cron().
  */

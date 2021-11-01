@@ -21,12 +21,12 @@ foreach (rules_core_modules() as $module) {
  * for providing some general stuff.
  */
 function rules_core_modules() {
-  // Make use of the fast, advanced drupal static pattern.
-  static $drupal_static_fast;
-  if (!isset($drupal_static_fast)) {
-    $drupal_static_fast = &drupal_static(__FUNCTION__);
+  // Make use of the fast, advanced Backdrop static pattern.
+  static $backdrop_static_fast;
+  if (!isset($backdrop_static_fast)) {
+    $backdrop_static_fast = &backdrop_static(__FUNCTION__);
   }
-  $modules = &$drupal_static_fast;
+  $modules = &$backdrop_static_fast;
 
   if (!isset($modules)) {
     $modules = array('data', 'entity', 'node', 'system', 'user', 'rules_core');
@@ -56,12 +56,12 @@ function _rules_rules_collect_items($hook) {
  * Implements hook_rules_file_info().
  */
 function rules_rules_file_info() {
-  // Make use of the fast, advanced drupal static pattern.
-  static $drupal_static_fast;
-  if (!isset($drupal_static_fast)) {
-    $drupal_static_fast = &drupal_static(__FUNCTION__);
+  // Make use of the fast, advanced Backdrop static pattern.
+  static $backdrop_static_fast;
+  if (!isset($backdrop_static_fast)) {
+    $backdrop_static_fast = &backdrop_static(__FUNCTION__);
   }
-  $items = &$drupal_static_fast;
+  $items = &$backdrop_static_fast;
   if (!isset($items)) {
     $items = array();
     foreach (rules_core_modules() as $module) {

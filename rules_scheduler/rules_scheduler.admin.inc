@@ -11,17 +11,12 @@
 function rules_scheduler_schedule_page() {
   // Display view for all scheduled tasks
   $task_list = "";
-  if (module_exists('views')) {
-    // We cannot use views_embed_view() here as we need to set the path for the
-    // component filter form.
-    $view = views_get_view('rules_scheduler');
-    if ($view){
-        $view->override_path = RULES_SCHEDULER_PATH;
-        $task_list = $view->preview();
-    }
-  }
-  else {
-    $task_list = t('To display scheduled tasks you have to install the <a href="https://www.drupal.org/project/views">Views</a> module.');
+  // We cannot use views_embed_view() here as we need to set the path for the
+  // component filter form.
+  $view = views_get_view('rules_scheduler');
+  if ($view){
+      $view->override_path = RULES_SCHEDULER_PATH;
+      $task_list = $view->preview();
   }
   $page['task_view'] = array(
     '#markup' => $task_list,

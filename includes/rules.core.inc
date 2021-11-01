@@ -1037,7 +1037,7 @@ abstract class RulesPlugin extends RulesExtendable {
     if (!empty($this->settings[$name . ':process'])) {
       // For processing, make sure the data is unwrapped now.
       $return = rules_unwrap_data(array($arg), array($info));
-      // @todo For Drupal 8: Refactor to add the name and language code as
+      // @todo Refactor to add the name and language code as
       // separate parameter to process().
       $info['#name'] = $name;
       $info['#langcode'] = $langcode;
@@ -1169,7 +1169,7 @@ abstract class RulesPlugin extends RulesExtendable {
       // default configurations 'module' points to the module providing the
       // default configuration, so the module via which the rules is configured
       // is stored in the "owner" property.
-      // @todo For Drupal 8 use "owner" for generating machine names also and
+      // @todo Use "owner" for generating machine names also and
       // module only for the modules providing default configurations.
       $this->module = !isset($this->module) || $module != 'rules' ? $module : $this->module;
       if (!isset($this->owner)) {

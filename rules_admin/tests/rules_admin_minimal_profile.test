@@ -14,7 +14,7 @@
  * define any content types, so when Rules expects to have content types to
  * operate on that assumption may cause errors.
  */
-class RulesAdminMinimalProfileTestCase extends DrupalWebTestCase {
+class RulesAdminMinimalProfileTestCase extends BackdropWebTestCase {
 
   /**
    * {@inheritdoc}
@@ -33,7 +33,7 @@ class RulesAdminMinimalProfileTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Overrides DrupalWebTestCase::setUp().
+   * Overrides BackdropWebTestCase::setUp().
    */
   protected function setUp() {
     parent::setUp('rules', 'rules_admin');
@@ -48,18 +48,18 @@ class RulesAdminMinimalProfileTestCase extends DrupalWebTestCase {
    */
   public function testNodeEventUi() {
     // Create a simple user account with permission to create a rule.
-    $user = $this->drupalCreateUser(array('access administration pages', 'administer rules'));
-    $this->drupalLogin($user);
+    $user = $this->backdropCreateUser(array('access administration pages', 'administer rules'));
+    $this->backdropLogin($user);
 
-    $this->drupalGet('admin/config/workflow/rules/reaction/add');
+    $this->backdropGet('admin/config/workflow/rules/reaction/add');
     $edit = array(
       'settings[label]' => 'Test node event',
       'settings[name]' => 'test_node_event',
       'event' => 'node_insert',
     );
-    $this->drupalPostAJAX(NULL, $edit, 'event');
+    $this->backdropPostAJAX(NULL, $edit, 'event');
     $this->assertText('Restrict by type', 'Restrict by type selection is visible.');
-    $this->drupalPost(NULL, $edit, 'Save');
+    $this->backdropPost(NULL, $edit, 'Save');
     $this->assertText('Editing reaction rule', 'Rule edit page is shown.');
   }
 

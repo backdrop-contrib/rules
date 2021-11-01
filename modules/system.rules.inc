@@ -128,7 +128,7 @@ function rules_system_action_info() {
       'base' => 'rules_action_backdrop_message',
       'access callback' => 'rules_system_integration_access',
     ),
-    'drupal_watchdog' => array(
+    'backdrop_watchdog' => array(
       'label' => t('Logs a message to the system dblog'),
       'group' => t('System'),
       'parameter' => array(
@@ -159,11 +159,11 @@ function rules_system_action_info() {
         'link_path' => array(
           'type' => 'uri',
           'label' => t('Link path'),
-          'description' => t('A Drupal path or path alias. Enter (optional) queries after "?" and (optional) anchor after "#".'),
+          'description' => t('A Backdrop path or path alias. Enter (optional) queries after "?" and (optional) anchor after "#".'),
           'optional' => TRUE,
         ),
       ),
-      'base' => 'rules_action_drupal_watchdog',
+      'base' => 'rules_action_backdrop_watchdog',
       'access callback' => 'rules_system_integration_access',
     ),
     'redirect' => array(

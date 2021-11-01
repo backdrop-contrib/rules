@@ -223,11 +223,11 @@ class RulesNumericOffsetProcessor extends RulesDataProcessor {
       '#description' => t('Add an offset to the selected number. E.g. an offset of "1" adds 1 to the number before it is passed on as argument.'),
     );
     $form['value'] = array(
-      '#type' => 'textfield',
+      '#type' => 'number',
       '#title' => t('Offset'),
       '#description' => t('Note that you can also specify negative numbers.'),
       '#default_value' => $settings['value'],
-      '#element_validate' => array('rules_ui_element_integer_validate'),
+      '#step' => 1,
       '#weight' => 5,
     );
     return $form;

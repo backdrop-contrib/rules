@@ -49,21 +49,21 @@ function rules_drush_command() {
     'arguments' => array(
       'rule' => 'Rule name to revert.',
     ),
-    'drupal dependencies' => array('rules'),
+    'backdrop dependencies' => array('rules'),
   );
   $items['rules-delete'] = array(
     'description' => 'Delete a rule on your site.',
     'arguments' => array(
       'rule' => 'Rules name to delete.',
     ),
-    'drupal dependencies' => array('rules'),
+    'backdrop dependencies' => array('rules'),
   );
   $items['rules-export'] = array(
     'description' => 'Export a rule.',
     'arguments' => array(
       'rule' => 'Rules name to export.',
     ),
-    'drupal dependencies' => array('rules'),
+    'backdrop dependencies' => array('rules'),
   );
 
   return $items;

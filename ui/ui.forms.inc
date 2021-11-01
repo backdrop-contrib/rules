@@ -813,7 +813,7 @@ function rules_ui_form_data_selection_auto_completion($parameter, $form_build_id
 /**
  * FAPI validation of an integer element.
  *
- * Copy of the core Drupal private function _element_validate_integer().
+ * Copy of the core Drupal 7 private function _element_validate_integer().
  */
 function rules_ui_element_integer_validate($element, &$form_state) {
   $value = $element['#value'];
@@ -876,9 +876,9 @@ function rules_ui_element_date_validate($element, &$form_state) {
  */
 function rules_ui_element_duration_process($element, &$form_state) {
   $element['value'] = array(
-    '#type' => 'textfield',
-    '#size' => 8,
-    '#element_validate' => array('rules_ui_element_integer_validate'),
+    '#type' => 'number',
+    '#max' => 99999999,
+    '#step' => 1,
     '#default_value' => $element['#default_value'],
     '#required' => !empty($element['#required']),
   );

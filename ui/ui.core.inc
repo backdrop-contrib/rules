@@ -441,7 +441,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
       '#required' => TRUE,
       '#weight' => -5,
     );
-    // @todo For Drupal 8 use "owner" for generating machine names and
+    // @todo Use "owner" for generating machine names and
     // module only for the modules providing default configurations.
     if (!empty($this->element->module) && !empty($this->element->name) && $this->element->module == 'rules' && strpos($this->element->name, 'rules_') === 0) {
       // Remove the Rules module prefix from the machine name.

@@ -5,11 +5,6 @@
  * Rules engine module.
  */
 
-// The class autoloader may fail for classes added in 7.x-2.4 (Issue 2090511).
-if (!drupal_autoload_class('RulesEventHandlerEntityBundle')) {
-  require_once dirname(__FILE__) . '/includes/rules.event.inc';
-}
-
 // Include our hook implementations early, as they can be called even before
 // hook_init().
 require_once dirname(__FILE__) . '/modules/events.inc';
@@ -346,7 +341,7 @@ function rules_discover_plugins($class) {
  *   The name of the class or interface plugins to discover.
  *
  * @return string|false
- *   The path of the class, relative to the Drupal installation root,
+ *   The path of the class, relative to the Backdrop installation root,
  *   or FALSE if not discovered.
  */
 function _rules_discover_module($class) {
@@ -1612,10 +1607,10 @@ function rules_menu() {
  */
 function rules_external_help($topic = NULL) {
   $help = array(
-    'rules' =>                'https://www.drupal.org/node/298480',
-    'terminology' =>          'https://www.drupal.org/node/1299990',
-    'condition-components' => 'https://www.drupal.org/node/1300034',
-    'data-selection' =>       'https://www.drupal.org/node/1300042',
+    'rules' =>                'https://github.com/backdrop-contrib/rules/wiki/Rules-Core',
+    'terminology' =>          'https://github.com/backdrop-contrib/rules/wiki/Glossary',
+    'condition-components' => 'https://github.com/backdrop-contrib/rules/wiki/Logical-Operators',
+    'data-selection' =>       'https://github.com/backdrop-contrib/rules/wiki/Data-Objects',
     'chained-tokens' =>       'https://www.drupal.org/node/1300042',
     'loops' =>                'https://www.drupal.org/node/1300058',
     'components' =>           'https://www.drupal.org/node/1300024',

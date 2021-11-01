@@ -11,18 +11,7 @@
 class RulesTestCase extends BackdropWebTestCase {
 
   /**
-   * Declares test metadata.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Rules Engine tests',
-      'description' => 'Test using the rules API to create and evaluate rules.',
-      'group' => 'Rules',
-    );
-  }
-
-  /**
-   * Overrides DrupalWebTestCase::setUp().
+   * Overrides BackdropWebTestCase::setUp().
    */
   protected function setUp() {
     parent::setUp('rules', 'rules_test');
@@ -442,8 +431,8 @@ class RulesTestCase extends BackdropWebTestCase {
     $node = $this->backdropCreateNode(array(
       'body' => $body,
       'type' => 'page',
-      'summary' => ''),
-    );
+      'summary' => '',
+    ));
 
     $rule = rule(array('nid' => array('type' => 'integer')));
     $rule->action('rules_action_load_node')
@@ -961,17 +950,6 @@ class RulesTestCase extends BackdropWebTestCase {
 class RulesTestDataCase extends BackdropWebTestCase {
 
   /**
-   * Declares test metadata.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Rules Data tests',
-      'description' => 'Tests rules data saving and type matching.',
-      'group' => 'Rules',
-    );
-  }
-
-  /**
    * Overrides BackdropWebTestCase::setUp().
    */
   protected function setUp() {
@@ -1111,17 +1089,6 @@ class RulesTestDataCase extends BackdropWebTestCase {
  * Test triggering rules.
  */
 class RulesTriggerTestCase extends BackdropWebTestCase {
-
-  /**
-   * Declares test metadata.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Reaction Rules',
-      'description' => 'Tests triggering reactive rules.',
-      'group' => 'Rules',
-    );
-  }
 
   /**
    * Overrides BackdropWebTestCase::setUp().
@@ -1376,21 +1343,10 @@ class RulesTriggerTestCase extends BackdropWebTestCase {
 class RulesIntegrationTestCase extends BackdropWebTestCase {
 
   /**
-   * Declares test metadata.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Rules Core Integration',
-      'description' => 'Tests provided integration for backdrop core.',
-      'group' => 'Rules',
-    );
-  }
-
-  /**
    * Overrides BackdropWebTestCase::setUp().
    */
   protected function setUp() {
-    parent::setUp('rules', 'rules_test', 'php', 'path');
+    parent::setUp('rules', 'rules_test', 'path');
     RulesLog::logger()->clear();
     config_set('rules.settings','rules_debug_log', 1);
   }
@@ -2082,7 +2038,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
 
     // Execute action and check that only two mails were sent.
     rules_action('mail_to_users_of_role', $settings + array('roles' => array_keys($roles)))->execute();
-    $mails = $this->drupalGetMails();
+    $mails = $this->backdropGetMails();
     $this->assertEqual(count($mails), 2, '2 e-mails were sent to users of a role.');
 
     // Check each mail to ensure that only $user1 and $user2 got the mail.
@@ -2095,7 +2051,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     // This time check that three mails were sent - one for each user..
     config_set('rules_scheduler', 'backdrop_test_email_collector', array());
     rules_action('mail_to_users_of_role', $settings + array('roles' => array_keys($roles + $additional_roles)))->execute();
-    $mails = $this->drupalGetMails();
+    $mails = $this->backdropGetMails();
     $this->assertEqual(count($mails), 3, '3 e-mails were sent to users of multiple roles.');
 
     // Test reacting on new log entries and make sure the log entry is usable.
@@ -2149,18 +2105,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
 class RulesEventDispatcherTestCase extends BackdropWebTestCase {
 
   /**
-   * Declares test metadata.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Rules event dispatchers',
-      'description' => 'Tests event dispatcher functionality.',
-      'group' => 'Rules',
-    );
-  }
-
-  /**
-   * Overrides DrupalWebTestCase::setUp().
+   * Overrides BackdropWebTestCase::setUp().
    */
   protected function setUp() {
     parent::setUp('rules', 'rules_test');
@@ -2223,18 +2168,7 @@ class RulesEventDispatcherTestCase extends BackdropWebTestCase {
 class RulesInvocationEnabledTestCase extends BackdropWebTestCase {
 
   /**
-   * Declares test metadata.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Rules invocation enabled',
-      'description' => 'Tests that Rules events are enabled during menu item loads.',
-      'group' => 'Rules',
-    );
-  }
-
-  /**
-   * Overrides DrupalWebTestCase::setUp().
+   * Overrides BackdropWebTestCase::setUp().
    */
   protected function setUp() {
     parent::setUp('dblog', 'rules', 'rules_test', 'rules_test_invocation');

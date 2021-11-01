@@ -23,7 +23,7 @@ class RulesI18nTestCase extends BackdropWebTestCase {
   }
 
   /**
-   * Overrides DrupalWebTestCase::setUp().
+   * Overrides BackdropWebTestCase::setUp().
    */
   protected function setUp() {
     parent::setUp('rules_i18n');
