@@ -590,13 +590,11 @@ class RulesDataUIEntity extends RulesDataUIText {
   public static function inputForm($name, $info, $settings, RulesPlugin $element) {
     $form = parent::inputForm($name, $info, $settings, $element);
     if (empty($info['options list'])) {
+      $form[$name]['#type'] = 'textfield';
+
       $entity_info = entity_get_info($info['type']);
       if (empty($entity_info['entity keys']['name'])) {
-        $form[$name]['#type'] = 'number';
-        $form[$name]['#step'] = 1;
-      }
-      else {
-        $form[$name]['#type'] = 'textfield';
+        $form[$name]['#element_validate'][] = 'rules_ui_element_integer_validate';
       }
       $form[$name]['#title'] = t('@entity identifier', array('@entity' => $entity_info['label']));
       $entity_label = strtolower($entity_info['label'][0]) . substr($entity_info['label'], 1);
@@ -604,7 +602,6 @@ class RulesDataUIEntity extends RulesDataUIText {
     }
     return $form;
   }
-
 }
 
 /**

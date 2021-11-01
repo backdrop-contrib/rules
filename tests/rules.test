@@ -1352,6 +1352,16 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
   }
 
   /**
+   * Get the current URL from the cURL handler.
+   *
+   * @return
+   *   The current URL.
+   */
+  protected function getUrl() {
+    return $this->url;
+  }
+
+  /**
    * Just makes sure the access callback run without errors.
    */
   public function testAccessCallbacks() {
@@ -1553,7 +1563,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     // Also test a full rule so the integrity check must work.
     $term_wrapped = entity_plus_property_values_create_entity('taxonomy_term', array(
       'name' => $this->randomName(),
-      'vocabulary' => 1,
+      'vocabulary' => 'tags',
     ))->save();
     $rule = rule(array(
       'node' => array('type' => 'node'),
@@ -1823,13 +1833,13 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
 
     // Test assigning a role with the list_add action.
     $rule = rule(array('user' => array('type' => 'user')));
-    $rule->action('list_add', array('list:select' => 'user:roles', 'item' => $role));
+    $rule->action('list_add', array('list:select' => 'account:roles', 'item' => $role));
     $rule->execute($user);
     $this->assertTrue(isset($user->roles[$role]), 'Role assigned to user.');
 
     // Test removing a role with the list_remove action.
     $rule = rule(array('user' => array('type' => 'user')));
-    $rule->action('list_remove', array('list:select' => 'user:roles', 'item' => $role));
+    $rule->action('list_remove', array('list:select' => 'account:roles', 'item' => $role));
     $rule->execute($user);
     $this->assertTrue(!isset($user->roles[$role]), 'Role removed from user.');
 
@@ -1974,26 +1984,26 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     $condition = rules_condition('data_is', array('data:select' => 'site:current-user:name', 'value' => $GLOBALS['user']->name));
     $this->assertTrue($condition->execute(), 'Retrieved the current user\'s name.');
     // Another test using a token replacement.
-    $condition = rules_condition('data_is', array('data:select' => 'site:current-user:name', 'value' => '[site:current-user:name]'));
-    $this->assertTrue($condition->execute(), 'Replaced the token for the current user\'s name.');
+    $condition = rules_condition('data_is', array('data:select' => 'site:name', 'value' => '[site:name]'));
+    $this->assertTrue($condition->execute(), 'Replaced the token for the site name.');
 
     // Test breadcrumbs and backdrop set message.
     $rule = rules_reaction_rule();
     $rule->event('init')
-      ->action('breadcrumb_set', array('titles' => array('foo'), 'paths' => array('bar')))
+      ->action('breadcrumb_set', array('titles' => array('newcrumb'), 'paths' => array('node')))
       ->action('backdrop_message', array('message' => 'A message.'));
     $rule->save('test');
 
-    $this->backdropGet('node');
-    $this->assertLink('foo', 0, 'Breadcrumb has been set.');
+    $this->backdropGet('about');
+    $this->assertLink('newcrumb', 0, 'Breadcrumb has been set.');
     $this->assertText('A message.', 'Backdrop message has been shown.');
 
     // Test the page redirect.
-    $node = $this->backdropCreateNode();
     $rule = rules_reaction_rule();
     $rule->event('node_view')
-      ->action('redirect', array('url' => 'user'));
+      ->action('redirect', array('url' => 'user', 'force' => 1));
     $rule->save('test2');
+    $node = $this->backdropCreateNode();
 
     $this->backdropGet('node/' . $node->nid);
     $this->assertEqual($this->getUrl(), url('user', array('absolute' => TRUE)), 'Redirect has been issued.');
@@ -2012,7 +2022,8 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     $this->assertMail('to', 'mail@example.com', 'Mail has been sent.');
     $this->assertMail('from', config_get('system.core','site_mail'), 'Default from address has been used');
 
-    rules_action('mail', $settings + array('from' => 'sender@example.com'))->execute();
+    $settings['from'] = 'sender@example.com';
+    rules_action('mail', $settings)->execute();
     $this->assertMail('from', 'sender@example.com', 'Specified from address has been used');
 
     // Test sending mail to all users of a role. First clear the mail
