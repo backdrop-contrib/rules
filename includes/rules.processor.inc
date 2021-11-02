@@ -275,7 +275,7 @@ abstract class RulesDataInputEvaluator extends RulesDataProcessor {
       'sanitize' => FALSE,
     );
     $options = array_filter(array(
-      'language' => $info['#langcode'] != LANGUAGE_NONE && isset($languages[$info['#langcode']]) ? $languages[$info['#langcode']] : NULL,
+      'langcode' => $info['#langcode'] != LANGUAGE_NONE && isset($languages[$info['#langcode']]) ? $languages[$info['#langcode']] : NULL,
       'callback' => $info['cleaning callback'],
       'sanitize' => $info['sanitize'],
     ));

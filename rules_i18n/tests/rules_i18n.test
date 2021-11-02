@@ -32,33 +32,33 @@ class RulesI18nTestCase extends BackdropWebTestCase {
    *
    * We cannot extend from Backdropi18nTestCase or the test-bot would die.
    */
-  public function addLanguage($language_code) {
+  public function addLanguage($langcode) {
     // Check to make sure that language has not already been installed.
     $this->backdropGet('admin/config/regional/language');
 
-    if (strpos($this->backdropGetContent(), 'enabled[' . $language_code . ']') === FALSE) {
+    if (strpos($this->backdropGetContent(), 'enabled[' . $langcode . ']') === FALSE) {
       // Doesn't have language installed so add it.
       $edit = array();
-      $edit['langcode'] = $language_code;
+      $edit['langcode'] = $langcode;
       $this->backdropPost('admin/config/regional/language/add', $edit, t('Add language'));
 
       // Make sure we are not using a stale list.
       backdrop_static_reset('language_list');
-      $languages = language_list('language');
-      $this->assertTrue(array_key_exists($language_code, $languages), t('Language was installed successfully.'));
+      $languages = language_list();
+      $this->assertTrue(array_key_exists($langcode, $languages), t('Language was installed successfully.'));
 
-      if (array_key_exists($language_code, $languages)) {
-        $this->assertRaw(t('The language %language has been created and can now be used. More information is available on the <a href="@locale-help">help screen</a>.', array('%language' => $languages[$language_code]->name, '@locale-help' => url('admin/help/locale'))), t('Language has been created.'));
+      if (array_key_exists($langcode, $languages)) {
+        $this->assertRaw(t('The language %language has been created and can now be used. More information is available on the <a href="@locale-help">help screen</a>.', array('%language' => $languages[$langcode]->name, '@locale-help' => url('admin/help/locale'))), t('Language has been created.'));
       }
     }
-    elseif ($this->xpath('//input[@type="checkbox" and @name=:name and @checked="checked"]', array(':name' => 'enabled[' . $language_code . ']'))) {
+    elseif ($this->xpath('//input[@type="checkbox" and @name=:name and @checked="checked"]', array(':name' => 'enabled[' . $langcode . ']'))) {
       // It's installed and enabled. No need to do anything.
-      $this->assertTrue(TRUE, 'Language [' . $language_code . '] already installed and enabled.');
+      $this->assertTrue(TRUE, 'Language [' . $langcode . '] already installed and enabled.');
     }
     else {
       // It's installed but not enabled. Enable it.
-      $this->assertTrue(TRUE, 'Language [' . $language_code . '] already installed.');
-      $this->backdropPost(NULL, array('enabled[' . $language_code . ']' => TRUE), t('Save configuration'));
+      $this->assertTrue(TRUE, 'Language [' . $langcode . '] already installed.');
+      $this->backdropPost(NULL, array('enabled[' . $langcode . ']' => TRUE), t('Save configuration'));
       $this->assertRaw(t('Configuration saved.'), t('Language successfully enabled.'));
     }
   }
@@ -124,7 +124,7 @@ class RulesI18nTestCase extends BackdropWebTestCase {
     $set = rules_action_set(array());
     $set->action('rules_i18n_t', array(
       'text' => 'untranslated',
-      'language' => 'de',
+      'langcode' => 'de',
     ));
     $set->action('backdrop_message', array('message:select' => 'text'));
     $set->save('rules_i18n_test');
@@ -139,16 +139,6 @@ class RulesI18nTestCase extends BackdropWebTestCase {
     $set->execute();
     $messages = backdrop_get_messages();
     $this->assertEqual($messages['status'][0], 'text-de', 'Text has been successfully translated.');
-
-    // Enable the PHP module and make sure PHP in translations is not evaluated.
-    module_enable(array('php'));
-    i18n_string_textgroup('rules')->update_translation("rules_config:{$set->name}:$id:text", 'de', 'text <?php echo "eval";?>');
-
-    // Clear messages and execute it.
-    backdrop_get_messages();
-    $set->execute();
-    $messages = backdrop_get_messages();
-    $this->assertEqual($messages['status'][0], check_plain('text <?php echo "eval";?>'), 'PHP in translated text is not executed.');
   }
 
   /**
@@ -164,7 +154,7 @@ class RulesI18nTestCase extends BackdropWebTestCase {
     $set = rules_action_set(array('node' => array('type' => 'node')));
     $set->action('rules_i18n_select', array(
       'data:select' => 'node:body:value',
-      'language' => 'de',
+      'langcode' => 'de',
       'data_translated:var' => 'body',
     ));
     $set->action('backdrop_message', array('message:select' => 'body'));
@@ -172,7 +162,7 @@ class RulesI18nTestCase extends BackdropWebTestCase {
 
     $body['en'][0] = array('value' => 'English body.');
     $body['de'][0] = array('value' => 'German body.');
-    $node = $this->backdropCreateNode(array('language' => 'en', 'body' => $body));
+    $node = $this->backdropCreateNode(array('langcode' => 'en', 'body' => $body));
 
     // Clear messages and execute it.
     backdrop_get_messages();
@@ -181,5 +171,4 @@ class RulesI18nTestCase extends BackdropWebTestCase {
     $messages = backdrop_get_messages();
     $this->assertEqual($messages['status'][0], "German body.\n", 'Translated text has been selected.');
   }
-
 }

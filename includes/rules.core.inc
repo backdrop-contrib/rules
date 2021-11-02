@@ -1057,13 +1057,13 @@ abstract class RulesPlugin extends RulesExtendable {
     // If there is language parameter, get its value first so it can be used
     // for getting other translatable values.
     $langcode = NULL;
-    if (isset($parameters['language'])) {
-      $lang_arg = $this->getArgument('language', $parameters['language'], $state);
+    if (isset($parameters['langcode'])) {
+      $lang_arg = $this->getArgument('langcode', $parameters['langcode'], $state);
       $langcode = $lang_arg instanceof EntityMetadataWrapper ? $lang_arg->value() : $lang_arg;
     }
     // Now get all arguments.
     foreach ($parameters as $name => $info) {
-      $args[$name] = $name == 'language' ? $lang_arg : $this->getArgument($name, $info, $state, $langcode);
+      $args[$name] = $name == 'langcode' ? $lang_arg : $this->getArgument($name, $info, $state, $langcode);
     }
     // Append the settings and the execution state. Faces will append $this.
     $args['settings'] = $this->settings;

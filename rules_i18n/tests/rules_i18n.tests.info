@@ -2,5 +2,4 @@
 name = Rules I18n
 description = Tests translating Rules configs.
 group = Rules
-dependencies[] = i18n_string
 file = rules_i18n.test

@@ -38,7 +38,7 @@ function rules_path_action_info() {
           'optional' => TRUE,
           'cleaning callback' => 'rules_path_clean_replacement_values',
         ),
-        'language' => array(
+        'langcode' => array(
           'type' => 'token',
           'label' => t('Language'),
           'description' => t('If specified, the language for which the URL alias applies.'),
@@ -128,7 +128,7 @@ function rules_path_condition_info() {
           'description' => t('Specifies the existing path you wish to check for. For example: node/28, forum/1, taxonomy/term/1+2.'),
           'optional' => TRUE,
         ),
-        'language' => array(
+        'langcode' => array(
           'type' => 'token',
           'label' => t('Language'),
           'description' => t('If specified, the language for which the URL alias applies.'),
@@ -152,7 +152,7 @@ function rules_path_condition_info() {
           'optional' => TRUE,
           'cleaning callback' => 'rules_path_clean_replacement_values',
         ),
-        'language' => array(
+        'langcode' => array(
           'type' => 'token',
           'label' => t('Language'),
           'description' => t('If specified, the language for which the URL alias applies.'),

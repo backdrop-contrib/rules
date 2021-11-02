@@ -323,7 +323,7 @@ class RulesPluginUI extends FacesExtender implements RulesPluginUIInterface {
     $language_count = config_get('system.core', 'language_count');
     if ($language_count > 1 && !empty($info['translatable'])) {
        $parameter = $this->element->pluginParameterInfo();
-       $info['custom translation language'] = !empty($parameter['language']);
+       $info['custom translation language'] = !empty($parameter['langcode']);
     }
 
     // Add the parameter form.
@@ -1080,7 +1080,7 @@ class RulesContainerPluginUI extends RulesPluginUI {
   public function operations() {
     $ops = parent::operations();
     $add_ops = self::addOperations();
-    $ops['#links'] += $add_ops['#links'];
+    $ops['#links'] = array_merge($ops['#links'], $add_ops['#links']);
     return $ops;
   }
 

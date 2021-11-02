@@ -19,7 +19,7 @@ function rules_i18n_rules_action_info() {
         'description' => t('The text to translate.'),
         'translatable' => TRUE,
       ),
-      'language' => array(
+      'langcode' => array(
         'type' => 'token',
         'label' => t('Language'),
         'description' => t('The language to translate the text into.'),
@@ -44,7 +44,7 @@ function rules_i18n_rules_action_info() {
         'translatable' => TRUE,
         'restrict' => 'select',
       ),
-      'language' => array(
+      'langcode' => array(
         'type' => 'token',
         'label' => t('Language'),
         'description' => t('The language to translate the value into.'),
@@ -83,8 +83,8 @@ function rules_i18n_action_t($text) {
  * to set a default selector.
  */
 function rules_i18n_action_t_form_alter(&$form, &$form_state, $options, $element) {
-  if (isset($form['parameter']['language']['settings']['language:select']) && empty($element->settings['language:select'])) {
-    $form['parameter']['language']['settings']['language:select']['#default_value'] = 'site:current-page:language';
+  if (isset($form['parameter']['langcode']['settings']['language:select']) && empty($element->settings['language:select'])) {
+    $form['parameter']['langcode']['settings']['language:select']['#default_value'] = 'site:current-page:language';
   }
 }
 
@@ -170,11 +170,11 @@ class RulesI18nStringEvaluator extends RulesDataInputEvaluator {
    * Translate the value.
    *
    * If the element provides a language parameter, we are using this target
-   * language provided via $options['language']. Sanitizing is handled by Rules,
+   * language provided via $options['langcode']. Sanitizing is handled by Rules,
    * so disable that for i18n.
    */
   public function evaluate($value, $options, RulesState $state) {
-    $langcode = isset($options['language']) ? $options['language']->langcode : NULL;
+    $langcode = isset($options['langcode']) ? $options['langcode'] : NULL;
     if (is_array($value)) {
       foreach ($value as $key => $text) {
         $value[$key] = i18n_string($options['i18n context'] . ':' . $key, $text, array('langcode' => $langcode, 'sanitize' => FALSE));

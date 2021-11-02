@@ -256,7 +256,7 @@ class RulesTaxonomyVocabularyWrapper extends EntityBackdropWrapper {
   protected function setEntity($data) {
     if (isset($data) && $data !== FALSE && !is_object($data) && !is_numeric($data)) {
       // The vocabulary name has been passed.
-      parent::setEntity(taxonomy_vocabulary_machine_name_load($data));
+      parent::setEntity(taxonomy_vocabulary_load($data));
     }
     else {
       parent::setEntity($data);

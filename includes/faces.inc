@@ -132,7 +132,7 @@ if (!class_exists('FacesExtendable', FALSE)) {
         return call_user_func_array(array($this->facesClassInstances[$method[1]], $name), array_values($arguments));
       }
       $class = check_plain(get_class($this));
-			 // supress exception report
+			 // suppress exception report
       // throw new FacesExtendableException("There is no method $name for this instance of the class $class.");
     }
 

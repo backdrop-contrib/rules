@@ -232,7 +232,7 @@ class RulesUiTestCase extends BackdropWebTestCase {
     // permission at the same time.
     $edit = array(
       'settings[access][access_exposed]' => TRUE,
-      'settings[access][permissions][matrix][checkboxes][1][use Rules component rules_test_action_set]' => TRUE,
+      'settings[access][permissions][matrix][checkboxes][authenticated][use Rules component rules_test_action_set]' => TRUE,
     );
     $this->backdropPost(NULL, $edit, 'Save changes');
   }
@@ -321,11 +321,11 @@ class RulesUiTestCase extends BackdropWebTestCase {
       'Rule overridden status unchanged after cache clear.'
     );
 
-    // A 'revert' link should now be available for the overridden rule.
-    $this->assertText('revert', 'Revert link is now present.');
+    // A 'Revert' link should now be available for the overridden rule.
+    $this->assertText('Revert', 'Revert link is now present.');
 
     // Revert the overridden rule and verify it's back to its original status.
-    $this->clickLink('revert');
+    $this->clickLink('Revert');
     $this->backdropPost(NULL, array(), 'Confirm');
     $this->assertText(
       'example default rule',
@@ -335,7 +335,9 @@ class RulesUiTestCase extends BackdropWebTestCase {
       'Reverted reaction rule example imported default rule to the defaults',
       'Example default rule was reverted.'
     );
-    $this->assertNoText('revert', 'Revert link is not present.');
+    // Reload to remove the message that includes the word 'Reverted'.
+    $this->backdropGet('admin/config/workflow/rules');
+    $this->assertNoText('Revert', 'Revert link is not present.');
   }
 
   /**
