@@ -319,7 +319,7 @@ class RulesTestCase extends BackdropWebTestCase {
     $rule = rule();
     $rule->action('entity_create', array(
       'type' => 'node',
-      'param_type' => 'article',
+      'param_type' => 'post',
       'param_author:select' => 'site:current-user',
       'param_title' => $title,
       'entity_created:var' => 'node',
@@ -608,7 +608,7 @@ class RulesTestCase extends BackdropWebTestCase {
    * Customizes action info and makes sure integrity is checked.
    */
   public function testMetadataAssertion() {
-    $action = rules_action('rules_action_make_sticky');
+    $action = rules_action('rules_action_node_make_sticky');
 
     // Test failing integrity check.
     try {
@@ -663,7 +663,7 @@ class RulesTestCase extends BackdropWebTestCase {
 
     // Test asserting metadata on a derived property being a list item.
     $rule = rule(array('node' => array('type' => 'node')));
-    $rule->condition('node_is_of_type', array('node:select' => 'node:ref-nodes:0', 'type' => array('article')))
+    $rule->condition('node_is_of_type', array('node:select' => 'node:ref-nodes:0', 'type' => array('post')))
       ->action('data_set', array('data:select' => 'node:ref-nodes:0:field-tags', 'value' => array()));
     $rule->integrityCheck();
     $rule->execute($node);
@@ -674,7 +674,7 @@ class RulesTestCase extends BackdropWebTestCase {
 
     // Make sure assertions of a one list item are not valid for another item.
     $rule = rule(array('node' => array('type' => 'node')));
-    $rule->condition('node_is_of_type', array('node:select' => 'node:ref-nodes:0', 'type' => array('article')))
+    $rule->condition('node_is_of_type', array('node:select' => 'node:ref-nodes:0', 'type' => array('post')))
       ->action('data_set', array('data:select' => 'node:ref-nodes:1:field-tags', 'value' => array()));
     try {
       $rule->integrityCheck();
@@ -1222,13 +1222,14 @@ class RulesTriggerTestCase extends BackdropWebTestCase {
    * that would trigger it itself.
    */
   public function testRecursionPrevention() {
-    $rule = $this->createTestRule(FALSE, 'node_update');
-    $rule->action('rules_action_make_sticky');
-    $rule->integrityCheck()->save();
+    $rule = rules_reaction_rule();
+    $rule->event('node_update')
+      ->action('rules_action_node_make_sticky');
+    $rule->save('recursion-test');
 
     // Now trigger the rule.
     $node = $this->backdropCreateNode(array(
-      'type' => 'page',
+      'type' => 'post',
       'sticky' => 0,
       'status' => 0,
     ));
@@ -1250,7 +1251,7 @@ class RulesTriggerTestCase extends BackdropWebTestCase {
   public function testRecursionOnDifferentArguments() {
     // Create rule1 - which might recurse.
     $rule = $this->createTestRule(FALSE, 'node_update');
-    $rule->action('rules_action_make_sticky');
+    $rule->action('rules_action_node_make_sticky');
     $rule->label = 'rule 1';
     $rule->integrityCheck()->save();
 
@@ -1262,7 +1263,7 @@ class RulesTriggerTestCase extends BackdropWebTestCase {
     ));
     $rule2 = $this->createTestRule(FALSE, 'node_update');
     $rule2->action('rules_action_load_node', array('nid' => $node2->nid))
-      ->action('rules_action_make_sticky', array('node:select' => 'node_loaded'));
+      ->action('rules_action_node_make_sticky', array('node:select' => 'node_loaded'));
     $rule2->label = 'rule 2';
     $rule2->save();
 
@@ -1307,7 +1308,7 @@ class RulesTriggerTestCase extends BackdropWebTestCase {
     node_save($node);
 
     $msg = backdrop_get_messages();
-    $this->assertEqual($msg['status'][0], 'A node has been updated.', 'Default rule has been triggered.');
+    $this->assertEqual($msg['info'][0], 'A node has been updated.', 'Default rule has been triggered.');
   }
 
   /**
@@ -1315,14 +1316,14 @@ class RulesTriggerTestCase extends BackdropWebTestCase {
    */
   public function testEventSettings() {
     $rule = rules_reaction_rule();
-    $rule->event('node_presave', array('bundle' => 'article'))
+    $rule->event('node_presave', array('bundle' => 'post'))
       ->condition('data_is_empty', array('data:select' => 'node:field-tags'))
       ->action('node_publish', array('node:select' => 'node'));
     $rule->integrityCheck()->save();
 
     $node = $this->backdropCreateNode(array('type' => 'page', 'status' => 0));
     $this->assertEqual($node->status, 0, 'Rule has not been triggered.');
-    $node = $this->backdropCreateNode(array('type' => 'article', 'status' => 0));
+    $node = $this->backdropCreateNode(array('type' => 'post', 'status' => 0));
     $this->assertEqual($node->status, 1, 'Rule has been triggered.');
     RulesLog::logger()->checkLog();
 
@@ -1447,24 +1448,24 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
 
     // Data is empty condition evaluates to TRUE
     // for node with empty title, action sets title to 'bar'.
-    $node = $this->backdropCreateNode(array('title' => '', 'type' => 'article'));
+    $node = $this->backdropCreateNode(array('title' => '', 'type' => 'post'));
     $rule->execute($node);
     $this->assertEqual($node->title, 'bar', "Data is empty condition evaluates to TRUE for node with empty title, action sets title to 'bar'.");
 
     // Data is empty condition evaluates to FALSE
     // for node with title 'foo', action is not executed.
-    $node = $this->backdropCreateNode(array('title' => 'foo', 'type' => 'article'));
+    $node = $this->backdropCreateNode(array('title' => 'foo', 'type' => 'post'));
     $rule->execute($node);
     $this->assertEqual($node->title, 'foo', "Data is empty condition evaluates to FALSE for node with title 'foo', action is not executed.");
 
     // Data is empty condition evaluates to TRUE for the parent of a
     // not existing term in the tags field of the node.
     $rule = rule(array('node' => array('type' => 'node')));
-    $rule->condition('node_is_of_type', array('type' => array('article')));
+    $rule->condition('node_is_of_type', array('type' => array('post')));
     $rule->condition('data_is_empty', array('data:select' => 'node:field-tags:0:parent'));
     $rule->action('data_set', array('data:select' => 'node:title', 'value' => 'bar'));
     $rule->integrityCheck();
-    $node = $this->backdropCreateNode(array('title' => 'foo', 'type' => 'article'));
+    $node = $this->backdropCreateNode(array('title' => 'foo', 'type' => 'post'));
     $rule->execute($node);
     $this->assertEqual($node->title, 'bar', "Data is empty condition evaluates to TRUE for not existing data structures");
 
@@ -1544,22 +1545,22 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     global $user;
 
     $page = $this->backdropCreateNode(array('type' => 'page'));
-    $article = $this->backdropCreateNode(array('type' => 'article'));
+    $post = $this->backdropCreateNode(array('type' => 'post'));
 
     $result = rules_condition('entity_field_access')
-      ->execute(entity_metadata_wrapper('node', $article), 'field_tags');
+      ->execute(entity_metadata_wrapper('node', $post), 'field_tags');
     $this->assertTrue($result);
 
     // Test entity_is_of_bundle condition.
     $result = rules_condition('entity_is_of_bundle', array(
       'type' => 'node',
-      'bundle' => array('article'),
+      'bundle' => array('post'),
     ))->execute(entity_metadata_wrapper('node', $page));
     $this->assertFalse($result, 'Entity is of bundle condition has not been met.');
     $result = rules_condition('entity_is_of_bundle', array(
       'type' => 'node',
-      'bundle' => array('article'),
-    ))->execute(entity_metadata_wrapper('node', $article));
+      'bundle' => array('post'),
+    ))->execute(entity_metadata_wrapper('node', $post));
     $this->assertTrue($result, 'Entity is of bundle condition has been met.');
 
     // Also test a full rule so the integrity check must work.
@@ -1572,27 +1573,27 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     ));
     $rule->condition('entity_is_of_bundle', array(
       'entity:select' => 'node',
-      'bundle' => array('article'),
+      'bundle' => array('post'),
     ));
     $rule->action('data_set', array('data:select' => 'node:field_tags', 'value' => array($term_wrapped->getIdentifier())));
     $rule->integrityCheck();
-    $rule->execute($article);
-    $this->assertEqual($term_wrapped->getIdentifier(), $article->field_tags[LANGUAGE_NONE][0]['tid'], 'Entity is of bundle condition has been met.');
+    $rule->execute($post);
+    $this->assertEqual($term_wrapped->getIdentifier(), $post->field_tags[LANGUAGE_NONE][0]['tid'], 'Entity is of bundle condition has been met.');
 
     // Test again using an entity variable.
-    $article = $this->backdropCreateNode(array('type' => 'article'));
+    $post = $this->backdropCreateNode(array('type' => 'post'));
     $rule = rule(array(
       'entity' => array('type' => 'entity'),
     ));
     $rule->condition('entity_is_of_bundle', array(
       'entity:select' => 'entity',
       'type' => 'node',
-      'bundle' => array('article'),
+      'bundle' => array('post'),
     ));
     $rule->action('data_set', array('data:select' => 'entity:field_tags', 'value' => array($term_wrapped->getIdentifier())));
     $rule->integrityCheck();
-    $rule->execute(entity_metadata_wrapper('node', $article));
-    $this->assertEqual($term_wrapped->getIdentifier(), $article->field_tags[LANGUAGE_NONE][0]['tid'], 'Entity is of bundle condition has been met.');
+    $rule->execute(entity_metadata_wrapper('node', $post));
+    $this->assertEqual($term_wrapped->getIdentifier(), $post->field_tags[LANGUAGE_NONE][0]['tid'], 'Entity is of bundle condition has been met.');
 
     // Test CRUD actions.
     $action = rules_action('entity_create', array(
@@ -1629,7 +1630,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     // debug(RulesLog::logger()->render());
 
     $node = entity_plus_property_values_create_entity('node', array(
-      'type' => 'article',
+      'type' => 'post',
       'author' => $user,
       'title' => 'foo',
     ))->value();
@@ -1692,12 +1693,12 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     $tags[LANGUAGE_NONE][0]['tid'] = $term->tid;
     $node = $this->backdropCreateNode(array(
       'title' => 'foo',
-      'type' => 'article',
+      'type' => 'post',
       'field_tags' => $tags,
     ));
 
     // Test assigning and remove a term from an article.
-    $rule = rule(array('node' => array('type' => 'node', 'bundle' => 'article')));
+    $rule = rule(array('node' => array('type' => 'node', 'bundle' => 'post')));
     $term_wrapped = rules_wrap_data($term->tid, array('type' => 'taxonomy_term'));
     $term_wrapped2 = rules_wrap_data($term2->tid, array('type' => 'taxonomy_term'));
     $rule->action('list_add', array('list:select' => 'node:field-tags', 'item' => $term_wrapped2));
@@ -1809,9 +1810,9 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
       $this->assertTrue($return, 'Condition determines node ' . $property . ' is enabled.');
     }
 
-    $return = rules_condition('node_is_of_type', array('type' => array('page', 'article')))->execute($node);
+    $return = rules_condition('node_is_of_type', array('type' => array('page', 'post')))->execute($node);
     $this->assertTrue($return, 'Condition determines node is of type page.');
-    $return = rules_condition('node_is_of_type', array('type' => array('article')))->execute($node);
+    $return = rules_condition('node_is_of_type', array('type' => array('post')))->execute($node);
     $this->assertFalse($return, 'Condition determines node is not of type article.');
 
     // Test auto saving of a new node after it has been inserted into the DB.

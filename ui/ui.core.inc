@@ -1080,7 +1080,12 @@ class RulesContainerPluginUI extends RulesPluginUI {
   public function operations() {
     $ops = parent::operations();
     $add_ops = self::addOperations();
-    $ops['#links'] = array_merge($ops['#links'], $add_ops['#links']);
+    if (is_array($ops['#links'])) {
+      $ops['#links'] = array_merge($ops['#links'], $add_ops['#links']);
+    }
+    else {
+      $ops['#links'] = $add_ops['#links'];
+    }
     return $ops;
   }
 
