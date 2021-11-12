@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @file Rules Admin UI
- *   Implements rule management and configuration screens.
+ * @file
+ * Implements rule management and configuration screens.
  */
 
 /**
@@ -32,7 +32,6 @@ function rules_admin_reaction_overview($form, &$form_state, $base_path) {
     $collapsed = FALSE;
   }
   $form['help'] = array(
-    '#type' => 'markup',
     '#markup' => t('Reaction rules, listed below, react on selected events on the site. Each reaction rule may fire any number of <em>actions</em>, and may have any number of <em>conditions</em> that must be met for the actions to be executed. You can also set up <a href="@url1">components</a> – stand-alone sets of Rules configuration that can be used in Rules and other parts of your site. See <a href="@url2">the online documentation</a> for an introduction on how to use Rules.',
       array('@url1' => url('admin/config/workflow/rules/components'),
             '@url2' => rules_external_help('rules'))),
@@ -105,7 +104,6 @@ function rules_admin_components_overview($form, &$form_state, $base_path) {
     $collapsed = FALSE;
   }
   $form['help'] = array(
-    '#type' => 'markup',
     '#markup' => t('Components are stand-alone sets of Rules configuration that can be used by Rules and other modules on your site. Components are for example useful if you want to use the same conditions, actions or rules in multiple places, or call them from your custom module. You may also export each component separately. See <a href="@url">the online documentation</a> for more information about how to use components.',
       array('@url' => rules_external_help('components'))),
   );
@@ -263,7 +261,12 @@ function rules_admin_settings_integrity_check_submit($form, &$form_state) {
     rules_config_update_dirty_flag($rules_config, TRUE, TRUE);
     if ($rules_config->dirty) {
       $count++;
-      $variables = array('%label' => $rules_config->label(), '%name' => $rules_config->name, '@plugin' => $rules_config->plugin(), '!uri'=> url(RulesPluginUI::path($rules_config->name)));
+      $variables = array(
+        '%label' => $rules_config->label(),
+        '%name' => $rules_config->name,
+        '@plugin' => $rules_config->plugin(),
+        '!uri'=> url(RulesPluginUI::path($rules_config->name)),
+      );
       backdrop_set_message(t('The @plugin <a href="!uri">%label (%name)</a> fails the integrity check and cannot be executed.', $variables), 'error');
     }
 

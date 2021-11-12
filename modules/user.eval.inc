@@ -5,11 +5,12 @@
  * Contains rules integration for the user module needed during evaluation.
  *
  * @addtogroup rules
+ *
  * @{
  */
 
 /**
- * Condition user: condition to check whether user has particular roles
+ * Condition user: condition to check whether user has particular roles.
  */
 function rules_condition_user_has_role($account, $roles, $operation = 'AND') {
   switch ($operation) {
@@ -120,5 +121,5 @@ function rules_action_user_send_account_email($account, $email_type) {
 }
 
 /**
- * @}
+ * @} End of "addtogroup rules"
  */

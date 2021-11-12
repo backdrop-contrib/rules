@@ -2,4 +2,5 @@ name = "Rules Test invocation"
 description = "Helper module to test Rules invocations."
 package = Testing
 backdrop = 1.x
+type = module
 hidden = TRUE

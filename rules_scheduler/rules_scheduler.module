@@ -7,6 +7,8 @@
 
 define('RULES_SCHEDULER_PATH', 'admin/config/workflow/rules/schedule');
 
+module_load_include('inc', 'rules_scheduler', 'rules_scheduler.rules');
+
 /**
  * Implements hook_cron().
  */
@@ -103,7 +105,7 @@ function rules_scheduler_menu() {
     'access arguments' => array('administer rules'),
     'file' => 'rules_scheduler.admin.inc',
   );
-  $items[RULES_SCHEDULER_PATH .'/%rules_scheduler_task/delete'] = array(
+  $items[RULES_SCHEDULER_PATH . '/%rules_scheduler_task/delete'] = array(
     'title' => 'Delete a scheduled task',
     'type' => MENU_CALLBACK,
     'page callback' => 'backdrop_get_form',
@@ -115,7 +117,10 @@ function rules_scheduler_menu() {
 }
 
 /**
- * Load a task by a given task ID.
+ * Loads a task by a given task ID.
+ *
+ * @param int $tid
+ *   The task ID.
  */
 function rules_scheduler_task_load($tid) {
   $result = db_select('rules_scheduler', 'r')
@@ -126,7 +131,10 @@ function rules_scheduler_task_load($tid) {
 }
 
 /**
- * Delete a task by a given task ID.
+ * Deletes a task by a given task ID.
+ *
+ * @param int $tid
+ *   The task ID.
  */
 function rules_scheduler_task_delete($tid) {
   db_delete('rules_scheduler')
@@ -137,9 +145,9 @@ function rules_scheduler_task_delete($tid) {
 /**
  * Schedule a task to be executed later on.
  *
- * @param $task
+ * @param array $task
  *   An array representing the task with the following keys:
- *   - config: The machine readable name of the to be scheduled component.
+ *   - config: The machine readable name of the to-be-scheduled component.
  *   - date: Timestamp when the component should be executed.
  *   - state: (deprecated) Rules evaluation state to use for scheduling.
  *   - data: Any additional data to store with the task.
@@ -166,8 +174,8 @@ function rules_scheduler_schedule_task($task) {
 /**
  * Queue tasks that are ready for execution.
  *
- * @return boolean
- *   Returns TRUE if any queue items where created, otherwise FALSE.
+ * @return bool
+ *   TRUE if any queue items were created, otherwise FALSE.
  */
 function rules_scheduler_queue_tasks() {
   $items_created = FALSE;

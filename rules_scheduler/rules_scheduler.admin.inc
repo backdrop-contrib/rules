@@ -10,18 +10,13 @@
  */
 function rules_scheduler_schedule_page() {
   // Display view for all scheduled tasks
-  $task_list = ""; 
-  if (module_exists('views')) {
-    // We cannot use views_embed_view() here as we need to set the path for the
-    // component filter form.
-    $view = views_get_view('rules_scheduler');
-	if($view){
-    	$view->override_path = RULES_SCHEDULER_PATH;
-    	$task_list = $view->preview();
-	}
-  }
-  else {
-    $task_list = t('To display scheduled tasks you have to install the <a href="http://drupal.org/project/views">Views</a> module.');
+  $task_list = "";
+  // We cannot use views_embed_view() here as we need to set the path for the
+  // component filter form.
+  $view = views_get_view('rules_scheduler');
+  if ($view){
+      $view->override_path = RULES_SCHEDULER_PATH;
+      $task_list = $view->preview();
   }
   $page['task_view'] = array(
     '#markup' => $task_list,
@@ -47,7 +42,7 @@ function rules_scheduler_form($form, &$form_state) {
   $form['delete_by_config'] = array(
     '#type' => 'fieldset',
     '#title' => t('Delete tasks by component name'),
-    '#disabled' => empty($config_options)
+    '#disabled' => empty($config_options),
   );
   $form['delete_by_config']['config'] = array(
     '#title' => t('Component'),
@@ -60,7 +55,7 @@ function rules_scheduler_form($form, &$form_state) {
     '#type' => 'submit',
     '#value' => t('Delete tasks'),
     '#submit' => array('rules_scheduler_form_delete_by_config_submit'),
-    );
+  );
   return $form;
 }
 
@@ -93,7 +88,6 @@ function rules_scheduler_delete_task($form, &$form_state, $task) {
   else {
     $msg = t('This task executes component %label and will be executed on %date. The action cannot be undone.', array(
       '%label' => $config->label(),
-      '%id' => $task['identifier'],
       '%date' => format_date($task['date']),
     ));
   }
@@ -119,7 +113,7 @@ function rules_scheduler_schedule_form($form, &$form_state, $rules_config, $base
     $form_state['component'] = $rules_config->name;
     $action = rules_action('schedule', array('component' => $rules_config->name));
     $action->form($form, $form_state);
-    // The component should be fixed, so hide the paramter for it.
+    // The component should be fixed, so hide the parameter for it.
     $form['parameter']['component']['#access'] = FALSE;
     $form['submit'] = array(
       '#type' => 'submit',

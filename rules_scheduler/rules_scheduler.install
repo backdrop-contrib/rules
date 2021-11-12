@@ -31,7 +31,8 @@ function rules_scheduler_schema() {
         'not null' => TRUE,
       ),
       'data' => array(
-        'type' => 'text',
+        'type' => 'blob',
+        'size' => 'big',
         'not null' => FALSE,
         'serialize' => TRUE,
         'description' => 'The whole, serialized evaluation data.',
@@ -47,7 +48,7 @@ function rules_scheduler_schema() {
         'type' => 'varchar',
         'length' => '255',
         'not null' => FALSE,
-        'description' => 'The fully qualified class name of a the queue item handler.',
+        'description' => 'The fully-qualified class name of the queue item handler.',
       ),
     ),
     'primary key' => array('tid'),
@@ -62,10 +63,21 @@ function rules_scheduler_schema() {
 }
 
 /**
- * Move book settings from variables to config.
+ * Implements hook_install().
  */
-function rules_scheduler_update_1000() {
-  // Migrate variables to config.
+function rules_scheduler_install() {
+  // Create the queue to hold scheduled tasks.
+  $queue = BackdropQueue::get('rules_scheduler_tasks', TRUE);
+  $queue->createQueue();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function rules_scheduler_uninstall() {
+  // Clean up after ourselves by deleting the queue and all items in it.
+  $queue = BackdropQueue::get('rules_scheduler_tasks');
+  $queue->deleteQueue();
 }
 
 /**
@@ -76,37 +88,23 @@ function rules_scheduler_update_last_removed() {
 }
 
 /**
- * Rules upgrade callback for mapping the action name.
+ * Move book settings from variables to config.
  */
-function rules_scheduler_action_upgrade_map_name($element) {
-  return 'schedule';
+function rules_scheduler_update_1000() {
+  // Migrate variables to config.
 }
 
 /**
- * Rules upgrade callback.
+ * Use blob:big for rules_scheduler.data for compatibility with D7 upgrades.
  */
-function rules_scheduler_action_upgrade($element, $target) {
-  $target->settings['component'] = $element['#info']['set'];
-  $target->settings['date'] = $element['#settings']['task_date'];
-  $target->settings['identifier'] = $element['#settings']['task_identifier'];
-
-  unset($element['#info']['arguments']['task_date'], $element['#info']['arguments']['task_identifier']);
-  foreach ($element['#info']['arguments'] as $name => $info) {
-    rules_upgrade_element_parameter_settings($element, $target, $name, $info, 'param_' . $name);
+function rules_scheduler_update_1200() {
+  if (db_field_exists('rules_scheduler', 'data')) {
+    db_change_field('rules_scheduler', 'data', 'data', array(
+      'type' => 'blob',
+      'size' => 'big',
+      'not null' => FALSE,
+      'serialize' => TRUE,
+      'description' => 'The whole, serialized evaluation data.',
+    ));
   }
-}
-
-/**
- * Rules upgrade callback for mapping the action name.
- */
-function rules_action_delete_scheduled_set_upgrade_map_name($element) {
-  return 'schedule_delete';
-}
-
-/**
- * Rules upgrade callback.
- */
-function rules_action_delete_scheduled_set_upgrade($element, $target) {
-  $target->settings['component'] = $element['#settings']['ruleset'];
-  $target->settings['task'] = $element['#settings']['task_identifier'];
 }

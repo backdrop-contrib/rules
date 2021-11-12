@@ -1,7 +1,7 @@
 name = Rules translation
 description = Allows translating rules.
-dependencies[] = rules
-dependencies[] = i18n_string
 package = Multilingual - Internationalization
 backdrop = 1.x
 
+dependencies[] = rules
+dependencies[] = i18n_string

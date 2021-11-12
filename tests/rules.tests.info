@@ -1,5 +1,35 @@
-[RulesTestCase]      
+[RulesTestCase]
 name = Rules Engine tests
-description = Test using the rules API to create and evaluate rules
+description = Test using the rules API to create and evaluate rules.
+group = Rules
+file = rules.test
+
+[RulesTestDataCase]
+name = Rules Data tests
+description = Tests rules data saving and type matching.
+group = Rules
+file = rules.test
+
+[RulesTriggerTestCase]
+name = Reaction Rules
+description = Tests triggering reactive rules.
+group = Rules
+file = rules.test
+
+[RulesIntegrationTestCase]
+name = Rules Core Integration
+description = Tests provided integration for Backdrop core.
+group = Rules
+file = rules.test
+
+[RulesEventDispatcherTestCase]
+name = Rules event dispatchers
+description = Tests event dispatcher functionality.
+group = Rules
+file = rules.test
+
+[RulesInvocationEnabledTestCase]
+name = Rules invocation enabled
+description = Tests that Rules events are enabled during menu item loads.
 group = Rules
 file = rules.test

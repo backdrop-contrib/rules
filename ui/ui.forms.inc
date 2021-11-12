@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @file Rules UI forms
+ * @file
+ * Rules User Interface forms.
  */
 
 /**
@@ -35,7 +36,7 @@ function rules_ui_parameter_replace_submit($form, &$form_state) {
 }
 
 /**
- * General form submit handler, that rebuilds the form
+ * General form submit handler, that rebuilds the form.
  */
 function rules_form_submit_rebuild($form, &$form_state) {
   $form_state['rebuild'] = TRUE;
@@ -54,8 +55,9 @@ function rules_ui_form_edit_rules_config($form, &$form_state, $rules_config, $ba
 }
 
 /**
- * General rules configuration form validation callback. Also populates the
- * rules configuration with the form values.
+ * General rules configuration form validation callback.
+ *
+ * Also populates the rules configuration with the form values.
  */
 function rules_ui_form_rules_config_validate($form, &$form_state) {
   $form_state['rules_element']->form_validate($form, $form_state);
@@ -204,13 +206,29 @@ function rules_ui_confirm_operations($op, $rules_config) {
 
   switch ($op) {
     case 'enable':
-      return array(t('Are you sure you want to enable the %plugin %label?', $vars), '');
+      return array(
+        t('Are you sure you want to enable the %plugin %label?', $vars),
+        '',
+      );
+
     case 'disable':
-      return array(t('Are you sure you want to disable the %plugin %label?', $vars), '');
+      return array(
+        t('Are you sure you want to disable the %plugin %label?', $vars),
+        '',
+      );
+
     case 'revert':
-      return array(t('Are you sure you want to revert the %plugin %label?', $vars), t('This action cannot be undone.'));
+      return array(
+        t('Are you sure you want to revert the %plugin %label?', $vars),
+        t('This action cannot be undone.'),
+      );
+
     case 'delete':
-      return array(t('Are you sure you want to delete the %plugin %label?', $vars), t('This action cannot be undone.'));
+      return array(
+        t('Are you sure you want to delete the %plugin %label?', $vars),
+        t('This action cannot be undone.'),
+      );
+
     default:
       return FALSE;
   }
@@ -232,9 +250,10 @@ function rules_ui_form_rules_config_confirm_op($form, &$form_state, $rules_confi
 }
 
 /**
- * Applies the operation and returns the message to show to the user. Also the
- * operation is logged to the watchdog. Note that the string is defined two
- * times so that the translation extractor can find it.
+ * Applies the operation and returns the message to show to the user.
+ *
+ * The operation is also logged to the watchdog. Note that the string is
+ * defined two times so that the translation extractor can find it.
  */
 function rules_ui_confirm_operation_apply($op, $rules_config) {
   $vars = array('%plugin' => $rules_config->plugin(), '%label' => $rules_config->label());
@@ -329,6 +348,7 @@ function rules_ui_add_element($form, &$form_state, $rules_config, $plugin_name, 
 
 /**
  * Add element submit callback.
+ *
  * Used for "abstract plugins" to create the initial element object with the
  * given implementation name and rebuild the form.
  */
@@ -387,7 +407,10 @@ function rules_ui_delete_element($form, &$form_state, $rules_config, $rules_elem
     }
   }
 
-  $confirm_question = t('Are you sure you want to delete the %element_plugin %element_name?', array('%element_plugin' => $rules_element->plugin(), '%element_name' => $rules_element->label(), '%plugin' => $rules_config->plugin(), '%label' => $rules_config->label()));
+  $confirm_question = t('Are you sure you want to delete the %element_plugin %element_name?', array(
+    '%element_plugin' => $rules_element->plugin(),
+    '%element_name' => $rules_element->label(),
+  ));
   return confirm_form($form, $confirm_question, RulesPluginUI::path($rules_config->name), t('This action cannot be undone.'), t('Delete'), t('Cancel'));
 }
 
@@ -401,7 +424,6 @@ function rules_ui_delete_element_submit($form, &$form_state) {
     $form_state['redirect'] = RulesPluginUI::defaultRedirect($form_state['element_parent']);
   }
 }
-
 
 /**
  * Configure a rule element.
@@ -526,7 +548,7 @@ function rules_ui_add_event_apply($form, &$form_state) {
 }
 
 /**
- * Form to remove a event from a rule.
+ * Form to remove an event from a rule.
  */
 function rules_ui_remove_event($form, &$form_state, $rules_config, $event, $base_path) {
   RulesPluginUI::$basePath = $base_path;
@@ -592,13 +614,23 @@ function rules_ui_import_form_validate($form, &$form_state) {
   if ($rules_config = rules_import($form_state['values']['import'], $error_msg)) {
     // Store the successfully imported entity in $form_state.
     $form_state['rules_config'] = $rules_config;
-    if (!$form_state['values']['overwrite']) {
-      // Check for existing entities with the same identifier.
-      if (rules_config_load($rules_config->name)) {
+
+    // Check for existing entities with the same identifier.
+    if ($existing_config = rules_config_load($rules_config->name)) {
+      // Don't import and overwrite the existing configuration unless the user
+      // has checked the 'overwrite' box.
+      if (!$form_state['values']['overwrite']) {
         $vars = array('@entity' => t('Rules configuration'), '%label' => $rules_config->label());
         form_set_error('import', t('Import of @entity %label failed, a @entity with the same machine name already exists. Check the overwrite option to replace it.', $vars));
       }
+      // Don't import if the existing configuration has the status ENTITY_FIXED
+      // because that means the configuration can't be modified.
+      if ($existing_config->status == ENTITY_FIXED) {
+        $vars = array('@entity' => t('Rules configuration'), '%label' => $rules_config->label());
+        form_set_error('import', t("Import of @entity %label failed, a @entity with the same machine name already exists and is marked as ENTITY_FIXED meaning it can't be mofified.", $vars));
+      }
     }
+
     try {
       $rules_config->integrityCheck();
     }
@@ -626,6 +658,9 @@ function rules_ui_import_form_submit($form, &$form_state) {
   if ($existing_config = rules_config_load($rules_config->name)) {
     // Copy DB id and remove the new indicator to overwrite the existing record.
     $rules_config->id = $existing_config->id;
+    // Set the ENTITY_CUSTOM bit in the status bitmask, because the
+    // configuration has now been customized by the import.
+    $rules_config->status = $existing_config->status | ENTITY_CUSTOM;
     unset($rules_config->is_new);
   }
   $rules_config->save();
@@ -715,6 +750,7 @@ function rules_ui_import_file_form_submit($form, &$form_state) {
 
 /**
  * FAPI process callback for the data selection widget.
+ *
  * This finalises the auto completion callback path by appending the form build
  * id.
  */
@@ -774,12 +810,12 @@ function rules_ui_form_data_selection_auto_completion($parameter, $form_build_id
   backdrop_json_output($matches);
 }
 
-
 /**
- * FAPI validation of an integer element. Copy of the private function
- * _element_validate_integer().
+ * FAPI validation of an integer element.
+ *
+ * Copy of the core Drupal 7 private function _element_validate_integer().
  */
-function rules_ui_element_integer_validate($element, &$form_state) {;
+function rules_ui_element_integer_validate($element, &$form_state) {
   $value = $element['#value'];
   if (isset($value) && $value !== '' && (!is_numeric($value) || intval($value) != $value)) {
     form_error($element, t('%name must be an integer value.', array('%name' => isset($element['#title']) ? $element['#title'] : t('Element'))));
@@ -787,8 +823,9 @@ function rules_ui_element_integer_validate($element, &$form_state) {;
 }
 
 /**
- * FAPI validation of a decimal element. Improved version of the private
- * function _element_validate_number().
+ * FAPI validation of a decimal element.
+ *
+ * Improved version of the private function _element_validate_number().
  */
 function rules_ui_element_decimal_validate($element, &$form_state) {
   // Substitute the decimal separator ",".
@@ -812,9 +849,11 @@ function rules_ui_element_ip_address_validate($element, &$form_state) {
 }
 
 /**
- * FAPI validation of a date element. Makes sure the specified date format is
- * correct and converts date values specifiy a fixed (= non relative) date to
- * a timestamp. Relative dates are handled by the date input evaluator.
+ * FAPI validation of a date element.
+ *
+ * Makes sure the specified date format is correct and converts date values
+ * specify a fixed (= non relative) date to a timestamp. Relative dates are
+ * handled by the date input evaluator.
  */
 function rules_ui_element_date_validate($element, &$form_state) {
   $value = $element['#value'];
@@ -837,9 +876,9 @@ function rules_ui_element_date_validate($element, &$form_state) {
  */
 function rules_ui_element_duration_process($element, &$form_state) {
   $element['value'] = array(
-    '#type' => 'textfield',
-    '#size' => 8,
-    '#element_validate' => array('rules_ui_element_integer_validate'),
+    '#type' => 'number',
+    '#max' => 99999999,
+    '#step' => 1,
     '#default_value' => $element['#default_value'],
     '#required' => !empty($element['#required']),
   );
@@ -883,8 +922,9 @@ function rules_ui_element_duration_multipliers() {
 }
 
 /**
- * Helper function to determine the value for a rules duration form
- * element.
+ * Helper function a rules duration form element.
+ *
+ * Determines the value for a rules duration form element.
  */
 function rules_ui_element_duration_value($element, $input = FALSE) {
   // This runs before child elements are processed, so we cannot calculate the
@@ -898,6 +938,7 @@ function rules_ui_element_duration_value($element, $input = FALSE) {
 
 /**
  * FAPI after build callback for the duration parameter type form.
+ *
  * Fixes up the form value by applying the multiplier.
  */
 function rules_ui_element_duration_after_build($element, &$form_state) {
@@ -926,7 +967,6 @@ function rules_ui_element_fix_empty_after_build($element, &$form_state) {
   }
   return $element;
 }
-
 
 /**
  * FAPI after build callback for specifying a list of values.
@@ -994,6 +1034,7 @@ function rules_ui_element_machine_name_validate($element, &$form_state) {
 
 /**
  * FAPI callback to validate the form for editing variable info.
+ *
  * @see RulesPluginUI::getVariableForm()
  */
 function rules_ui_element_variable_form_validate($elements, &$form_state) {
@@ -1064,7 +1105,7 @@ function rules_autocomplete_tags($tags_typed = '') {
       ->groupBy('rt.tag')
       ->range(0, 10)
       ->execute()
-      ->fetchCol('rt.tag');
+      ->fetchCol();
 
     $prefix = count($tags_typed) ? backdrop_implode_tags($tags_typed) . ', ' : '';
 

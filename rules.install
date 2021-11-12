@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @file Rules - Installation file.
+ * @file
+ * Rules - Installation file.
  */
 
 /**
@@ -18,7 +19,7 @@ function rules_enable() {
 function rules_install() {
   module_load_include('inc', 'rules', 'modules/events');
   // Set the modules' weight to 20, see
-  // http://drupal.org/node/445084#comment-1533280 for the reasoning.
+  // https://www.drupal.org/node/445084#comment-1533280 for the reasoning.
   db_query("UPDATE {system} SET weight = 20 WHERE name = 'rules'");
 }
 
@@ -46,7 +47,7 @@ function rules_schema() {
         'description' => 'The label of the configuration.',
         'default' => 'unlabeled',
       ),
-     'plugin' => array(
+      'plugin' => array(
         'type' => 'varchar',
         'length' => 127,
         'not null' => TRUE,
@@ -114,7 +115,7 @@ function rules_schema() {
       'name' => array('name'),
     ),
     'indexes' => array(
-      'plugin' => array('plugin'),
+      'plugin' => array('plugin', 'active'),
     ),
   );
   $schema['rules_trigger'] = array(

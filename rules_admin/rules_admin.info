@@ -2,8 +2,7 @@ name = Rules UI
 description = Administrative interface for managing rules.
 package = Rules
 backdrop = 1.x
-dependencies[] = rules
 type = module
+configure = admin/config/workflow/rules
 
-
-
+dependencies[] = rules

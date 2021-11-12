@@ -5,9 +5,15 @@
  * Rules Scheduler tests.
  */
 
+/**
+ * Test cases for the Rules Scheduler module.
+ */
 class RulesSchedulerTestCase extends BackdropWebTestCase {
 
-  static function getInfo() {
+  /**
+   * Declares test metadata.
+   */
+  public static function getInfo() {
     return array(
       'name' => 'Rules Scheduler tests',
       'description' => 'Test scheduling components.',
@@ -15,7 +21,10 @@ class RulesSchedulerTestCase extends BackdropWebTestCase {
     );
   }
 
-  function setUp() {
+  /**
+   * Overrides BackdropWebTestCase::setUp().
+   */
+  protected function setUp() {
     parent::setUp('rules_scheduler', 'rules_scheduler_test');
     RulesLog::logger()->clear();
     config_set('rules.settings','rules_debug_log', 1);
@@ -27,13 +36,14 @@ class RulesSchedulerTestCase extends BackdropWebTestCase {
    * Note that this also makes sure Rules properly handles timezones, else this
    * test could fail due to a wrong 'now' timestamp.
    */
-  function testComponentSchedule() {
+  public function testComponentSchedule() {
     $set = rules_rule_set(array(
       'node1' => array('type' => 'node', 'label' => 'node'),
     ));
-    $set->rule(rule()->condition('node_is_published', array('node:select' => 'node1'))
-                     ->action('node_unpublish', array('node:select' => 'node1'))
-               );
+    $set->rule(
+      rule()->condition('node_is_published', array('node:select' => 'node1'))
+        ->action('node_unpublish', array('node:select' => 'node1'))
+    );
     $set->integrityCheck()->save('rules_test_set_2');
 
     // Use different names for the variables to ensure they are properly mapped.
@@ -51,7 +61,7 @@ class RulesSchedulerTestCase extends BackdropWebTestCase {
     $rule->execute($node);
 
     // Run cron to let the rules scheduler do its work.
-    backdrop_cron_run();
+    $this->cronRun();
 
     $node = node_load($node->nid, NULL, TRUE);
     $this->assertFalse($node->status, 'The component has been properly scheduled.');
@@ -59,15 +69,16 @@ class RulesSchedulerTestCase extends BackdropWebTestCase {
   }
 
   /**
-   * Make sure recurion prevention is working fine for scheduled rule sets.
+   * Makes sure recursion prevention is working fine for scheduled rule sets.
    */
-  function testRecursionPrevention() {
+  public function testRecursionPrevention() {
     $set = rules_rule_set(array(
       'node1' => array('type' => 'node', 'label' => 'node'),
     ));
-    $set->rule(rule()->condition('node_is_published', array('node:select' => 'node1'))
-                     ->action('node_unpublish', array('node:select' => 'node1'))
-               );
+    $set->rule(
+      rule()->condition('node_is_published', array('node:select' => 'node1'))
+        ->action('node_unpublish', array('node:select' => 'node1'))
+    );
     $set->integrityCheck()->save('rules_test_set_2');
 
     // Add an reaction rule that is triggered upon a node save. The scheduled
@@ -78,7 +89,7 @@ class RulesSchedulerTestCase extends BackdropWebTestCase {
     $rule->event('node_update');
     $rule->action('schedule', array(
       'component' => 'rules_test_set_2',
-      'identifier' => '',
+      'identifier' => 'test_recursion_prevention',
       'date' => 'now',
       'param_node1:select' => 'node',
     ));
@@ -87,13 +98,32 @@ class RulesSchedulerTestCase extends BackdropWebTestCase {
     // Create a node, what triggers the rule.
     $node = $this->backdropCreateNode(array('title' => 'The title.', 'status' => 1));
     // Run cron to let the rules scheduler do its work.
-    backdrop_cron_run();
+    $this->cronRun();
 
     $node = node_load($node->nid, NULL, TRUE);
     $this->assertFalse($node->status, 'The component has been properly scheduled.');
-    $text1 = RulesLog::logger()->render();
-    $text2 = RulesTestCase::t('Not evaluating reaction rule %unlabeled to prevent recursion.', array('unlabeled' => $rule->name));
-    $this->assertTrue((strpos($text1, $text2) !== FALSE), "Scheduled recursion prevented.");
+
+    // Create a simple user account with permission to see the dblog.
+    $user = $this->backdropCreateUser(array('access site reports'));
+    $this->backdropLogin($user);
+
+    // View the database log.
+    $this->backdropGet('admin/reports/dblog');
+
+    // Can't use
+    // $this->clickLink('Rules debug information: " Scheduled evaluation...')
+    // because xpath doesn't allow : or " in the string.
+    // So instead, use our own xpath to figure out the href of the second link
+    // on the page (the first link is the most recent log entry, which is the
+    // log entry for the user login, above.)
+
+    // All links.
+    $links = $this->xpath('//a[contains(@href, :href)]', array(':href' => 'admin/reports/event/'));
+    // Strip off /?q= from href.
+    $href = explode('=', $links[1]['href']);
+    // Click the link for the RulesLog entry.
+    $this->backdropGet($href[1]);
+    $this->assertRaw(RulesTestCase::t('Not evaluating reaction rule %unlabeled to prevent recursion.', array('unlabeled' => $rule->name)), "Scheduled recursion prevented.");
     RulesLog::logger()->checkLog();
   }
 
@@ -112,10 +142,10 @@ class RulesSchedulerTestCase extends BackdropWebTestCase {
     ));
 
     // Run cron to let the rules scheduler do its work.
-    backdrop_cron_run();
+    $this->cronRun();
 
     // The task handler should have set the variable to TRUE now.
     $this->assertTrue(config_get('rules.settings',$variable));
   }
-}
 
+}
