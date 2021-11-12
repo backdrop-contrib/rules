@@ -1882,7 +1882,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     $roles = $user->roles;
     // Remove the authenticate role so we only use the new role created by
     // backdropCreateUser().
-    unset($roles[BACKDROP_AUTHENTICATED_RID]);
+    unset($roles[BACKDROP_AUTHENTICATED_ROLE]);
     rules_action('mail_to_users_of_role', $settings + array('roles' => array_keys($roles)))->execute();
     $this->assertMail('to', $user->mail, 'Mail to users of a role has been sent.');
 
