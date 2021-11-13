@@ -93,11 +93,12 @@ function rules_path_default_cleaning_method($path) {
     if (module_exists('transliteration') && config_get('rules.settings','rules_path_transliteration')) {
       $path = transliteration_get($path);
     }
-
-    $array = config_get('rules.settings','rules_clean_path');
-    $array[2] = $path;
+    $preg_args = array(
+      config_get('rules.settings','rules_clean_path'),
+      $path,
+    );
     // Replace it and remove trailing and leading replacement characters.
-    $output = trim(call_user_func_array('preg_replace', $array), $replace);
+    $output = trim(call_user_func_array('preg_replace', $preg_args), $replace);
 
     if (config_get('rules.settings','rules_path_lower_case')) {
       $output = backdrop_strtolower($output);
