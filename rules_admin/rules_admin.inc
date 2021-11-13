@@ -163,6 +163,8 @@ function rules_admin_settings($form, &$form_state) {
   $form['path']['built_in_settings'] = array(
     '#type' => 'fieldset',
     '#title' => t('Rules (built-in) path cleaning settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
     '#states' => array(
       'visible' => array(
         ':input[name="rules_path_cleaning_callback"]' => array('value' => 'rules_path_default_cleaning_method'),
@@ -185,11 +187,11 @@ function rules_admin_settings($form, &$form_state) {
     '#default_value' => config_get('rules.settings','rules_path_replacement_char'),
     '#size' => 1,
   );
-  $form['path']['built_in_settings']['rules_clean_path'] = array(
+  $form['path']['built_in_settings']['rules_path_regex'] = array(
     '#type' => 'textfield',
     '#title' => t('Clean path regex'),
     '#description' => t('Enter the regex for the characters to be kept, e.g., "/[^a-zA-Z0-9\-_]+/".'),
-    '#default_value' => config_get('rules.settings','rules_clean_path'),
+    '#default_value' => config_get('rules.settings','rules_path_regex'),
   );
   $form['path']['built_in_settings']['rules_path_lower_case'] = array(
     '#type' => 'checkbox',
@@ -260,7 +262,7 @@ function rules_admin_settings_submit($form, &$form_state) {
     $config->set('rules_path_transliteration', $form_state['values']['rules_path_transliteration']);
   }
   $config->set('rules_path_replacement_char', $form_state['values']['rules_path_replacement_char']);
-  $config->set('rules_clean_path', $form_state['values']['rules_clean_path']);
+  $config->set('rules_path_regex', $form_state['values']['rules_path_regex']);
   $config->set('rules_path_lower_case', $form_state['values']['rules_path_lower_case']);
   $config->set('rules_log_errors', $form_state['values']['rules_log_errors']);
   $config->set('rules_debug_log', $form_state['values']['rules_debug_log']);

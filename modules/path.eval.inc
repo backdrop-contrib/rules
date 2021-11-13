@@ -94,8 +94,8 @@ function rules_path_default_cleaning_method($path) {
       $path = transliteration_get($path);
     }
     $preg_args = array(
-      config_get('rules.settings','rules_clean_path'),
-      $path,
+      config_get('rules.settings','rules_path_regex'),
+      $replace,
     );
     // Replace it and remove trailing and leading replacement characters.
     $output = trim(call_user_func_array('preg_replace', $preg_args), $replace);
@@ -120,22 +120,6 @@ function rules_clean_path($path) {
     $function = 'rules_path_default_cleaning_method';
   }
   return $function($path);
-}
-
-/**
- * CTools path cleaning callback.
- *
- * @see rules_admin_settings()
- */
-function rules_path_clean_ctools($path) {
-  // Make use of the CTools cleanstring implementation.
-  ctools_include('cleanstring');
-  $settings = array(
-    'separator' => config_get('rules.settings','rules_path_replacement_char'),
-    'transliterate' => module_exists('transliteration') && config_get('rules.settings','rules_path_transliteration'),
-    'lower case' => config_get('rules.settings','rules_path_lower_case'),
-  );
-  return ctools_cleanstring($path, $settings);
 }
 
 /**
