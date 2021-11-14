@@ -1671,7 +1671,7 @@ function rules_token_info() {
     $token_type = $data_info[$type]['token type'];
 
     $token_info['types'][$token_type] = array(
-      'name' => $data_info[$type]['label'],
+      'name' => t('Rules') . ' ' . $data_info[$type]['label'],
       'description' => t('Tokens related to %label Rules variables.', array('%label' => $data_info[$type]['label'])),
       'needs-data' => $token_type,
     );
