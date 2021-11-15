@@ -54,7 +54,7 @@ Additional documentation is located in [the Wiki](https://github.com/backdrop-co
 - Other contributors:
   - [Docwilmot](https://github.com/docwilmot)
   - [Laryn Kragt Bakker](https://github.com/laryn) - [CEDC.org](https://cedc.org)
-  - [Herb](https://github.com/herbdool/)]
+  - [Herb](https://github.com/herbdool/)
 
 ### Drupal:
   - Wolfgang Ziegler (fago) (lead maintainer)
