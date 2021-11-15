@@ -149,8 +149,8 @@ function rules_admin_settings($form, &$form_state) {
   // Present a list of available path cleaning callbacks.
   // @see rules_clean_path()
   $options = array(
-    'rules_path_default_cleaning_method' => t('Rules (built in)'),
     'rules_path_clean_path' => t('Path'),
+    'rules_path_default_cleaning_method' => t('Rules (built in, deprecated)'),
   );
   $form['path']['rules_path_cleaning_callback'] = array(
     '#type' => 'select',

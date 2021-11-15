@@ -85,6 +85,8 @@ function rules_condition_path_alias_exists($alias, $langcode = LANGUAGE_NONE) {
  * @code rules_path_replacement_char @endcode and
  * @code rules_path_transliteration @endcode
  * in the site's settings.php file.
+ * @deprecated Path module is now built into Backdrop and so
+ * rules_path_clean_path() is the preferred path-cleaning method.
  */
 function rules_path_default_cleaning_method($path) {
   $replace = config_get('rules.settings','rules_path_replacement_char');
