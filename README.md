@@ -1,33 +1,30 @@
 # Rules
 
-This module is a port to Backdrop of the Drupal 
-contributed module Rules version 7.x-2.9
-
 The Rules module allows site administrators to define conditionally executed
 actions based on occurring events (known as reactive or ECA rules).
 
-The Drupal version of Rules makes extensive use of classes and functions
-provided by the Drupal contributed module Entity API. Backdrop
-includes an entity module in core but this does not provide all the required
-functions. These are now available in the Entity Plus contributed module
-which is requirement.
+### Example use cases
 
-At the moment it may not be possible to upgrade Rules directly from a 
-Drupal 7 to a Backdrop installation, however it should be possible 
-to export rules from Drupal and import them into Backdrop.
+ - Build flexible content publishing workflows changes
+ - Send customized mails to notify your users about important
+ - Create custom redirections, system messages, breadcrumbs, ...
+ - Build an eCommerce store using Ubercart
 
+And many more...
 
-## Status
+### Features
 
-This port to Backdrop is in active use and reported issues are being addressed.
-
+ - Obviously, you may use reaction rules to react upon any event with custom conditions and actions.
+ - Allows functionality to be re-used via components.
+ - Flexible scheduling system that allows scheduling any component / action.
+ - Users can share their customizations by using the built-in import/export feature.
+ - Modular input evaluation system.
+ - The module has been developed with site performance in mind, so it makes use of caching routines to speed up rule evaluation.
+ - Rules 2.x features improved APIs, a new admin UI, support for all entity types, parameter configuration via simple data selection (i.e. just pass node:author as argument) and much more.
 
 ## Installation
 
-Install this module using the official Backdrop CMS instructions at
-https://backdropcms.org/guide/modules.
-
-Also install the required Entity Plus module.
+Install Entity Plus and this module using the [official Backdrop CMS instructions](https://backdropcms.org/guide/modules).
 
 Rules has four component modules, each with separate activation:
   + Rules
@@ -35,77 +32,37 @@ Rules has four component modules, each with separate activation:
   + Rules UI
   + Rules translation - for internationalization
 
-
-Then visit the configuration page at Administration >
-Configuration > Category > Rules (admin/config/category/rules)
+Then visit the configuration page at **Administration >
+Configuration > Category > Rules** (**admin/config/category/rules**)
 and enter the required information.
 
 ## Documentation
 
 Additional documentation is located in [the Wiki](https://github.com/backdrop-contrib/rules/wiki).
 
-## Debug Information
+## Current Maintainers
 
-An administrative setting enables debug information to be shown when 
-rules are evaluated and is visible for users having the permission 
-'Access the Rules debug log'. It is displayed in a pre-defined custom
-block 'Rules Log' which the site administrator must configure in the
-layout by adding it to their preferred region (e.g. the footer). When doing
-this the administrator should also set the Visibility condition for this
-block to be 'User: Permission  --  Access the Rules debug log'.
+- [Graham Oliver](https://github.com/Graham-72)
+- [Laryn Kragt Bakker](https://github.com/laryn) - [CEDC.org](https://cedc.org)
+- [Robert Lang](https://github.com/bugfolder)
+- Seeking additional maintainers
 
-There is also an administrative option to include this Log debug 
-information in the site's system log along with other 
-notifications, warnings and error reports.
+## Credits
 
-## Tests
+### Port to Backdrop:
+- [Graham Oliver](https://github.com/Graham-72)
+- Other contributors:
+  - [Docwilmot](https://github.com/docwilmot)
+  - [Laryn Kragt Bakker](https://github.com/laryn) - [CEDC.org](https://cedc.org)
+  - [Herb](https://github.com/herbdool/)]
 
-There are six inbuilt tests:
-
-  + Reaction Rules  -  Tests triggering reactive rules.
-
-  + Rules Core Integration  -  Tests provided integration for backdrop core.
-
-  + Rules Data test  -  Tests rules data saving and type matching.
-
-  + Rules Engine tests - Test using the rules API to create and evaluate rules.
-
-  + Rules event dispatchers  -  Tests event dispatcher functionality.
-
-  + Rules invocation enabled  -  Tests that Rules events are enabled during
-    menu item loads.
-
+### Drupal:
+  - Wolfgang Ziegler (fago) (lead maintainer)
+  - Klaus Purer (klausi)
+  - The Drupal 7 project has been sponsored by drunomics, epiqo,
+    and Google Summer of Code.
 
 ## License
 
 This project is GPL v2 software.
 See the LICENSE.txt file in this directory for complete text.
-
-## Current Maintainers
-
-- Graham Oliver github.com/Graham-72
-- [Laryn Kragt Bakker](https://github.com/laryn) - [CEDC.org](https://cedc.org)
-- Seeking additional maintainers
-
-## Acknowledgement
-
-This port to Backdrop would not, of course, be possible without
-all the work done by the developers and maintainers of the Drupal module.
-
-
-## Credits
-
-### For Drupal:
-
-  - Wolfgang Ziegler (fago) (lead maintainer)
-  - Klaus Purer (klausi)
-
-### Port to Backdrop:
-
-  - Graham Oliver github.com/Graham-72
-  - Other contributors : @docwilmot; @laryn; @ herbdool
-
-
-The Drupal 7 project has been sponsored by drunomics, epiqo
-and Google Summer of Code.
-
