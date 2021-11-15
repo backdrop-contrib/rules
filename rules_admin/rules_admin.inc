@@ -171,14 +171,11 @@ function rules_admin_settings($form, &$form_state) {
       ),
     ),
   );
-  $tl_exists = module_exists('transliteration');
-  $tl_help = $tl_exists ? t('check to transliterate aliases.') : t('Enable the Transliteration module to permit transliteration of aliases.');
   $form['path']['built_in_settings']['rules_path_transliteration'] = array(
     '#type' => 'checkbox',
     '#title' => t('Transliteration'),
-    '#description' => $tl_help,
-    '#default_value' => $tl_exists && config_get('rules.settings','rules_path_transliteration'),
-    '#disabled' => !$tl_exists,
+    '#description' => t('Check to transliterate aliases.'),
+    '#default_value' => config_get('rules.settings','rules_path_transliteration'),
   );
   $form['path']['built_in_settings']['rules_path_replacement_char'] = array(
     '#type' => 'textfield',
@@ -258,9 +255,7 @@ function rules_admin_settings($form, &$form_state) {
 function rules_admin_settings_submit($form, &$form_state) {
   $config = config('rules.settings');
   $config->set('rules_path_cleaning_callback', $form_state['values']['rules_path_cleaning_callback']);
-  if (module_exists('transliteration')) {
-    $config->set('rules_path_transliteration', $form_state['values']['rules_path_transliteration']);
-  }
+  $config->set('rules_path_transliteration', $form_state['values']['rules_path_transliteration']);
   $config->set('rules_path_replacement_char', $form_state['values']['rules_path_replacement_char']);
   $config->set('rules_path_regex', $form_state['values']['rules_path_regex']);
   $config->set('rules_path_lower_case', $form_state['values']['rules_path_lower_case']);

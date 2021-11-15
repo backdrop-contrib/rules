@@ -89,8 +89,8 @@ function rules_condition_path_alias_exists($alias, $langcode = LANGUAGE_NONE) {
 function rules_path_default_cleaning_method($path) {
   $replace = config_get('rules.settings','rules_path_replacement_char');
   if ($replace) {
-    // If the transliteration module is enabled, transliterate the alias first.
-    if (module_exists('transliteration') && config_get('rules.settings','rules_path_transliteration')) {
+    // If transliteration is enabled, transliterate the alias first.
+    if (config_get('rules.settings','rules_path_transliteration')) {
       $path = transliteration_get($path);
     }
     $preg_args = array(
