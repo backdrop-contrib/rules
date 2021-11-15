@@ -2024,7 +2024,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     $roles = $user1->roles;
     // Remove the authenticated role so we only use the new role created by
     // backdropCreateUser().
-    unset($roles[BACKDROP_AUTHENTICATED_RID]);
+    unset($roles[BACKDROP_AUTHENTICATED_ROLE]);
 
     // Now create a second user with the same role.
     $user2 = $this->backdropCreateUser();
