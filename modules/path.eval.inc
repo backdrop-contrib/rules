@@ -89,6 +89,7 @@ function rules_condition_path_alias_exists($alias, $langcode = LANGUAGE_NONE) {
  * rules_path_clean_path() is the preferred path-cleaning method.
  */
 function rules_path_default_cleaning_method($path) {
+  watchdog_deprecated_function('rules', __FUNCTION__);
   $replace = config_get('rules.settings','rules_path_replacement_char');
   if ($replace) {
     // If transliteration is enabled, transliterate the alias first.
