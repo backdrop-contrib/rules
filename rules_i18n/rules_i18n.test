@@ -171,7 +171,6 @@ class RulesI18nTestCase extends BackdropWebTestCase {
     $field = field_info_field('body');
     $field['translatable'] = TRUE;
     field_update_field($field);
-    config_set('rules.settings','language_content_type_page');
 
     $set = rules_action_set(array('node' => array('type' => 'node')));
     $set->action('rules_i18n_select', array(
