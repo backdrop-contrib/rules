@@ -124,8 +124,7 @@ function rules_php_condition_info() {
  */
 function rules_php_evaluator_help($var_info, $action_help = FALSE) {
   $render['top'] = array(
-    '#prefix' => '<p>',
-    '#suffix' => '</p>',
+    '#type' => 'help',
     '#markup' => t('PHP code inside of &lt;?php ?&gt; delimiters will be evaluated and replaced by its output. E.g. &lt;? echo 1+1?&gt; will be replaced by 2.') . ' ' . t('Furthermore you can make use of the following variables:'),
   );
   $render['vars'] = array(
@@ -146,8 +145,7 @@ function rules_php_evaluator_help($var_info, $action_help = FALSE) {
 
   if ($action_help) {
     $render['updated_help'] = array(
-      '#prefix' => '<p>',
-      '#suffix' => '</p>',
+      '#type' => 'help',
       '#markup' => t("If you want to change a variable just return an array of new variable values, e.g.: !code", array('!code' => '<pre>return array("node" => $node);</pre>')),
     );
   }

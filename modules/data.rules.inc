@@ -308,9 +308,8 @@ function rules_action_data_set_form_alter(&$form, &$form_state, $options, RulesA
     $form['parameter']['data']['settings']['#access'] = FALSE;
     // @todo Improve display.
     $form['parameter']['data']['info'] = array(
-      '#prefix' => '<p>',
+      '#type' => 'help',
       '#markup' => t('<strong>Selected data:</strong> %selector', array('%selector' => $element->settings['data:select'])),
-      '#suffix' => '</p>',
     );
   }
 }
@@ -365,9 +364,8 @@ function rules_data_list_form_alter(&$form, &$form_state, $options, RulesAbstrac
     // Change the list parameter to be not editable any more.
     $form['parameter']['list']['settings']['#access'] = FALSE;
     $form['parameter']['list']['info'] = array(
-      '#prefix' => '<p>',
+      '#type' => 'help',
       '#markup' => t('<strong>Selected list:</strong> %selector', array('%selector' => $element->settings['list:select'])),
-      '#suffix' => '</p>',
     );
   }
 }
@@ -654,9 +652,8 @@ function rules_condition_data_is_form_alter(&$form, &$form_state, $options, Rule
     $form['parameter']['data']['settings']['#access'] = FALSE;
     // @todo Improve display.
     $form['parameter']['data']['info'] = array(
-      '#prefix' => '<p>',
+      '#type' => 'help',
       '#markup' => t('<strong>Selected data:</strong> %selector', array('%selector' => $element->settings['data:select'])),
-      '#suffix' => '</p>',
     );
 
     // Limit the operations to what makes sense for the selected data type.
