@@ -3,3 +3,5 @@ description = "Support module for the Rules tests."
 package = Testing
 backdrop = 1.x
 hidden = TRUE
+
+dependencies[] = rules
