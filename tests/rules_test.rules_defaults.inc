@@ -1,8 +1,7 @@
 <?php
-
 /**
  * @file
- * Includes any Rules integration provided by the module.
+ * Includes Rules integration provided by the Rules Test module.
  */
 
 /**
@@ -24,9 +23,6 @@ function rules_test_default_rules_configuration() {
   $action_set = rules_action_set(array('node' => array('type' => 'node', 'label' => 'Content')));
   $action_set->action('node_publish');
   $configs['rules_test_action_set'] = $action_set;
-
-  // Test providing a rule using an export.
-  $configs['rules_export_test'] = rules_import(_rules_export_get_test_export());
 
   // An action set used to test merging term parents.
   $configs['rules_retrieve_term_parents'] = rules_import('{ "rules_retrieve_term_parents" : {
@@ -68,57 +64,4 @@ function rules_test_default_rules_configuration() {
 }');
 
   return $configs;
-}
-
-/**
- * Defines the export of rule for testing import/export.
- */
-function _rules_export_get_test_export() {
-  return '{ "rules_export_test" : {
-    "LABEL" : "Test import rule2",
-    "PLUGIN" : "reaction rule",
-    "WEIGHT" : "-1",
-    "ACTIVE" : false,
-    "OWNER" : "rules",
-    "TAGS" : [ "bar", "baz", "foo" ],
-    "REQUIRES" : [ "rules", "comment" ],
-    "ON" : { "comment_insert" : [] },
-    "IF" : [
-      { "OR" : [
-          { "NOT node_is_sticky" : { "node" : [ "comment:node" ] } },
-          { "node_is_of_type" : {
-              "node" : [ "comment:node" ],
-              "type" : { "value" : { "page" : "page" } }
-            }
-          },
-          { "NOT AND" : [ { "OR" : [] } ] }
-        ]
-      }
-    ],
-    "DO" : [
-      { "data_set" : {
-          "data" : [ "comment:node:created" ],
-          "value" : { "select" : "site:current-date", "date_offset" : { "value" : -604800 } }
-        }
-      },
-      { "node_make_sticky" : { "node" : [ "comment:node" ] } },
-      { "variable_add" : {
-          "USING" : { "type" : "token", "value" : "error" },
-          "PROVIDE" : { "variable_added" : { "level" : "Error level" } }
-        }
-      },
-      { "backdrop_message" : {
-          "message" : "fein, [comment:node:title] has been made sticky!",
-          "type" : [ "level" ]
-        }
-      },
-      { "LOOP" : {
-          "USING" : { "list" : [ "site:current-user:roles" ] },
-          "ITEM" : { "current_role" : "Current role" },
-          "DO" : [ { "backdrop_message" : { "message" : [ "current-role" ] } } ]
-        }
-      }
-    ]
-  }
-}';
 }

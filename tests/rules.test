@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Rules tests.
@@ -62,7 +61,7 @@ class RulesTestCase extends BackdropWebTestCase {
     $last = array_pop($log);
     $last = array_pop($log);
     $last = array_pop($log);
-    $this->assertEqual($last[0], 'action called', 'Action called');
+    $this->assertEqual($last[0], 'Debug: action called', 'Action called');
     RulesLog::logger()->checkLog();
 
     // Make sure condition and action iterators are working.
@@ -88,20 +87,40 @@ class RulesTestCase extends BackdropWebTestCase {
     $container = new RulesTestContainer();
     $this->assertEqual($container->dependencies(), array('rules_test'), 'Providing module for container plugin is returned as dependency.');
 
+    // Originally these dependency tests uses 'rules_export_test', which is
+    // loaded as a default configuration from a previous export. However, when
+    // the comment module is disabled, loading from an export file fails with an
+    // unhandled exception (and that's not what we're testing here). So now we
+    // create a rule and save it into the db, then load the rule from the db for
+    // testing its dependencies and whether it is properly (un)marked as dirty.
+    $rule = rules_import(
+'{ "rules_example_using_comment_rule" : {
+    "LABEL" : "A comment rule",
+    "PLUGIN" : "reaction rule",
+    "OWNER" : "rules",
+    "REQUIRES" : [ "rules", "comment" ],
+    "ON" : { "comment_insert" : [] },
+    "DO" : [
+      { "backdrop_message" : { "message" : "A comment was saved on [comment:node:title]." } }
+    ]
+  }
+}');
+    $rule->save();
+
     // Test handling unmet dependencies.
-    $rule = rules_config_load('rules_export_test');
+    $rule = rules_config_load('rules_example_using_comment_rule');
     $this->assertTrue(in_array('comment', $rule->dependencies) && !$rule->dirty, 'Dependencies have been imported.');
 
     // Remove the required comment module and make sure the rule is dirty then.
     module_disable(array('comment'));
     rules_clear_cache();
-    $rule = rules_config_load('rules_export_test');
+    $rule = rules_config_load('rules_example_using_comment_rule');
     $this->assertTrue($rule->dirty, 'Rule has been marked as dirty');
 
     // Now try re-enabling.
     module_enable(array('comment'));
     rules_clear_cache();
-    $rule = rules_config_load('rules_export_test');
+    $rule = rules_config_load('rules_example_using_comment_rule');
     $this->assertTrue(!$rule->dirty, 'Rule has been marked as not dirty again.');
 
     // Test it with components.
@@ -155,8 +174,7 @@ class RulesTestCase extends BackdropWebTestCase {
 
     $s = serialize($action);
     $action2 = unserialize($s);
-    $node = (object) array('status' => 0, 'type' => 'page');
-    $node->title = 'test';
+    $node = $this->backdropCreateNode(array('status' => 0, 'type' => 'page', 'title' => 'test'));
 
     $action2->execute($node);
     $this->assertEqual($node->status, 1, 'Action executed correctly');
@@ -228,7 +246,7 @@ class RulesTestCase extends BackdropWebTestCase {
     $log = RulesLog::logger()->get();
     $last = array_pop($log);
     $last = array_pop($log);
-    $this->assertEqual($last[0], 'Action called with node ' . $node->nid, 'Action called');
+    $this->assertEqual($last[0], 'Debug: Action called with node ' . $node->nid, 'Action called');
     RulesLog::logger()->checkLog();
   }
 
@@ -440,10 +458,10 @@ class RulesTestCase extends BackdropWebTestCase {
          ->execute($node->nid);
 
     RulesLog::logger()->checkLog();
-    $msg = backdrop_get_messages('status');
-    $last_msg = array_pop($msg['status']);
-    $wrapper = entity_metadata_wrapper('node', $node);
-    $this->assertEqual($last_msg, $wrapper->body->value->value(array('sanitize' => TRUE)), 'Data selector for getting parameter applied.');
+    $msg = backdrop_get_messages();
+    $last_msg = array_pop($msg['info']);
+    $intended_msg = check_markup($node->body[LANGUAGE_NONE][0]['value'],$node->body[LANGUAGE_NONE][0]['format']);
+    $this->assertEqual($last_msg, $intended_msg, 'Data selector for getting parameter applied.');
 
     // Get a "reference" on the same object as returned by node_load().
     $node = node_load($node->nid);
@@ -527,8 +545,8 @@ class RulesTestCase extends BackdropWebTestCase {
     rules_invoke_component('rules_test_set_1', $node);
 
     $msg = backdrop_get_messages();
-    $this->assertEqual($msg['status'][0], 'The title.', 'First rule evaluated.');
-    $this->assertEqual($msg['status'][1], 'Node is published.', 'Second rule evaluated.');
+    $this->assertEqual($msg['info'][0], 'The title.', 'First rule evaluated.');
+    $this->assertEqual($msg['info'][1], 'Node is published.', 'Second rule evaluated.');
 
     // Test a condition set.
     $set = rules_or(array(
@@ -698,7 +716,7 @@ class RulesTestCase extends BackdropWebTestCase {
 
     // Ensure the action has been executed twice, once for each list item.
     $msg = backdrop_get_messages();
-    $this->assert($msg['status'][0] == 'test' && $msg['status'][1], 'Loop has been properly executed');
+    $this->assert($msg['info'][0] == 'test' && $msg['info'][1], 'Loop has been properly executed');
 
     // Now test looping over nodes.
     $node1 = $this->backdropCreateNode(array('type' => 'page', 'sticky' => 0));
@@ -794,22 +812,31 @@ class RulesTestCase extends BackdropWebTestCase {
 
     RulesLog::logger()->checkLog();
     $msg = backdrop_get_messages();
-    $this->assertEqual(array_pop($msg['status']), 'Title: ' . check_plain('<b>The body & nothing.</b>'), 'Token input evaluator applied.');
+    $this->assertEqual(array_pop($msg['info']), 'Title: ' . check_plain('<b>The body & nothing.</b>'), 'Token input evaluator applied.');
 
     // Test token replacements on a list of text values.
+    // Set a few site variables.
+    config('system.core')
+      ->set('site_name', 'Backdrop CMS')
+      ->set('site_slogan', 'Slogan')
+      ->save();
     $component = rules_action_set(array('var' => array('type' => 'list<text>', 'label' => 'var')), array('var'));
     $component->save('rules_test_input');
-
-    $action = rules_action('component_rules_test_input', array('var' => array('uid: [site:current-user:uid]')));
+    $action = rules_action('component_rules_test_input', array('var' => array('site name: [site:name]', 'site slogan: [site:slogan]')));
     list($var) = $action->execute();
     $uid = $GLOBALS['user']->uid;
-    $this->assertEqual(array("uid: $uid"), $var, 'Token replacements on a list of values applied.');
+    $this->assertEqual(array('site name: Backdrop CMS', 'site slogan: Slogan'), $var, 'Token replacements on a list of values applied.');
   }
 
   /**
    * Tests importing and exporting a rule.
    */
   public function testRuleImportExport() {
+    // We've moved the 'rules_export_test' rule default configuration into its
+    // own module so that it doesn't cause problems for other tests that
+    // enable/disable the comment module on which it relies.
+    module_enable(array('rules_export_test'));
+
     $rule = rule(array('nid' => array('type' => 'integer')));
     $rule->name = "rules_export_test";
     $rule->action('rules_action_load_node')
@@ -829,7 +856,7 @@ class RulesTestCase extends BackdropWebTestCase {
     $this->assertEqual($export, $rule->export(), 'Rule has been exported correctly.');
 
     // Test importing a rule which makes use of almost all features.
-    $export = _rules_export_get_test_export();
+    $export = _rules_export_test_get_test_export();
     $rule = rules_import($export);
     $this->assertTrue(!empty($rule) && $rule->integrityCheck(), 'Rule has been imported.');
 
@@ -907,6 +934,8 @@ class RulesTestCase extends BackdropWebTestCase {
 }';
     $or = rules_import($export);
     $this->assertTrue($or->integrityCheck() && $or->isNegated(), 'Negated condition component imported.');
+
+    module_disable(array('rules_export_text'));
   }
 
   /**
@@ -941,7 +970,6 @@ class RulesTestCase extends BackdropWebTestCase {
     $msg = RulesTestCase::t('The variable or parameter %message is empty.', array('message'));
     $this->assertTrue(strpos($text, $msg) !== FALSE, 'Evaluation aborted due to an empty argument value.');
   }
-
 }
 
 /**

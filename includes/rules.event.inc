@@ -323,7 +323,7 @@ class RulesEventHandlerEntityBundle extends RulesEventHandlerBase {
     $this->entityType = implode('_', explode('_', $event_name, -1));
     $this->entityInfo = entity_get_info($this->entityType);
     if (!$this->entityInfo) {
-      throw new InvalidArgumentException('Unsupported event name passed.');
+      throw new InvalidArgumentException('Unsupported event name "' . $event_name . '" passed.');
     }
   }
 
