@@ -1381,10 +1381,25 @@ class RulesTriggerTestCase extends BackdropWebTestCase {
 class RulesIntegrationTestCase extends BackdropWebTestCase {
 
   /**
+   * Note whether the PHP module is available for testing.
+   */
+  protected $has_php;
+
+  /**
    * Overrides BackdropWebTestCase::setUp().
    */
   protected function setUp() {
-    parent::setUp('entity_plus', 'locale', 'rules', 'rules_test', 'path');
+
+    $setup_modules = array('entity_plus', 'locale', 'rules', 'rules_test', 'path');
+    $available_modules = system_rebuild_module_data();
+    if (isset($available_modules['php'])) {
+      $this->has_php = TRUE;
+      $setup_modules[] = 'php';
+    }
+    else {
+      $this->has_php = FALSE;
+    }
+    parent::setUp($setup_modules);
     RulesLog::logger()->clear();
     config_set('rules.settings','rules_debug_log', 1);
   }
@@ -1591,7 +1606,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     // Also test a full rule so the integrity check must work.
     $term_wrapped = entity_plus_property_values_create_entity('taxonomy_term', array(
       'name' => $this->randomName(),
-      'vocabulary' => 1,
+      'vocabulary' => 'tags',
     ))->save();
     $rule = rule(array(
       'node' => array('type' => 'node'),
@@ -1661,7 +1676,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     ))->value();
     $term_wrapped = entity_plus_property_values_create_entity('taxonomy_term', array(
       'name' => $this->randomName(),
-      'vocabulary' => 1,
+      'vocabulary' => 'tags',
     ))->save();
 
     // Test asserting the field and using it afterwards.
@@ -1709,7 +1724,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
   public function testTaxonomyIntegration() {
     $term = entity_plus_property_values_create_entity('taxonomy_term', array(
       'name' => $this->randomName(),
-      'vocabulary' => 1,
+      'vocabulary' => 'tags',
     ))->value();
     $term2 = clone $term;
     taxonomy_term_save($term);
@@ -1770,11 +1785,11 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
 
     $term1 = entity_plus_property_values_create_entity('taxonomy_term', array(
       'name' => $this->randomName(),
-      'vocabulary' => 1,
+      'vocabulary' => 'tags',
     ))->save();
     $term2 = entity_plus_property_values_create_entity('taxonomy_term', array(
       'name' => $this->randomName(),
-      'vocabulary' => 1,
+      'vocabulary' => 'tags',
     ))->save();
 
     // Test asserting the term reference field and using it afterwards.
@@ -1793,7 +1808,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     // config.
     $term = entity_plus_property_values_create_entity('taxonomy_term', array(
       'name' => $this->randomName(),
-      'vocabulary' => 1,
+      'vocabulary' => 'tags',
       'parent' => array($term1->value()),
     ))->save();
 
@@ -1859,20 +1874,28 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     $role = $this->backdropCreateRole(array('administer nodes'), 'foo');
     $user = $this->backdropCreateUser();
 
+// FAILS. This is the last remaining test fail in this function.
+
     // Test assigning a role with the list_add action.
     $rule = rule(array('user' => array('type' => 'user')));
+    $rule->label = 'rule_1';
     $rule->action('list_add', array('list:select' => 'user:roles', 'item' => $role));
     $rule->execute($user);
     $this->assertTrue(isset($user->roles[$role]), 'Role assigned to user.');
 
+    RulesLog::logger()->checkLog();
+    RulesLog::logger()->clear();
+
     // Test removing a role with the list_remove action.
     $rule = rule(array('user' => array('type' => 'user')));
+    $rule->label = 'rule_2';
     $rule->action('list_remove', array('list:select' => 'user:roles', 'item' => $role));
     $rule->execute($user);
     $this->assertTrue(!isset($user->roles[$role]), 'Role removed from user.');
 
     // Test assigning a role with user_add_role action.
     $rule = rule(array('user' => array('type' => 'user')));
+    $rule->label = 'rule_3';
     $rule->action('user_add_role', array('account:select' => 'user', 'roles' => array($role)));
     $rule->execute($user);
 
@@ -1882,6 +1905,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
 
     // Test removing a role with the user_remove_role action.
     $rule = rule(array('user' => array('type' => 'user')));
+    $rule->label = 'rule_4';
     $rule->action('user_remove_role', array('account:select' => 'user', 'roles' => array($role)));
     $rule->execute($user);
 
@@ -1905,6 +1929,11 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
    * Tests integration for the php module.
    */
   public function testPHPIntegration() {
+    // Don't try to test PHP if the module isn't part of the installation.
+    if (!$this->has_php) {
+      return;
+    }
+
     $node = $this->backdropCreateNode(array('title' => 'foo'));
     $rule = rule(array('var_name' => array('type' => 'node')));
     $rule->condition('php_eval', array('code' => 'return TRUE;'))
@@ -1915,7 +1944,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     $rule->access();
     RulesLog::logger()->checkLog();
     $msg = backdrop_get_messages();
-    $this->assertEqual(array_pop($msg['status']), "Title: foo Token: foo", 'PHP input evaluation has been applied.');
+    $this->assertEqual(array_pop($msg['info']), "Title: foo Token: foo", 'PHP input evaluation has been applied.');
     $this->assertEqual(array_pop($msg['status']), "Executed-foo", 'PHP code condition and action have been evaluated.');
 
     // Test PHP data processor.
@@ -1930,7 +1959,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     $rule->access();
     RulesLog::logger()->checkLog();
     $msg = backdrop_get_messages();
-    $this->assertEqual(array_pop($msg['status']), "Title: foo", 'PHP data processor has been applied.');
+    $this->assertEqual(array_pop($msg['info']), "Title: foo", 'PHP data processor has been applied.');
   }
 
   /**
@@ -2100,7 +2129,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
 
     watchdog('php', 'test %message', array('%message' => 'message'));
     $msg = backdrop_get_messages();
-    $this->assertEqual(array_pop($msg['status']), t('test %message', array('%message' => 'message')), 'Watchdog event occurred and log entry properties can be used.');
+    $this->assertEqual(array_pop($msg['info']), t('test %message', array('%message' => 'message')), 'Watchdog event occurred and log entry properties can be used.');
   }
 
   /**
@@ -2126,7 +2155,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     // Test term alias action.
     $term = entity_plus_property_values_create_entity('taxonomy_term', array(
       'name' => $this->randomName(),
-      'vocabulary' => 1,
+      'vocabulary' => 'tags',
     ))->value();
     rules_action('taxonomy_term_path_alias')->execute($term, 'term-test');
     $path = path_load("taxonomy/term/$term->tid");
