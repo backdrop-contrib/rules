@@ -1696,7 +1696,7 @@ function rules_tokens($type, $tokens, $data, $options = array()) {
     );
     // Entity tokens uses metadata wrappers as values for 'struct' types.
     $wrapper = entity_metadata_wrapper('struct', array('value' => $data[$type]), $info);
-    return entity_plus_token_tokens('struct', $tokens, array('struct' => $wrapper), $options);
+    return entity_token_tokens('struct', $tokens, array('struct' => $wrapper), $options);
   }
 }
 
