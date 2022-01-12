@@ -4,7 +4,6 @@
     "rules_log_level": 1,
     "rules_debug_log": 0,
     "rules_debug": 0,
-    "language_content_type_page": "1",
     "rules_path_cleaning_callback": "rules_path_clean_path",
     "rules_path_transliteration": 1,
     "rules_path_replacement_char": "-",
