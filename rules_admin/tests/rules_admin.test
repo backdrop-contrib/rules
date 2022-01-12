@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Rules UI tests.
@@ -9,17 +8,6 @@
  * Tests for creating rules through the UI.
  */
 class RulesUiTestCase extends BackdropWebTestCase {
-
-  /**
-   * Declares test metadata.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Rules UI Tests ',
-      'description' => 'Tests Rules UI.',
-      'group' => 'Rules',
-    );
-  }
 
   /**
    * Overrides BackdropWebTestCase::setUp().

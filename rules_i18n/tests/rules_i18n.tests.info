@@ -1,0 +1,6 @@
+[RulesI18nTestCase]
+name = Rules I18n
+description = Tests translating Rules configs.
+group = Rules
+file = rules_scheduler.test
+dependencies[] = i18n_string
