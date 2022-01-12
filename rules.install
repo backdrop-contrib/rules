@@ -191,18 +191,7 @@ function rules_schema() {
 }
 
 /**
- * Remove settings that are now obtained from system.core
- */
-function rules_update_1001() {
-  $config = config('rules.settings');
-  $config->clear('theme_default');
-  $config->clear('admin_theme');
-  $config->clear('site_mail');
-  $config->save();
-}
-
-/**
- * Move book settings from variables to config.
+ * Move Rules settings from variables to config.
  */
 function rules_update_1000() {
   // Migrate variables to config.
@@ -234,6 +223,31 @@ function rules_update_1000() {
   update_variable_del('rules_clean_path');
   update_variable_del('rules_path_transliteration');
   update_variable_del('site_mail');
+}
+
+/**
+ * Remove settings that are now obtained from system.core.
+ */
+function rules_update_1001() {
+  $config = config('rules.settings');
+  $config->clear('theme_default');
+  $config->clear('admin_theme');
+  $config->clear('site_mail');
+  $config->save();
+}
+
+/**
+ * Deprecate 'rules_clean_path' config variable in favor of 'rules_path_regex'.
+ */
+function rules_update_1002() {
+  $rules_clean_path = config_get('rules.settings', 'rules_clean_path');
+  if (is_array($rules_clean_path) && count($rules_clean_path) == 2) {
+    config_set('rules.settings', 'rules_path_regex', $rules_clean_path[0]);
+  }
+  else {
+    config_set('rules.settings', 'rules_path_regex', '/[^a-zA-Z0-9\-_]+/');
+  }
+  config_clear('rules.settings', 'rules_clean_path');
 }
 
 /**

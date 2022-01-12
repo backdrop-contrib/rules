@@ -85,19 +85,23 @@ function rules_condition_path_alias_exists($alias, $langcode = LANGUAGE_NONE) {
  * @code rules_path_replacement_char @endcode and
  * @code rules_path_transliteration @endcode
  * in the site's settings.php file.
+ * @deprecated Path module is now built into Backdrop and so
+ * rules_path_clean_path() is the preferred path-cleaning method.
  */
 function rules_path_default_cleaning_method($path) {
+  watchdog_deprecated_function('rules', __FUNCTION__);
   $replace = config_get('rules.settings','rules_path_replacement_char');
   if ($replace) {
-    // If the transliteration module is enabled, transliterate the alias first.
-    if (module_exists('transliteration') && config_get('rules.settings','rules_path_transliteration')) {
+    // If transliteration is enabled, transliterate the alias first.
+    if (config_get('rules.settings','rules_path_transliteration')) {
       $path = transliteration_get($path);
     }
-
-    $array = config_get('rules.settings','rules_clean_path');
-    $array[2] = $path;
+    $preg_args = array(
+      config_get('rules.settings','rules_path_regex'),
+      $replace,
+    );
     // Replace it and remove trailing and leading replacement characters.
-    $output = trim(call_user_func_array('preg_replace', $array), $replace);
+    $output = trim(call_user_func_array('preg_replace', $preg_args), $replace);
 
     if (config_get('rules.settings','rules_path_lower_case')) {
       $output = backdrop_strtolower($output);
@@ -119,22 +123,6 @@ function rules_clean_path($path) {
     $function = 'rules_path_default_cleaning_method';
   }
   return $function($path);
-}
-
-/**
- * CTools path cleaning callback.
- *
- * @see rules_admin_settings()
- */
-function rules_path_clean_ctools($path) {
-  // Make use of the CTools cleanstring implementation.
-  ctools_include('cleanstring');
-  $settings = array(
-    'separator' => config_get('rules.settings','rules_path_replacement_char'),
-    'transliterate' => module_exists('transliteration') && config_get('rules.settings','rules_path_transliteration'),
-    'lower case' => config_get('rules.settings','rules_path_lower_case'),
-  );
-  return ctools_cleanstring($path, $settings);
 }
 
 /**

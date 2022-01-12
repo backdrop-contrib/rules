@@ -146,23 +146,66 @@ function rules_admin_components_overview($form, &$form_state, $base_path) {
  */
 function rules_admin_settings($form, &$form_state) {
 
-  if (module_exists('path')) {
-    // Present a list of available path cleaning callbacks.
-    // @see rules_clean_path()
-    $options = array(
-      'rules_path_default_cleaning_method' => t('Rules (built in)'),
-    );
-    $options['rules_path_clean_path'] = t('Path');
-    $path_help = t("Note that Path's URL path cleaning method can be configured at <a href='!url'>admin/config/urls/path/patterns/settings</a>.", array('!url' => url('admin/config/urls/path/patterns/settings')));
+  // Present a list of available path cleaning callbacks.
+  // @see rules_clean_path()
+  $options = array(
+    'rules_path_clean_path' => t('Path'),
+    'rules_path_default_cleaning_method' => t('Rules (built in, deprecated)'),
+  );
+  $form['path']['rules_path_cleaning_callback'] = array(
+    '#type' => 'select',
+    '#title' => t('URL path cleaning method'),
+    '#description' => t('Choose the path cleaning method to be applied when generating URL path aliases.'),
+    '#default_value' => config_get('rules.settings','rules_path_cleaning_callback'),
+    '#options' => $options,
+  );
 
-    $form['path']['rules_path_cleaning_callback'] = array(
-      '#type' => 'select',
-      '#title' => t('URL path cleaning method'),
-      '#description' => t('Choose the path cleaning method to be applied when generating URL path aliases.') . ' ' . $path_help,
-      '#default_value' => config_get('rules.settings','rules_path_cleaning_callback'),
-      '#options' => $options,
-    );
-  }
+  $form['path']['built_in_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Rules (built-in) path cleaning settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#states' => array(
+      'visible' => array(
+        ':input[name="rules_path_cleaning_callback"]' => array('value' => 'rules_path_default_cleaning_method'),
+      ),
+    ),
+  );
+  $form['path']['built_in_settings']['rules_path_transliteration'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Transliteration'),
+    '#description' => t('Check to transliterate aliases.'),
+    '#default_value' => config_get('rules.settings','rules_path_transliteration'),
+  );
+  $form['path']['built_in_settings']['rules_path_replacement_char'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Replacement character'),
+    '#description' => t('Enter the replacement character for non-ASCII characters in the path.'),
+    '#default_value' => config_get('rules.settings','rules_path_replacement_char'),
+    '#size' => 1,
+  );
+  $form['path']['built_in_settings']['rules_path_regex'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Clean path regex'),
+    '#description' => t('Enter the regex for the characters to be kept, e.g., "/[^a-zA-Z0-9\-_]+/".'),
+    '#default_value' => config_get('rules.settings','rules_path_regex'),
+  );
+  $form['path']['built_in_settings']['rules_path_lower_case'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Lower case'),
+    '#description' => t('Check to convert all characters in the path to lower case.'),
+    '#default_value' => config_get('rules.settings','rules_path_lower_case'),
+  );
+
+  $form['path']['path_settings'] = array(
+    '#type' => 'fieldset',
+    '#description' => t("Path module's URL path cleaning method can be configured at <a href='!url'>admin/config/urls/path/patterns/settings</a>.", array('!url' => url('admin/config/urls/path/patterns/settings'))),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="rules_path_cleaning_callback"]' => array('value' => 'rules_path_clean_path'),
+      ),
+    ),
+  );
 
   $form['rules_log_errors'] = array(
     '#type' => 'radios',
@@ -212,6 +255,10 @@ function rules_admin_settings($form, &$form_state) {
 function rules_admin_settings_submit($form, &$form_state) {
   $config = config('rules.settings');
   $config->set('rules_path_cleaning_callback', $form_state['values']['rules_path_cleaning_callback']);
+  $config->set('rules_path_transliteration', $form_state['values']['rules_path_transliteration']);
+  $config->set('rules_path_replacement_char', $form_state['values']['rules_path_replacement_char']);
+  $config->set('rules_path_regex', $form_state['values']['rules_path_regex']);
+  $config->set('rules_path_lower_case', $form_state['values']['rules_path_lower_case']);
   $config->set('rules_log_errors', $form_state['values']['rules_log_errors']);
   $config->set('rules_debug_log', $form_state['values']['rules_debug_log']);
   $config->set('rules_debug', $form_state['values']['rules_debug']);
