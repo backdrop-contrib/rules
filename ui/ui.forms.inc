@@ -160,9 +160,8 @@ function rules_ui_form_execute_rules_config($form, &$form_state, $rules_config, 
     // Create either the appropriate action or condition element.
     $element = rules_plugin_factory($rules_config instanceof RulesActionInterface ? 'action' : 'condition', 'component_' . $rules_config->name);
     $form['exec_help'] = array(
-      '#prefix' => '<p>',
+      '#type' => 'help',
       '#markup' => t('This form allows you to manually trigger the execution of the @plugin "%label". If this component requires any parameters, input the suiting execution arguments below.', array('@plugin' => $rules_config->plugin(), '%label' => $rules_config->label())),
-      '#suffix' => '</p>',
     );
     $element->form($form, $form_state);
 
