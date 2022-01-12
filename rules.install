@@ -191,6 +191,13 @@ function rules_schema() {
 }
 
 /**
+ * Implements hook_update_last_removed().
+ */
+function rules_update_last_removed() {
+  return 7214;
+}
+
+/**
  * Move Rules settings from variables to config.
  */
 function rules_update_1000() {
@@ -200,7 +207,6 @@ function rules_update_1000() {
   $config->set('rules_log_level', update_variable_get('rules_log_level', RulesLog::INFO));
   $config->set('rules_debug_log', update_variable_get('rules_debug_log', 0));
   $config->set('rules_debug', update_variable_get('rules_log_debug', RulesLog::WARN));
-  $config->set('language_content_type_page', update_variable_get('language_content_type_page', 1));
   $config->set('rules_path_cleaning_callback', update_variable_get('rules_path_cleaning_callback', 'rules_path_default_cleaning_method'));
   $config->set('rules_path_replacement_char', update_variable_get('rules_path_replacement_char', '-'));
   $config->set('rules_path_lower_case', update_variable_get('rules_path_lower_case', TRUE));
@@ -216,7 +222,6 @@ function rules_update_1000() {
   update_variable_del('rules_debug_region');
   update_variable_del('theme_default');
   update_variable_del('admin_theme');
-  update_variable_del('language_content_type_page');
   update_variable_del('rules_path_cleaning_callback');
   update_variable_del('rules_path_replacement_char');
   update_variable_del('rules_path_lower_case');
@@ -251,8 +256,10 @@ function rules_update_1002() {
 }
 
 /**
- * Implements hook_update_last_removed().
+ * Remove superfluous config variable 'language_content_type_page'.
  */
-function rules_update_last_removed() {
-  return 7214;
+function rules_update_1003() {
+  $config = config('rules.settings');
+  $config->clear('language_content_type_page');
+  $config->save();
 }
