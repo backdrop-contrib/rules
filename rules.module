@@ -905,22 +905,10 @@ function rules_hook_info() {
  * @see RulesEntityController
  */
 function rules_config_load_multiple($names = array(), $conditions = array()) {
-  module_load_include('inc', 'rules', 'includes/entity.functions');
-  $entity_type = 'rules_config';
   if (empty($names)) {
     $names = FALSE;
   }
-  $entities = entity_load_multiple($entity_type, $names, $conditions);
-  $info = entity_get_info($entity_type);
-  if (!isset($info['entity keys']['name'])) {
-    return $entities;
-  }
-  $ret = array();
-  foreach ($entities as $entity) {
-    $key = isset($entity->$property) ? $entity->$property : NULL;
-    $ret[$key] = $entity;
-  }
-  return $ret;
+  return entity_load_multiple_by_name('rules_config', $names, $conditions);
 }
 
 /**
