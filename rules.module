@@ -962,7 +962,7 @@ function rules_get_components($label = FALSE, $type = NULL, $conditions = array(
  * @param array $ids
  *   An array of entity IDs.
  */
-function rules_config_delete(array $ids) {
+function rules_configuration_delete(array $ids) {
   return entity_get_controller('rules_config')->delete($ids);
 }
 
