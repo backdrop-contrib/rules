@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Rules UI tests.
@@ -20,17 +19,6 @@ class RulesAdminMinimalProfileTestCase extends BackdropWebTestCase {
    * {@inheritdoc}
    */
   protected $profile = 'minimal';
-
-  /**
-   * Declares test metadata.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Rules UI Minimal Profile Tests ',
-      'description' => 'Tests UI support for minimal profile.',
-      'group' => 'Rules',
-    );
-  }
 
   /**
    * Overrides BackdropWebTestCase::setUp().

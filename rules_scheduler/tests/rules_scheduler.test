@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Rules Scheduler tests.
@@ -9,17 +8,6 @@
  * Test cases for the Rules Scheduler module.
  */
 class RulesSchedulerTestCase extends BackdropWebTestCase {
-
-  /**
-   * Declares test metadata.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Rules Scheduler tests',
-      'description' => 'Test scheduling components.',
-      'group' => 'Rules',
-    );
-  }
 
   /**
    * Overrides BackdropWebTestCase::setUp().

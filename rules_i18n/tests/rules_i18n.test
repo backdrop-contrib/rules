@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Rules i18n tests.
@@ -9,18 +8,6 @@
  * Test the i18n integration.
  */
 class RulesI18nTestCase extends BackdropWebTestCase {
-
-  /**
-   * Declares test metadata.
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Rules I18n',
-      'description' => 'Tests translating Rules configs.',
-      'group' => 'Rules',
-      'dependencies' => array('i18n_string'),
-    );
-  }
 
   /**
    * Overrides BackdropWebTestCase::setUp().
