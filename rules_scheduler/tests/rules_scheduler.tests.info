@@ -1,5 +1,5 @@
 [RulesSchedulerTestCase]
-name = Rules Scheduler tests
+name = Rules scheduler tests
 description = Test scheduling components.
 group = Rules
 file = rules_scheduler.test

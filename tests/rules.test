@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Rules tests.
@@ -14,7 +13,7 @@ class RulesTestCase extends BackdropWebTestCase {
    * Overrides BackdropWebTestCase::setUp().
    */
   protected function setUp() {
-    parent::setUp('rules', 'rules_test');
+    parent::setUp('entity_plus', 'locale', 'rules', 'rules_test');
     RulesLog::logger()->clear();
     config_set('rules.settings','rules_debug_log', 1);
   }
@@ -62,7 +61,7 @@ class RulesTestCase extends BackdropWebTestCase {
     $last = array_pop($log);
     $last = array_pop($log);
     $last = array_pop($log);
-    $this->assertEqual($last[0], 'action called', 'Action called');
+    $this->assertEqual($last[0], 'Debug: action called', 'Action called');
     RulesLog::logger()->checkLog();
 
     // Make sure condition and action iterators are working.
@@ -88,20 +87,40 @@ class RulesTestCase extends BackdropWebTestCase {
     $container = new RulesTestContainer();
     $this->assertEqual($container->dependencies(), array('rules_test'), 'Providing module for container plugin is returned as dependency.');
 
+    // Originally these dependency tests uses 'rules_export_test', which is
+    // loaded as a default configuration from a previous export. However, when
+    // the comment module is disabled, loading from an export file fails with an
+    // unhandled exception (and that's not what we're testing here). So now we
+    // create a rule and save it into the db, then load the rule from the db for
+    // testing its dependencies and whether it is properly (un)marked as dirty.
+    $rule = rules_import(
+'{ "rules_example_using_comment_rule" : {
+    "LABEL" : "A comment rule",
+    "PLUGIN" : "reaction rule",
+    "OWNER" : "rules",
+    "REQUIRES" : [ "rules", "comment" ],
+    "ON" : { "comment_insert" : [] },
+    "DO" : [
+      { "backdrop_message" : { "message" : "A comment was saved on [comment:node:title]." } }
+    ]
+  }
+}');
+    $rule->save();
+
     // Test handling unmet dependencies.
-    $rule = rules_config_load('rules_export_test');
+    $rule = rules_config_load('rules_example_using_comment_rule');
     $this->assertTrue(in_array('comment', $rule->dependencies) && !$rule->dirty, 'Dependencies have been imported.');
 
     // Remove the required comment module and make sure the rule is dirty then.
     module_disable(array('comment'));
     rules_clear_cache();
-    $rule = rules_config_load('rules_export_test');
+    $rule = rules_config_load('rules_example_using_comment_rule');
     $this->assertTrue($rule->dirty, 'Rule has been marked as dirty');
 
     // Now try re-enabling.
     module_enable(array('comment'));
     rules_clear_cache();
-    $rule = rules_config_load('rules_export_test');
+    $rule = rules_config_load('rules_example_using_comment_rule');
     $this->assertTrue(!$rule->dirty, 'Rule has been marked as not dirty again.');
 
     // Test it with components.
@@ -155,8 +174,7 @@ class RulesTestCase extends BackdropWebTestCase {
 
     $s = serialize($action);
     $action2 = unserialize($s);
-    $node = (object) array('status' => 0, 'type' => 'page');
-    $node->title = 'test';
+    $node = $this->backdropCreateNode(array('status' => 0, 'type' => 'page', 'title' => 'test'));
 
     $action2->execute($node);
     $this->assertEqual($node->status, 1, 'Action executed correctly');
@@ -228,7 +246,7 @@ class RulesTestCase extends BackdropWebTestCase {
     $log = RulesLog::logger()->get();
     $last = array_pop($log);
     $last = array_pop($log);
-    $this->assertEqual($last[0], 'Action called with node ' . $node->nid, 'Action called');
+    $this->assertEqual($last[0], 'Debug: Action called with node ' . $node->nid, 'Action called');
     RulesLog::logger()->checkLog();
   }
 
@@ -317,7 +335,7 @@ class RulesTestCase extends BackdropWebTestCase {
     $rule = rule();
     $rule->action('entity_create', array(
       'type' => 'node',
-      'param_type' => 'article',
+      'param_type' => 'post',
       'param_author:select' => 'site:current-user',
       'param_title' => $title,
       'entity_created:var' => 'node',
@@ -440,10 +458,10 @@ class RulesTestCase extends BackdropWebTestCase {
          ->execute($node->nid);
 
     RulesLog::logger()->checkLog();
-    $msg = backdrop_get_messages('status');
-    $last_msg = array_pop($msg['status']);
-    $wrapper = entity_metadata_wrapper('node', $node);
-    $this->assertEqual($last_msg, $wrapper->body->value->value(array('sanitize' => TRUE)), 'Data selector for getting parameter applied.');
+    $msg = backdrop_get_messages();
+    $last_msg = array_pop($msg['info']);
+    $intended_msg = check_markup($node->body[LANGUAGE_NONE][0]['value'],$node->body[LANGUAGE_NONE][0]['format']);
+    $this->assertEqual($last_msg, $intended_msg, 'Data selector for getting parameter applied.');
 
     // Get a "reference" on the same object as returned by node_load().
     $node = node_load($node->nid);
@@ -527,8 +545,8 @@ class RulesTestCase extends BackdropWebTestCase {
     rules_invoke_component('rules_test_set_1', $node);
 
     $msg = backdrop_get_messages();
-    $this->assertEqual($msg['status'][0], 'The title.', 'First rule evaluated.');
-    $this->assertEqual($msg['status'][1], 'Node is published.', 'Second rule evaluated.');
+    $this->assertEqual($msg['info'][0], 'The title.', 'First rule evaluated.');
+    $this->assertEqual($msg['info'][1], 'Node is published.', 'Second rule evaluated.');
 
     // Test a condition set.
     $set = rules_or(array(
@@ -661,7 +679,7 @@ class RulesTestCase extends BackdropWebTestCase {
 
     // Test asserting metadata on a derived property being a list item.
     $rule = rule(array('node' => array('type' => 'node')));
-    $rule->condition('node_is_of_type', array('node:select' => 'node:ref-nodes:0', 'type' => array('article')))
+    $rule->condition('node_is_of_type', array('node:select' => 'node:ref-nodes:0', 'type' => array('post')))
       ->action('data_set', array('data:select' => 'node:ref-nodes:0:field-tags', 'value' => array()));
     $rule->integrityCheck();
     $rule->execute($node);
@@ -672,7 +690,7 @@ class RulesTestCase extends BackdropWebTestCase {
 
     // Make sure assertions of a one list item are not valid for another item.
     $rule = rule(array('node' => array('type' => 'node')));
-    $rule->condition('node_is_of_type', array('node:select' => 'node:ref-nodes:0', 'type' => array('article')))
+    $rule->condition('node_is_of_type', array('node:select' => 'node:ref-nodes:0', 'type' => array('post')))
       ->action('data_set', array('data:select' => 'node:ref-nodes:1:field-tags', 'value' => array()));
     try {
       $rule->integrityCheck();
@@ -698,7 +716,7 @@ class RulesTestCase extends BackdropWebTestCase {
 
     // Ensure the action has been executed twice, once for each list item.
     $msg = backdrop_get_messages();
-    $this->assert($msg['status'][0] == 'test' && $msg['status'][1], 'Loop has been properly executed');
+    $this->assert($msg['info'][0] == 'test' && $msg['info'][1], 'Loop has been properly executed');
 
     // Now test looping over nodes.
     $node1 = $this->backdropCreateNode(array('type' => 'page', 'sticky' => 0));
@@ -794,22 +812,31 @@ class RulesTestCase extends BackdropWebTestCase {
 
     RulesLog::logger()->checkLog();
     $msg = backdrop_get_messages();
-    $this->assertEqual(array_pop($msg['status']), 'Title: ' . check_plain('<b>The body & nothing.</b>'), 'Token input evaluator applied.');
+    $this->assertEqual(array_pop($msg['info']), 'Title: ' . check_plain('<b>The body & nothing.</b>'), 'Token input evaluator applied.');
 
     // Test token replacements on a list of text values.
+    // Set a few site variables.
+    config('system.core')
+      ->set('site_name', 'Backdrop CMS')
+      ->set('site_slogan', 'Slogan')
+      ->save();
     $component = rules_action_set(array('var' => array('type' => 'list<text>', 'label' => 'var')), array('var'));
     $component->save('rules_test_input');
-
-    $action = rules_action('component_rules_test_input', array('var' => array('uid: [site:current-user:uid]')));
+    $action = rules_action('component_rules_test_input', array('var' => array('site name: [site:name]', 'site slogan: [site:slogan]')));
     list($var) = $action->execute();
     $uid = $GLOBALS['user']->uid;
-    $this->assertEqual(array("uid: $uid"), $var, 'Token replacements on a list of values applied.');
+    $this->assertEqual(array('site name: Backdrop CMS', 'site slogan: Slogan'), $var, 'Token replacements on a list of values applied.');
   }
 
   /**
    * Tests importing and exporting a rule.
    */
   public function testRuleImportExport() {
+    // We've moved the 'rules_export_test' rule default configuration into its
+    // own module so that it doesn't cause problems for other tests that
+    // enable/disable the comment module on which it relies.
+    module_enable(array('rules_export_test'));
+
     $rule = rule(array('nid' => array('type' => 'integer')));
     $rule->name = "rules_export_test";
     $rule->action('rules_action_load_node')
@@ -829,7 +856,7 @@ class RulesTestCase extends BackdropWebTestCase {
     $this->assertEqual($export, $rule->export(), 'Rule has been exported correctly.');
 
     // Test importing a rule which makes use of almost all features.
-    $export = _rules_export_get_test_export();
+    $export = _rules_export_test_get_test_export();
     $rule = rules_import($export);
     $this->assertTrue(!empty($rule) && $rule->integrityCheck(), 'Rule has been imported.');
 
@@ -907,6 +934,8 @@ class RulesTestCase extends BackdropWebTestCase {
 }';
     $or = rules_import($export);
     $this->assertTrue($or->integrityCheck() && $or->isNegated(), 'Negated condition component imported.');
+
+    module_disable(array('rules_export_text'));
   }
 
   /**
@@ -941,7 +970,6 @@ class RulesTestCase extends BackdropWebTestCase {
     $msg = RulesTestCase::t('The variable or parameter %message is empty.', array('message'));
     $this->assertTrue(strpos($text, $msg) !== FALSE, 'Evaluation aborted due to an empty argument value.');
   }
-
 }
 
 /**
@@ -953,7 +981,7 @@ class RulesTestDataCase extends BackdropWebTestCase {
    * Overrides BackdropWebTestCase::setUp().
    */
   protected function setUp() {
-    parent::setUp('rules', 'rules_test');
+    parent::setUp('entity_plus', 'locale', 'rules', 'rules_test');
     config_set('rules.settings','rules_debug_log', 1);
     // Make sure we don't ran over issues with the node_load static cache.
     entity_get_controller('node')->resetCache();
@@ -1018,6 +1046,14 @@ class RulesTestDataCase extends BackdropWebTestCase {
    * Tests making use of custom wrapper classes.
    */
   public function testCustomWrapperClasses() {
+
+    // TODO: These tests no longer work because Taxonomy Vocabularies are no
+    // longer Entities (they are stored in config), so calls like
+    // entity_create('taxonomy_vocabulary', ...) will fail. For now, we'll just
+    // return out of this test. For the future, consider other ways of handling
+    // taxonomy and/or other ways of testing custom wrapper classes.
+    return;
+
     // Test loading a vocabulary by name, which is done by a custom wrapper.
     $set = rules_action_set(array('vocab' => array('type' => 'taxonomy_vocabulary')), array('vocab'));
     $set->action('backdrop_message', array('message:select' => 'vocab:name'));
@@ -1094,7 +1130,7 @@ class RulesTriggerTestCase extends BackdropWebTestCase {
    * Overrides BackdropWebTestCase::setUp().
    */
   protected function setUp() {
-    parent::setUp('rules', 'rules_test');
+    parent::setUp('entity_plus', 'locale', 'rules', 'rules_test');
     RulesLog::logger()->clear();
     config_set('rules.settings','rules_debug_log', 1);
   }
@@ -1305,7 +1341,7 @@ class RulesTriggerTestCase extends BackdropWebTestCase {
     node_save($node);
 
     $msg = backdrop_get_messages();
-    $this->assertEqual($msg['status'][0], 'A node has been updated.', 'Default rule has been triggered.');
+    $this->assertEqual($msg['info'][0], 'A node has been updated.', 'Default rule has been triggered.');
   }
 
   /**
@@ -1313,14 +1349,14 @@ class RulesTriggerTestCase extends BackdropWebTestCase {
    */
   public function testEventSettings() {
     $rule = rules_reaction_rule();
-    $rule->event('node_presave', array('bundle' => 'article'))
+    $rule->event('node_presave', array('bundle' => 'post'))
       ->condition('data_is_empty', array('data:select' => 'node:field-tags'))
       ->action('node_publish', array('node:select' => 'node'));
     $rule->integrityCheck()->save();
 
     $node = $this->backdropCreateNode(array('type' => 'page', 'status' => 0));
     $this->assertEqual($node->status, 0, 'Rule has not been triggered.');
-    $node = $this->backdropCreateNode(array('type' => 'article', 'status' => 0));
+    $node = $this->backdropCreateNode(array('type' => 'post', 'status' => 0));
     $this->assertEqual($node->status, 1, 'Rule has been triggered.');
     RulesLog::logger()->checkLog();
 
@@ -1331,7 +1367,9 @@ class RulesTriggerTestCase extends BackdropWebTestCase {
       $this->fail('Integrity check failed.');
     }
     catch (RulesIntegrityException $e) {
-      $this->pass('Integrity check failed: ' . $e);
+      $message = $e->getMessage();
+      $snippet = substr($message, 0, strpos($message, 'is not known.') + strlen('is not known.'));
+      $this->pass('Integrity check failed: ' . $snippet);
     }
   }
 
@@ -1343,10 +1381,25 @@ class RulesTriggerTestCase extends BackdropWebTestCase {
 class RulesIntegrationTestCase extends BackdropWebTestCase {
 
   /**
+   * Note whether the PHP module is available for testing.
+   */
+  protected $has_php;
+
+  /**
    * Overrides BackdropWebTestCase::setUp().
    */
   protected function setUp() {
-    parent::setUp('rules', 'rules_test', 'path');
+
+    $setup_modules = array('entity_plus', 'locale', 'rules', 'rules_test', 'path');
+    $available_modules = system_rebuild_module_data();
+    if (isset($available_modules['php'])) {
+      $this->has_php = TRUE;
+      $setup_modules[] = 'php';
+    }
+    else {
+      $this->has_php = FALSE;
+    }
+    parent::setUp($setup_modules);
     RulesLog::logger()->clear();
     config_set('rules.settings','rules_debug_log', 1);
   }
@@ -1435,24 +1488,24 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
 
     // Data is empty condition evaluates to TRUE
     // for node with empty title, action sets title to 'bar'.
-    $node = $this->backdropCreateNode(array('title' => '', 'type' => 'article'));
+    $node = $this->backdropCreateNode(array('title' => '', 'type' => 'post'));
     $rule->execute($node);
     $this->assertEqual($node->title, 'bar', "Data is empty condition evaluates to TRUE for node with empty title, action sets title to 'bar'.");
 
     // Data is empty condition evaluates to FALSE
     // for node with title 'foo', action is not executed.
-    $node = $this->backdropCreateNode(array('title' => 'foo', 'type' => 'article'));
+    $node = $this->backdropCreateNode(array('title' => 'foo', 'type' => 'post'));
     $rule->execute($node);
     $this->assertEqual($node->title, 'foo', "Data is empty condition evaluates to FALSE for node with title 'foo', action is not executed.");
 
     // Data is empty condition evaluates to TRUE for the parent of a
     // not existing term in the tags field of the node.
     $rule = rule(array('node' => array('type' => 'node')));
-    $rule->condition('node_is_of_type', array('type' => array('article')));
+    $rule->condition('node_is_of_type', array('type' => array('post')));
     $rule->condition('data_is_empty', array('data:select' => 'node:field-tags:0:parent'));
     $rule->action('data_set', array('data:select' => 'node:title', 'value' => 'bar'));
     $rule->integrityCheck();
-    $node = $this->backdropCreateNode(array('title' => 'foo', 'type' => 'article'));
+    $node = $this->backdropCreateNode(array('title' => 'foo', 'type' => 'post'));
     $rule->execute($node);
     $this->assertEqual($node->title, 'bar', "Data is empty condition evaluates to TRUE for not existing data structures");
 
@@ -1532,7 +1585,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     global $user;
 
     $page = $this->backdropCreateNode(array('type' => 'page'));
-    $article = $this->backdropCreateNode(array('type' => 'article'));
+    $article = $this->backdropCreateNode(array('type' => 'post'));
 
     $result = rules_condition('entity_field_access')
       ->execute(entity_metadata_wrapper('node', $article), 'field_tags');
@@ -1541,26 +1594,26 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     // Test entity_is_of_bundle condition.
     $result = rules_condition('entity_is_of_bundle', array(
       'type' => 'node',
-      'bundle' => array('article'),
+      'bundle' => array('post'),
     ))->execute(entity_metadata_wrapper('node', $page));
     $this->assertFalse($result, 'Entity is of bundle condition has not been met.');
     $result = rules_condition('entity_is_of_bundle', array(
       'type' => 'node',
-      'bundle' => array('article'),
+      'bundle' => array('post'),
     ))->execute(entity_metadata_wrapper('node', $article));
     $this->assertTrue($result, 'Entity is of bundle condition has been met.');
 
     // Also test a full rule so the integrity check must work.
     $term_wrapped = entity_plus_property_values_create_entity('taxonomy_term', array(
       'name' => $this->randomName(),
-      'vocabulary' => 1,
+      'vocabulary' => 'tags',
     ))->save();
     $rule = rule(array(
       'node' => array('type' => 'node'),
     ));
     $rule->condition('entity_is_of_bundle', array(
       'entity:select' => 'node',
-      'bundle' => array('article'),
+      'bundle' => array('post'),
     ));
     $rule->action('data_set', array('data:select' => 'node:field_tags', 'value' => array($term_wrapped->getIdentifier())));
     $rule->integrityCheck();
@@ -1568,14 +1621,14 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     $this->assertEqual($term_wrapped->getIdentifier(), $article->field_tags[LANGUAGE_NONE][0]['tid'], 'Entity is of bundle condition has been met.');
 
     // Test again using an entity variable.
-    $article = $this->backdropCreateNode(array('type' => 'article'));
+    $article = $this->backdropCreateNode(array('type' => 'post'));
     $rule = rule(array(
       'entity' => array('type' => 'entity'),
     ));
     $rule->condition('entity_is_of_bundle', array(
       'entity:select' => 'entity',
       'type' => 'node',
-      'bundle' => array('article'),
+      'bundle' => array('post'),
     ));
     $rule->action('data_set', array('data:select' => 'entity:field_tags', 'value' => array($term_wrapped->getIdentifier())));
     $rule->integrityCheck();
@@ -1617,13 +1670,13 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     // debug(RulesLog::logger()->render());
 
     $node = entity_plus_property_values_create_entity('node', array(
-      'type' => 'article',
+      'type' => 'post',
       'author' => $user,
       'title' => 'foo',
     ))->value();
     $term_wrapped = entity_plus_property_values_create_entity('taxonomy_term', array(
       'name' => $this->randomName(),
-      'vocabulary' => 1,
+      'vocabulary' => 'tags',
     ))->save();
 
     // Test asserting the field and using it afterwards.
@@ -1671,7 +1724,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
   public function testTaxonomyIntegration() {
     $term = entity_plus_property_values_create_entity('taxonomy_term', array(
       'name' => $this->randomName(),
-      'vocabulary' => 1,
+      'vocabulary' => 'tags',
     ))->value();
     $term2 = clone $term;
     taxonomy_term_save($term);
@@ -1680,12 +1733,12 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     $tags[LANGUAGE_NONE][0]['tid'] = $term->tid;
     $node = $this->backdropCreateNode(array(
       'title' => 'foo',
-      'type' => 'article',
+      'type' => 'post',
       'field_tags' => $tags,
     ));
 
     // Test assigning and remove a term from an article.
-    $rule = rule(array('node' => array('type' => 'node', 'bundle' => 'article')));
+    $rule = rule(array('node' => array('type' => 'node', 'bundle' => 'post')));
     $term_wrapped = rules_wrap_data($term->tid, array('type' => 'taxonomy_term'));
     $term_wrapped2 = rules_wrap_data($term2->tid, array('type' => 'taxonomy_term'));
     $rule->action('list_add', array('list:select' => 'node:field-tags', 'item' => $term_wrapped2));
@@ -1732,11 +1785,11 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
 
     $term1 = entity_plus_property_values_create_entity('taxonomy_term', array(
       'name' => $this->randomName(),
-      'vocabulary' => 1,
+      'vocabulary' => 'tags',
     ))->save();
     $term2 = entity_plus_property_values_create_entity('taxonomy_term', array(
       'name' => $this->randomName(),
-      'vocabulary' => 1,
+      'vocabulary' => 'tags',
     ))->save();
 
     // Test asserting the term reference field and using it afterwards.
@@ -1755,7 +1808,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     // config.
     $term = entity_plus_property_values_create_entity('taxonomy_term', array(
       'name' => $this->randomName(),
-      'vocabulary' => 1,
+      'vocabulary' => 'tags',
       'parent' => array($term1->value()),
     ))->save();
 
@@ -1797,9 +1850,9 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
       $this->assertTrue($return, 'Condition determines node ' . $property . ' is enabled.');
     }
 
-    $return = rules_condition('node_is_of_type', array('type' => array('page', 'article')))->execute($node);
+    $return = rules_condition('node_is_of_type', array('type' => array('page', 'post')))->execute($node);
     $this->assertTrue($return, 'Condition determines node is of type page.');
-    $return = rules_condition('node_is_of_type', array('type' => array('article')))->execute($node);
+    $return = rules_condition('node_is_of_type', array('type' => array('post')))->execute($node);
     $this->assertFalse($return, 'Condition determines node is not of type article.');
 
     // Test auto saving of a new node after it has been inserted into the DB.
@@ -1821,20 +1874,28 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     $role = $this->backdropCreateRole(array('administer nodes'), 'foo');
     $user = $this->backdropCreateUser();
 
+// FAILS. This is the last remaining test fail in this function.
+
     // Test assigning a role with the list_add action.
     $rule = rule(array('user' => array('type' => 'user')));
+    $rule->label = 'rule_1';
     $rule->action('list_add', array('list:select' => 'user:roles', 'item' => $role));
     $rule->execute($user);
     $this->assertTrue(isset($user->roles[$role]), 'Role assigned to user.');
 
+    RulesLog::logger()->checkLog();
+    RulesLog::logger()->clear();
+
     // Test removing a role with the list_remove action.
     $rule = rule(array('user' => array('type' => 'user')));
+    $rule->label = 'rule_2';
     $rule->action('list_remove', array('list:select' => 'user:roles', 'item' => $role));
     $rule->execute($user);
     $this->assertTrue(!isset($user->roles[$role]), 'Role removed from user.');
 
     // Test assigning a role with user_add_role action.
     $rule = rule(array('user' => array('type' => 'user')));
+    $rule->label = 'rule_3';
     $rule->action('user_add_role', array('account:select' => 'user', 'roles' => array($role)));
     $rule->execute($user);
 
@@ -1844,6 +1905,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
 
     // Test removing a role with the user_remove_role action.
     $rule = rule(array('user' => array('type' => 'user')));
+    $rule->label = 'rule_4';
     $rule->action('user_remove_role', array('account:select' => 'user', 'roles' => array($role)));
     $rule->execute($user);
 
@@ -1867,6 +1929,11 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
    * Tests integration for the php module.
    */
   public function testPHPIntegration() {
+    // Don't try to test PHP if the module isn't part of the installation.
+    if (!$this->has_php) {
+      return;
+    }
+
     $node = $this->backdropCreateNode(array('title' => 'foo'));
     $rule = rule(array('var_name' => array('type' => 'node')));
     $rule->condition('php_eval', array('code' => 'return TRUE;'))
@@ -1877,7 +1944,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     $rule->access();
     RulesLog::logger()->checkLog();
     $msg = backdrop_get_messages();
-    $this->assertEqual(array_pop($msg['status']), "Title: foo Token: foo", 'PHP input evaluation has been applied.');
+    $this->assertEqual(array_pop($msg['info']), "Title: foo Token: foo", 'PHP input evaluation has been applied.');
     $this->assertEqual(array_pop($msg['status']), "Executed-foo", 'PHP code condition and action have been evaluated.');
 
     // Test PHP data processor.
@@ -1892,7 +1959,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     $rule->access();
     RulesLog::logger()->checkLog();
     $msg = backdrop_get_messages();
-    $this->assertEqual(array_pop($msg['status']), "Title: foo", 'PHP data processor has been applied.');
+    $this->assertEqual(array_pop($msg['info']), "Title: foo", 'PHP data processor has been applied.');
   }
 
   /**
@@ -2062,7 +2129,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
 
     watchdog('php', 'test %message', array('%message' => 'message'));
     $msg = backdrop_get_messages();
-    $this->assertEqual(array_pop($msg['status']), t('test %message', array('%message' => 'message')), 'Watchdog event occurred and log entry properties can be used.');
+    $this->assertEqual(array_pop($msg['info']), t('test %message', array('%message' => 'message')), 'Watchdog event occurred and log entry properties can be used.');
   }
 
   /**
@@ -2088,7 +2155,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     // Test term alias action.
     $term = entity_plus_property_values_create_entity('taxonomy_term', array(
       'name' => $this->randomName(),
-      'vocabulary' => 1,
+      'vocabulary' => 'tags',
     ))->value();
     rules_action('taxonomy_term_path_alias')->execute($term, 'term-test');
     $path = path_load("taxonomy/term/$term->tid");
@@ -2108,7 +2175,7 @@ class RulesEventDispatcherTestCase extends BackdropWebTestCase {
    * Overrides BackdropWebTestCase::setUp().
    */
   protected function setUp() {
-    parent::setUp('rules', 'rules_test');
+    parent::setUp('entity_plus', 'locale', 'rules', 'rules_test');
   }
 
   /**
@@ -2171,7 +2238,7 @@ class RulesInvocationEnabledTestCase extends BackdropWebTestCase {
    * Overrides BackdropWebTestCase::setUp().
    */
   protected function setUp() {
-    parent::setUp('dblog', 'rules', 'rules_test', 'rules_test_invocation');
+    parent::setUp('entity_plus', 'locale', 'dblog', 'rules', 'rules_test', 'rules_test_invocation');
   }
 
   /**

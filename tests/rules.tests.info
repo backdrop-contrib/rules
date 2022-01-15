@@ -1,23 +1,23 @@
 [RulesTestCase]
-name = Rules Engine tests
+name = Rules engine tests
 description = Test using the rules API to create and evaluate rules.
 group = Rules
 file = rules.test
 
 [RulesTestDataCase]
-name = Rules Data tests
+name = Rules data tests
 description = Tests rules data saving and type matching.
 group = Rules
 file = rules.test
 
 [RulesTriggerTestCase]
-name = Reaction Rules
+name = Reaction rules
 description = Tests triggering reactive rules.
 group = Rules
 file = rules.test
 
 [RulesIntegrationTestCase]
-name = Rules Core Integration
+name = Rules core integration
 description = Tests provided integration for Backdrop core.
 group = Rules
 file = rules.test
