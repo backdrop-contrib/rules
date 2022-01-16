@@ -101,16 +101,17 @@ class RulesSchedulerTestCase extends BackdropWebTestCase {
     // Can't use
     // $this->clickLink('Rules debug information: " Scheduled evaluation...')
     // because xpath doesn't allow : or " in the string.
-    // So instead, use our own xpath to figure out the href of the second link
-    // on the page (the first link is the most recent log entry, which is the
-    // log entry for the user login, above.)
+    // So instead, use our own xpath to figure out the href of the relevant link
+    // on the page that reported the prevented recursion.
 
     // All links.
     $links = $this->xpath('//a[contains(@href, :href)]', array(':href' => 'admin/reports/event/'));
-    // Strip off /?q= from href.
-    $href = explode('=', $links[1]['href']);
+
+    // The path that should lead to the recursion prevention page.
+    $href = (string) $links[4]['href'];
+
     // Click the link for the RulesLog entry.
-    $this->backdropGet($href[1]);
+    $this->backdropGet($href);
     $this->assertRaw(RulesTestCase::t('Not evaluating reaction rule %unlabeled to prevent recursion.', array('unlabeled' => $rule->name)), "Scheduled recursion prevented.");
     RulesLog::logger()->checkLog();
   }
