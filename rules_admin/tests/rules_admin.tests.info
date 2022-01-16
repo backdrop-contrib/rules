@@ -1,11 +1,11 @@
 [RulesUiTestCase]
-name = Rules UI Tests
+name = Rules UI tests
 description = Tests Rules UI.
 group = Rules
 file = rules_admin.test
 
 [RulesAdminMinimalProfileTestCase]
-name = Rules UI Minimal Profile Tests
+name = Rules UI minimal profile tests
 description = Tests UI support for minimal profile.
 group = Rules
 file = rules_admin_minimal_profile.test

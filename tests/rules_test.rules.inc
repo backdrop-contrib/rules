@@ -1,8 +1,7 @@
 <?php
-
 /**
  * @file
- * Includes any rules integration provided by the module.
+ * Includes rules integration provided by the Rules Test module.
  */
 
 /**
@@ -144,7 +143,7 @@ function rules_test_rules_action_info() {
       'base' => 'rules_action_node_publish',
     ),
     'rules_node_make_sticky_action' => array(
-      'label' => t('Make content sticky'),
+      'label' => t('Make node content sticky'),
       'parameter' => array(
         'node' => array(
           'type' => 'node',
@@ -152,11 +151,11 @@ function rules_test_rules_action_info() {
           'save' => TRUE,
         ),
       ),
-      'base' => 'rules_action_make_sticky',
+      'base' => 'rules_action_node_make_sticky',
     ),
     // The same action again requiring a 'page' node.
     'rules_node_page_make_sticky_action' => array(
-      'label' => t('Mage page content sticky'),
+      'label' => t('Make page content sticky'),
       'parameter' => array(
         'node' => array(
           'type' => 'node',
@@ -165,7 +164,7 @@ function rules_test_rules_action_info() {
           'bundles' => array('page'),
         ),
       ),
-      'base' => 'rules_action_make_sticky',
+      'base' => 'rules_action_node_make_sticky',
     ),
     'rules_action_test_reference' => array(
       'label' => t('Change argument passed by reference'),

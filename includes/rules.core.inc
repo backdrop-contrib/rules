@@ -2806,6 +2806,16 @@ class RulesLog {
   }
 
   /**
+   * Renders the whole log, but as plain text (useful for debugging tests).
+   */
+  public function renderPlain() {
+    $output = $this->render();
+    $output = strip_tags(str_replace("</li>", "</li>\n", $output));
+    $output = str_replace(array('&nbsp;', '&lt;', '&gt;'), array('', '<', '>'), $output);
+    return $output;
+  }
+
+  /**
    * Renders the log of one event invocation.
    */
   protected function renderHelper(&$line = 0) {
@@ -2895,7 +2905,7 @@ class RulesEvaluationException extends RulesException {
       $rules_config = $this->element->root();
       rules_config_update_dirty_flag($rules_config);
       // If we discovered a broken configuration, exclude it in future.
-      if ($rules_config->dirty) {
+      if (isset($rules_config->dirty) && $rules_config->dirty) {
         rules_clear_cache();
       }
     }
