@@ -15,7 +15,7 @@ class RulesUiTestCase extends BackdropWebTestCase {
   protected function setUp() {
     parent::setUp('rules', 'rules_admin', 'rules_test');
     RulesLog::logger()->clear();
-    variable_set('rules_debug_log', TRUE);
+    config_set('rules.settings', 'rules_debug_log', 1);
   }
 
   /**
@@ -231,7 +231,7 @@ class RulesUiTestCase extends BackdropWebTestCase {
     // permission at the same time.
     $edit = array(
       'settings[access][access_exposed]' => TRUE,
-      'settings[access][permissions][matrix][checkboxes][1][use Rules component rules_test_action_set]' => TRUE,
+      'settings[access][permissions][matrix][checkboxes][anonymous][use Rules component rules_test_action_set]' => TRUE,
     );
     $this->backdropPost(NULL, $edit, 'Save changes');
   }
@@ -321,10 +321,10 @@ class RulesUiTestCase extends BackdropWebTestCase {
     );
 
     // A 'revert' link should now be available for the overridden rule.
-    $this->assertText('revert', 'Revert link is now present.');
+    $this->assertText('Revert', 'Revert link is now present.');
 
     // Revert the overridden rule and verify it's back to its original status.
-    $this->clickLink('revert');
+    $this->clickLink('Revert');
     $this->backdropPost(NULL, array(), 'Confirm');
     $this->assertText(
       'example default rule',
