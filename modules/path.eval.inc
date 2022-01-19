@@ -45,6 +45,8 @@ function rules_action_node_path_alias($node, $alias) {
     rules_log('The configured alias %alias already exists. Aborting.', array('%alias' => $alias));
     return FALSE;
   }
+  // Turn off auto to assure that we can save the custom url alias.
+  $node->path['auto'] = FALSE;
   $node->path['alias'] = $alias;
 }
 
@@ -57,6 +59,8 @@ function rules_action_taxonomy_term_path_alias($term, $alias) {
     rules_log('The configured alias %alias already exists. Aborting.', array('%alias' => $alias));
     return FALSE;
   }
+  // Turn off auto to assure that we can save the custom url alias.
+  $term->path['auto'] = FALSE;
   $term->path['alias'] = $alias;
 }
 
