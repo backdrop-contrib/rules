@@ -1394,6 +1394,21 @@ function rules_backdrop_goto_alter(&$path, &$options, &$http_response_code) {
   }
 }
 
+/** 
+ * Implements hook_preprocess_page().
+ * 
+ * Invokes backdrop_goto() if a redirect action exists.
+ * @see rules_action_backdrop_goto()
+ */
+function rules_preprocess_page($vars) {
+  // Invoke a the page redirect, in case the action has been executed.
+  // @see rules_action_drupal_goto()
+  if (isset($GLOBALS['_rules_action_backdrop_goto_do'])) {
+    list($url, $force) = $GLOBALS['_rules_action_backdrop_goto_do'];
+    backdrop_goto($url);
+  }
+}
+
 /**
  * Returns whether the debug log should be shown.
  */
