@@ -23,7 +23,7 @@ function rules_test_default_rules_configuration() {
   $action_set = rules_action_set(array('node' => array('type' => 'node', 'label' => 'Content')));
   $action_set->action('node_publish');
   $configs['rules_test_action_set'] = $action_set;
-
+  field_cache_clear();
   // An action set used to test merging term parents.
   $configs['rules_retrieve_term_parents'] = rules_import('{ "rules_retrieve_term_parents" : {
     "LABEL" : "Retrieve term parents",

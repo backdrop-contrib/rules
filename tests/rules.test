@@ -15,7 +15,7 @@ class RulesTestCase extends BackdropWebTestCase {
   protected function setUp() {
     parent::setUp('entity_plus', 'locale', 'rules', 'rules_test');
     RulesLog::logger()->clear();
-    config_set('rules.settings','rules_debug_log', 1);
+    config_set('rules.settings', 'rules_debug_log', 1);
   }
 
   /**
@@ -1389,8 +1389,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
    * Overrides BackdropWebTestCase::setUp().
    */
   protected function setUp() {
-
-    $setup_modules = array('entity_plus', 'locale', 'rules', 'rules_test', 'path');
+    $setup_modules = array('entity_plus', 'locale', 'rules', 'rules_test', 'path', 'entity_token');
     $available_modules = system_rebuild_module_data();
     if (isset($available_modules['php'])) {
       $this->has_php = TRUE;
@@ -1874,14 +1873,12 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     $role = $this->backdropCreateRole(array('administer nodes'), 'foo');
     $user = $this->backdropCreateUser();
 
-// FAILS. This is the last remaining test fail in this function.
-
     // Test assigning a role with the list_add action.
     $rule = rule(array('user' => array('type' => 'user')));
     $rule->label = 'rule_1';
     $rule->action('list_add', array('list:select' => 'user:roles', 'item' => $role));
     $rule->execute($user);
-    $this->assertTrue(isset($user->roles[$role]), 'Role assigned to user.');
+    $this->assertTrue(user_has_role($role, $user), 'Role assigned to user.');
 
     RulesLog::logger()->checkLog();
     RulesLog::logger()->clear();
@@ -2041,7 +2038,8 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     $condition = rules_condition('data_is', array('data:select' => 'site:current-user:name', 'value' => $GLOBALS['user']->name));
     $this->assertTrue($condition->execute(), 'Retrieved the current user\'s name.');
     // Another test using a token replacement.
-    $condition = rules_condition('data_is', array('data:select' => 'site:current-user:name', 'value' => '[site:current-user:name]'));
+    // The following test only passes with Entity Tokens 2.x
+    $condition = rules_condition('data_is', array('data:select' => 'site:current-user:name', 'value' => '[site:current_user:name]'));
     $this->assertTrue($condition->execute(), 'Replaced the token for the current user\'s name.');
 
     // Test breadcrumbs and backdrop set message.
@@ -2051,27 +2049,28 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
       ->action('backdrop_message', array('message' => 'A message.'));
     $rule->save('test');
 
-    $this->backdropGet('node');
+    $this->backdropGet('node/1');
     $this->assertLink('foo', 0, 'Breadcrumb has been set.');
     $this->assertText('A message.', 'Backdrop message has been shown.');
 
     // Test the page redirect.
+    global $user;
     $node = $this->backdropCreateNode();
     $rule = rules_reaction_rule();
     $rule->event('node_view')
-      ->action('redirect', array('url' => 'user'));
+      ->action('redirect', array('url' => "account/{$user->name}"));
     $rule->save('test2');
 
     $this->backdropGet('node/' . $node->nid);
-    $this->assertEqual($this->getUrl(), url('user', array('absolute' => TRUE)), 'Redirect has been issued.');
+    $this->assertEqual($this->getUrl(), url("account/{$user->name}", array('absolute' => TRUE)), 'Redirect has been issued.');
 
     // Also test using a url including a fragment.
     $actions = $rule->actions();
-    $actions[0]->settings['url'] = 'user#fragment';
+    $actions[0]->settings['url'] = "account/{$user->name}#fragment";
     $rule->save();
 
     $this->backdropGet('node/' . $node->nid);
-    $this->assertEqual($this->getUrl(), url('user', array('absolute' => TRUE, 'fragment' => 'fragment')), 'Redirect has been issued.');
+    $this->assertEqual($this->getUrl(), url("account/{$user->name}", array('absolute' => TRUE, 'fragment' => 'fragment')), 'Redirect has been issued.');
 
     // Test sending mail.
     $settings = array('to' => 'mail@example.com', 'subject' => 'subject', 'message' => 'hello.');
@@ -2084,40 +2083,51 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
 
     // Test sending mail to all users of a role. First clear the mail
     // collector to remove the mail sent in the previous line of code.
-    config_set('rules_scheduler', 'backdrop_test_email_collector', array());
+    state_set('test_email_collector', array());
 
     // Now make sure there is a custom role and two users with that role.
     $user1 = $this->backdropCreateUser(array('administer nodes'));
     $roles = $user1->roles;
     // Remove the authenticated role so we only use the new role created by
     // backdropCreateUser().
-    unset($roles[BACKDROP_AUTHENTICATED_ROLE]);
+    foreach ($roles as $index => $role) {
+      if ($role == BACKDROP_AUTHENTICATED_ROLE) {
+        unset($roles[$index]);
+      }
+    }
 
     // Now create a second user with the same role.
     $user2 = $this->backdropCreateUser();
-    user_save($user2, array('roles' => $roles));
+    $user2->roles[] = reset($roles);
+    user_save($user2);
 
     // Now create a third user without the same role - this user should NOT
     // receive the role email.
     $user3 = $this->backdropCreateUser(array('administer blocks'));
     $additional_roles = $user3->roles;
-    unset($additional_roles[BACKDROP_AUTHENTICATED_RID]);
+
+    $this->verbose(print_r($additional_roles, TRUE));
+    foreach ($additional_roles as $index => $role) {
+      if ($role == BACKDROP_AUTHENTICATED_ROLE) {
+        unset($additional_roles[$index]);
+      } 
+    }
 
     // Execute action and check that only two mails were sent.
-    rules_action('mail_to_users_of_role', $settings + array('roles' => array_keys($roles)))->execute();
+    rules_action('mail_to_users_of_role', $settings + array('roles' => $roles))->execute();
     $mails = $this->backdropGetMails();
     $this->assertEqual(count($mails), 2, '2 e-mails were sent to users of a role.');
 
     // Check each mail to ensure that only $user1 and $user2 got the mail.
     $mail = array_pop($mails);
-    $this->assertTrue($mail['to'] == $user2->mail, 'Mail to user of a role has been sent.');
+    $this->assertTrue($mail['to'] == $user1->mail || $mail['to'] == $user2->mail, 'Mail to user of a role has been sent.');
     $mail = array_pop($mails);
-    $this->assertTrue($mail['to'] == $user1->mail, 'Mail to user of a role has been sent.');
+    $this->assertTrue($mail['to'] == $user1->mail || $mail['to'] == $user2->mail, 'Mail to user of a role has been sent.');
 
     // Execute action again, this time to send mail to both roles.
     // This time check that three mails were sent - one for each user..
-    config_set('rules_scheduler', 'backdrop_test_email_collector', array());
-    rules_action('mail_to_users_of_role', $settings + array('roles' => array_keys($roles + $additional_roles)))->execute();
+    state_set('test_email_collector', array());
+    rules_action('mail_to_users_of_role', $settings + array('roles' => array_merge($roles, $additional_roles)))->execute();
     $mails = $this->backdropGetMails();
     $this->assertEqual(count($mails), 3, '3 e-mails were sent to users of multiple roles.');
 
@@ -2137,7 +2147,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
    */
   public function testPathIntegration() {
     rules_action('path_alias')->execute('foo', 'bar');
-    $path = path_load('foo');
+    $path = path_load(array('source' => 'foo'));
     $this->assertTrue($path['alias'] == 'bar', 'URL alias has been created.');
 
     $alias_exists = rules_condition('path_alias_exists', array('alias' => 'bar'))->execute();
@@ -2149,7 +2159,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     // Test node alias action.
     $node = $this->backdropCreateNode();
     rules_action('node_path_alias')->execute($node, 'test');
-    $path = path_load("node/$node->nid");
+    $path = path_load(array('source' => "node/$node->nid"));
     $this->assertTrue($path['alias'] == 'test', 'Node URL alias has been created.');
 
     // Test term alias action.
