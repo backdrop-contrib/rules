@@ -14,19 +14,19 @@
  */
 function rules_action_path_alias($source, $alias, $langcode = LANGUAGE_NONE) {
   if (!$alias) {
-    path_delete(array('source' => $source, 'language' => $langcode));
+    path_delete(array('source' => $source, 'langcode' => $langcode));
   }
   elseif (!$source) {
-    path_delete(array('alias' => $alias, 'language' => $langcode));
+    path_delete(array('alias' => $alias, 'langcode' => $langcode));
   }
   // Only set the alias if the alias is not taken yet.
-  elseif (!path_load(array('alias' => $alias, 'language' => $langcode))) {
+  elseif (!path_load(array('alias' => $alias, 'langcode' => $langcode))) {
     // Update the existing path or create a new one.
-    if ($path = path_load(array('source' => $source, 'language' => $langcode))) {
+    if ($path = path_load(array('source' => $source, 'langcode' => $langcode))) {
       $path['alias'] = $alias;
     }
     else {
-      $path = array('source' => $source, 'alias' => $alias, 'language' => $langcode);
+      $path = array('source' => $source, 'alias' => $alias, 'langcode' => $langcode);
     }
     path_save($path);
   }
@@ -41,7 +41,7 @@ function rules_action_path_alias($source, $alias, $langcode = LANGUAGE_NONE) {
 function rules_action_node_path_alias($node, $alias) {
   $langcode = isset($node->langcode) ? $node->langcode : LANGUAGE_NONE;
   // Only set the alias if the alias is not taken yet.
-  if (($path = path_load(array('alias' => $alias, 'language' => $langcode))) && (empty($node->path['pid']) || $node->path['pid'] != $path['pid'])) {
+  if (($path = path_load(array('alias' => $alias, 'langcode' => $langcode))) && (empty($node->path['pid']) || $node->path['pid'] != $path['pid'])) {
     rules_log('The configured alias %alias already exists. Aborting.', array('%alias' => $alias));
     return FALSE;
   }
@@ -53,7 +53,7 @@ function rules_action_node_path_alias($node, $alias) {
  */
 function rules_action_taxonomy_term_path_alias($term, $alias) {
   // Only set the alias if the alias is not taken yet.
-  if (($path = path_load(array('alias' => $alias, 'language' => LANGUAGE_NONE))) && (empty($term->path['pid']) || $term->path['pid'] != $path['pid'])) {
+  if (($path = path_load(array('alias' => $alias, 'langcode' => LANGUAGE_NONE))) && (empty($term->path['pid']) || $term->path['pid'] != $path['pid'])) {
     rules_log('The configured alias %alias already exists. Aborting.', array('%alias' => $alias));
     return FALSE;
   }

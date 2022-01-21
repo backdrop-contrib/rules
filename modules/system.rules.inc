@@ -241,7 +241,7 @@ function rules_system_action_info() {
           'description' => t("The mail's from address. Leave it empty to use the site-wide configured address."),
           'optional' => TRUE,
         ),
-        'language' => array(
+        'langcode' => array(
           'type' => 'token',
           'label' => t('Language'),
           'description' => t('If specified, the language used for getting the mail message and subject.'),
