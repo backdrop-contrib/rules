@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Rules integration with Backdrop core.

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Rules integration for the php module.

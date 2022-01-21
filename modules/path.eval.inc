@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Contains rules integration for the path module needed during evaluation.

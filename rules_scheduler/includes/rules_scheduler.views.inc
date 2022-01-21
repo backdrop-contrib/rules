@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Views integration for the rules scheduler module.

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Provides Rules integration for entities provided via the CRUD API.

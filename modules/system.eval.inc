@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Contains rules integration for the system module needed during evaluation.
@@ -98,7 +97,7 @@ function rules_action_mail($to, $subject, $message, $from, $langcode, $settings,
     'langcode' => $langcode,
   );
 
-  if (!empty($from)) { 
+  if (!empty($from)) {
     $params['from'] = $from;
   }
 
@@ -140,7 +139,7 @@ function rules_action_mail_to_users_of_role($roles, $subject, $message, $from, $
     'message' => $message,
   );
 
-  if (!empty($from)) { 
+  if (!empty($from)) {
     $params['from'] = $from;
   }
   // Set a unique key for this mail.

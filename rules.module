@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Rules engine module.
@@ -1394,9 +1393,9 @@ function rules_backdrop_goto_alter(&$path, &$options, &$http_response_code) {
   }
 }
 
-/** 
+/**
  * Implements hook_preprocess_page().
- * 
+ *
  * Invokes backdrop_goto() if a redirect action exists.
  * @see rules_action_backdrop_goto()
  */

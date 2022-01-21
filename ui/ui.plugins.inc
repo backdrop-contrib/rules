@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Contains UI for diverse plugins provided by Rules.

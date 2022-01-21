@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * General data related rules integration.

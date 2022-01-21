@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Internationalization integration based upon the entity API i18n stuff.

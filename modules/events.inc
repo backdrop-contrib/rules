@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Invokes events on behalf core modules.

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * An extended subclass for component filtering.

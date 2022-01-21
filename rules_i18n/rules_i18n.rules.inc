@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Internationalization rules integration.
