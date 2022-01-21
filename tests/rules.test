@@ -51,7 +51,7 @@ class RulesTestCase extends BackdropWebTestCase {
   }
 
   /**
-   * Tests creating a rule and iterating over the rule elements.
+   * Tests creating a rule and iterating over the rule  elements.
    */
   public function testRuleCreation() {
     $rule = $this->createTestRule();
