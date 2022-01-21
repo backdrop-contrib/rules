@@ -97,13 +97,18 @@ function rules_action_mail($to, $subject, $message, $from, $langcode, $settings,
     'message' => $message,
     'langcode' => $langcode,
   );
+
+  if (!empty($from)) { 
+    $params['from'] = $from;
+  }
+
   // Set a unique key for this mail.
   $name = isset($element->root()->name) ? $element->root()->name : 'unnamed';
   $key = 'rules_action_mail_' . $name . '_' . $element->elementId();
   $languages = language_list();
   $language = isset($languages[$langcode]) ? $languages[$langcode] : language_default();
 
-  $message = backdrop_mail('rules', $key, $to, $language, $params, $from);
+  $message = backdrop_mail('rules', $key, $to, $language, $params);
   if ($message['result']) {
     watchdog('rules', 'Successfully sent email to %recipient', array('%recipient' => $to));
   }
@@ -167,6 +172,9 @@ function rules_mail($key, &$message, $params) {
 
   $message['subject'] .= str_replace(array("\r", "\n"), '', $params['subject']);
   $message['body'][] = $params['message'];
+  if (!empty($params['from'])) {
+    $message['from'] = $params['from'];
+  }
 }
 
 /**
