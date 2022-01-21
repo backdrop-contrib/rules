@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Rules User Interface forms.

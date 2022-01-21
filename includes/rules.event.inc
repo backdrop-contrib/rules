@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Contains event handler interface and base classes.

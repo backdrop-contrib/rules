@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Contains core Rules UI functions.

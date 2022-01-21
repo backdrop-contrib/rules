@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Implements rule management and configuration screens.

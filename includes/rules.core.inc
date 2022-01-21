@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Rules base classes and interfaces needed for any rule evaluation.

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Contains plugin info and implementations not needed for rule evaluation.

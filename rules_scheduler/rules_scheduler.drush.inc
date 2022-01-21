@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Rules Scheduler Drush integration.

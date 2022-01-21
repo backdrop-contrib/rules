@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * General entity related rules integration.

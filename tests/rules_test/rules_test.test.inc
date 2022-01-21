@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Include file for testing file inclusion.

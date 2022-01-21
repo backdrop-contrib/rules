@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Contains rules core integration needed during evaluation.

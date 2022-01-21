@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Include file for Rules Scheduler tests.

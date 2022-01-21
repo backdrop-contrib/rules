@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Rules integration for the taxonomy_term module.

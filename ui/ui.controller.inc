@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Contains the UI controller for Rules.

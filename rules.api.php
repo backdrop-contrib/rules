@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Documentation for hooks provided by the Rules API.

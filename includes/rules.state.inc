@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Contains the state and data related stuff.
