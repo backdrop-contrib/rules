@@ -139,6 +139,10 @@ function rules_action_mail_to_users_of_role($roles, $subject, $message, $from, $
     'subject' => $subject,
     'message' => $message,
   );
+
+  if (!empty($from)) { 
+    $params['from'] = $from;
+  }
   // Set a unique key for this mail.
   $name = isset($element->root()->name) ? $element->root()->name : 'unnamed';
   $key = 'rules_action_mail_to_users_of_role_' . $name . '_' . $element->elementId();
@@ -146,7 +150,7 @@ function rules_action_mail_to_users_of_role($roles, $subject, $message, $from, $
 
   $message = array('result' => TRUE);
   foreach ($result as $row) {
-    $message = backdrop_mail('rules', $key, $row->mail, language_default(), $params, $from);
+    $message = backdrop_mail('rules', $key, $row->mail, language_default(), $params);
     // If $message['result'] is FALSE, then it's likely that email sending is
     // failing at the moment, and we should just abort sending any more. If
     // however, $message['result'] is NULL, then it's likely that a module has
