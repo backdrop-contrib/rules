@@ -24,7 +24,9 @@ And many more...
 
 ## Installation
 
-Install Entity Plus and this module using the [official Backdrop CMS instructions](https://backdropcms.org/guide/modules).
+Install Entity Plus, Entity UI, and Entity Tokens and this module using the [official Backdrop CMS instructions](https://backdropcms.org/guide/modules).
+
+If you will be upgrading a site from Drupal 7, you should [install stub modules](https://github.com/backdrop-contrib/rules/wiki/Upgrading-Rules-from-Drupal-7) in your D7 installation before starting the upgrade process.
 
 Rules has four component modules, each with separate activation:
   + Rules
@@ -44,7 +46,8 @@ Additional documentation is located in [the Wiki](https://github.com/backdrop-co
 
 - [Graham Oliver](https://github.com/Graham-72)
 - [Laryn Kragt Bakker](https://github.com/laryn) - [CEDC.org](https://cedc.org)
-- [Robert Lang](https://github.com/bugfolder)
+- [Robert J. Lang](https://github.com/bugfolder)
+- [Alejandro Cremaschi](https://github.com/argiepiano)
 - Seeking additional maintainers
 
 ## Credits
