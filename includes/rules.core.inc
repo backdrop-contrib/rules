@@ -1806,6 +1806,13 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
         $methods = $file_names = array();
         $includes = self::getIncludeFiles($info['module']);
 
+        // Make sure we've actually included all of the include files so that
+        // the call to getFileName() in the next section will succeed if the
+        // function lives in a file included via hook_rules_file_info().
+        foreach ($includes as $file) {
+          module_load_include('inc', $info['module'], $file);
+        }
+
         foreach (get_class_methods($interface) as $method) {
           if (isset($info['callbacks'][$method]) && ($function = $info['callbacks'][$method])) {
             $methods[$method][0] = $function;
@@ -1905,7 +1912,6 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
   protected function getFileName($function, $includes) {
     static $filenames;
     if (!isset($filenames) || !array_key_exists($function, $filenames)) {
-      module_load_include('inc','rules','tests/rules_test.test');
       $filenames[$function] = NULL;
       $reflector = new ReflectionFunction($function);
       // On windows the path contains backslashes instead of slashes, fix that.

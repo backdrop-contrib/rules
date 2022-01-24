@@ -2110,7 +2110,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     foreach ($additional_roles as $index => $role) {
       if ($role == BACKDROP_AUTHENTICATED_ROLE) {
         unset($additional_roles[$index]);
-      } 
+      }
     }
 
     // Execute action and check that only two mails were sent.
