@@ -8,7 +8,9 @@
  * Implements hook_enable().
  */
 function rules_test_enable() {
-  // Reset the static variable record of what Rules files have been included so
-  // that the list will be rebuilt to include our test files.
-  backdrop_static_reset('RulesAbstractPlugin::includeFiles');
+  // Clear the rules cache so that lists of included files (among other things)
+  // that are cached will be rebuilt so that we can immediately make use of
+  // rules defined in this module that might be triggered by the enabling of
+  // this module.
+  rules_clear_cache();
 }
