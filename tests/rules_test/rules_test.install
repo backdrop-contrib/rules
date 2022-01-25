@@ -1,0 +1,14 @@
+<?php
+/**
+ * @file
+ * Installation functions for the Rules test module.
+ */
+
+/**
+ * Implements hook_enable().
+ */
+function rules_test_enable() {
+  // Reset the static variable record of what Rules files have been included so
+  // that the list will be rebuilt to include our test files.
+  backdrop_static_reset('RulesAbstractPlugin::includeFiles');
+}
