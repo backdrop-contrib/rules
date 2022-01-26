@@ -244,5 +244,12 @@ function rules_taxonomy_vocabulary_delete(TaxonomyVocabulary $vocabulary) {
 }
 
 /**
+ * Implements hook_taxonomy_vocabulary_predelete().
+ */
+function rules_taxonomy_vocabulary_predelete(TaxonomyVocabulary $vocabulary) {
+  rules_invoke_event('taxonomy_vocabulary_predelete', $vocabulary);
+}
+
+/**
  * @} End of "addtogroup rules"
  */

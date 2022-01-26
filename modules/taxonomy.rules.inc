@@ -84,11 +84,6 @@ function rules_taxonomy_event_info() {
           'type' => 'taxonomy_vocabulary',
           'label' => t('updated vocabulary'),
         ),
-        'vocabulary_unchanged' => array(
-          'type' => 'taxonomy_vocabulary',
-          'label' => t('unchanged vocabulary'),
-          'handler' => 'rules_events_entity_unchanged',
-        ),
       ),
     ),
     'taxonomy_vocabulary_presave' => $defaults_vocab + array(
@@ -99,15 +94,19 @@ function rules_taxonomy_event_info() {
           'label' => t('saved vocabulary'),
           'skip save' => TRUE,
         ),
-        'vocabulary_unchanged' => array(
-          'type' => 'taxonomy_vocabulary',
-          'label' => t('unchanged vocabulary'),
-          'handler' => 'rules_events_entity_unchanged',
-        ),
       ),
     ),
     'taxonomy_vocabulary_delete' => $defaults_vocab + array(
       'label' => t('After deleting a vocabulary'),
+      'variables' => array(
+        'vocabulary' => array(
+          'type' => 'taxonomy_vocabulary',
+          'label' => t('deleted vocabulary'),
+        ),
+      ),
+    ),
+    'taxonomy_vocabulary_predelete' => $defaults_vocab + array(
+      'label' => t('Before deleting a vocabulary'),
       'variables' => array(
         'vocabulary' => array(
           'type' => 'taxonomy_vocabulary',
