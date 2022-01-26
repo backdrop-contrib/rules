@@ -130,9 +130,8 @@ function rules_taxonomy_term_integration_access($type, $name) {
  * Taxonomy vocabulary integration access callback.
  */
 function rules_taxonomy_vocabulary_integration_access($type, $name) {
-  if ($type == 'event' || $type == 'condition') {
-    //@todo This will always return FALSE, but it was the same in D7?.
-    return entity_plus_access('view', 'taxonomy_vocabulary');
+  if ($type == 'event' || $type == 'condition' || $type == 'action') {
+    return user_access('administer taxonomy');
   }
 }
 
