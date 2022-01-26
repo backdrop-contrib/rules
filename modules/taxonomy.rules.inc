@@ -199,7 +199,7 @@ function rules_taxonomy_action_info() {
       'name' => array(
         'type' => 'text',
         'label' => t('Name'),
-        'description' => t('The name of the vocabulary',) 
+        'description' => t('The name of the vocabulary'),
       ),
       'description' => array(
         'type' => 'text',
