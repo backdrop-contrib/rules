@@ -84,6 +84,11 @@ function rules_taxonomy_event_info() {
           'type' => 'taxonomy_vocabulary',
           'label' => t('updated vocabulary'),
         ),
+        'vocabulary_unchanged' => array(
+          'type' => 'taxonomy_vocabulary',
+          'label' => t('unchanged vocabulary'),
+          'handler' => 'rules_events_vocabulary_unchanged',
+        ),
       ),
     ),
     'taxonomy_vocabulary_presave' => $defaults_vocab + array(
@@ -93,6 +98,11 @@ function rules_taxonomy_event_info() {
           'type' => 'taxonomy_vocabulary',
           'label' => t('saved vocabulary'),
           'skip save' => TRUE,
+        ),
+        'vocabulary_unchanged' => array(
+          'type' => 'taxonomy_vocabulary',
+          'label' => t('unchanged vocabulary'),
+          'handler' => 'rules_events_vocabulary_unchanged',
         ),
       ),
     ),

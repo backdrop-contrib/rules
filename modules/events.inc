@@ -219,6 +219,17 @@ function rules_get_entity_view_modes($name, $var_info) {
  * Implements hook_taxonomy_vocabulary_presave().
  */
 function rules_taxonomy_vocabulary_presave(TaxonomyVocabulary $vocabulary) {
+  // Since core doesn't add (yet) the original vocabulary
+  // add it here for presave and update events. 
+  if (empty($vocabulary->original)) {
+    $config = config('taxonomy.vocabulary.' . $vocabulary->machine_name);
+    $is_new = $config->isNew();
+    if (!$is_new) {
+      $data = $config->get();
+      $original = new TaxonomyVocabulary($data);
+      $vocabulary->original = $original;
+    }
+  }
   rules_invoke_event('taxonomy_vocabulary_presave', $vocabulary);
 }
 
@@ -248,6 +259,16 @@ function rules_taxonomy_vocabulary_delete(TaxonomyVocabulary $vocabulary) {
  */
 function rules_taxonomy_vocabulary_predelete(TaxonomyVocabulary $vocabulary) {
   rules_invoke_event('taxonomy_vocabulary_predelete', $vocabulary);
+}
+
+/**
+ * Gets an unchanged vocabulary that doesn't contain any recent changes.
+ */
+function rules_events_vocabulary_unchanged($arguments, $name, $info) {
+  $vocabulary = $arguments['vocabulary'];
+  if (isset($vocabulary->original)) {
+    return $vocabulary->original;
+  }
 }
 
 /**
