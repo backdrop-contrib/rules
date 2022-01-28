@@ -197,7 +197,7 @@ function rules_taxonomy_action_info() {
   );
 
   $return['vocabulary_create'] = array(
-    'label' => t('Create a new vocabularity'),
+    'label' => t('Create a new vocabulary'),
     'parameter' => array(
       'machine_name' => array(
         'type' => 'token',
