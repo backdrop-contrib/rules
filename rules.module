@@ -1887,6 +1887,7 @@ function rules_autoload_info() {
     'RulesException' => 'includes/rules.core.inc',
     'RulesExtendable' => 'includes/rules.core.inc',
     'RulesIdentifiableDataWrapper' => 'includes/rules.state.inc',
+    'RulesDataWrapperSavableInterface' => 'includes/rules.state.inc',
     'RulesIntegrityException' => 'includes/rules.core.inc',
     'RulesLog' => 'includes/rules.core.inc',
     'RulesLoop' => 'includes/rules.plugins.inc',

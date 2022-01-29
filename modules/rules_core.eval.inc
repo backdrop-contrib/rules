@@ -245,32 +245,10 @@ class RulesNumericOffsetProcessor extends RulesDataProcessor {
 /**
  * A custom wrapper class for vocabularies.
  *
- * This class is capable of loading vocabularies by machine name.
+ * This class implements RulesDataWrapperSavableInterface, so that
+ * Rules can save Vocabularies (which are non-entities).
  */
-class RulesTaxonomyVocabularyWrapper extends EntityBackdropWrapper {
-
-  /**
-   * Overridden to support identifying vocabularies by machine names.
-   */
-  protected function setEntity($data) {
-    if (isset($data) && $data !== FALSE && !is_object($data) && !is_numeric($data)) {
-      // The vocabulary name has been passed.
-      parent::setEntity(taxonomy_vocabulary_machine_name_load($data));
-    }
-    else {
-      parent::setEntity($data);
-    }
-  }
-
-  /**
-   * Overridden to permit machine names as values.
-   */
-  public function validate($value) {
-    if (isset($value) && is_string($value)) {
-      return TRUE;
-    }
-    return parent::validate($value);
-  }
+class RulesTaxonomyVocabularyWrapper extends EntityVocabularyWrapper implements RulesDataWrapperSavableInterface {
 
 }
 

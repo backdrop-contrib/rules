@@ -148,7 +148,9 @@ function rules_rules_core_data_info() {
 
   if (module_exists('taxonomy')) {
     $return['taxonomy_vocabulary']['label'] = t('Taxonomy Vocabulary');
-    // For exportability identify vocabularies by name.
+    $return['taxonomy_vocabulary']['wrap'] = TRUE;
+    $return['taxonomy_vocabulary']['token type'] = 'vocabulary';
+    // As vocabularies are not entities, this wraps the vocabulary entity_plus wrapper.
     $return['taxonomy_vocabulary']['wrapper class'] = 'RulesTaxonomyVocabularyWrapper';
     $return['taxonomy_vocabulary']['ui class'] = 'RulesDataUITaxonomyVocabulary';
   }

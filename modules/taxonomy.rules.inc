@@ -9,6 +9,15 @@
  */
 
 /**
+ * Implements hook_rules_file_info() on behalf of the taxonomy module.
+ *
+ * @see rules_core_modules()
+ */
+function rules_taxonomy_file_info() {
+  return array('modules/taxonomy.eval');
+}
+
+/**
  * Implements hook_rules_event_info().
  */
 function rules_taxonomy_event_info() {
@@ -19,7 +28,7 @@ function rules_taxonomy_event_info() {
     'class' => 'RulesTaxonomyEventHandler',
   );
   $defaults_vocab = array(
-    'group' => t('Taxonomy'),
+    'group' => t('Vocabulary'),
     'access callback' => 'rules_taxonomy_vocabulary_integration_access',
     'module' => 'taxonomy',
   );
@@ -78,7 +87,7 @@ function rules_taxonomy_event_info() {
         'vocabulary_unchanged' => array(
           'type' => 'taxonomy_vocabulary',
           'label' => t('unchanged vocabulary'),
-          'handler' => 'rules_events_entity_unchanged',
+          'handler' => 'rules_events_vocabulary_unchanged',
         ),
       ),
     ),
@@ -93,12 +102,21 @@ function rules_taxonomy_event_info() {
         'vocabulary_unchanged' => array(
           'type' => 'taxonomy_vocabulary',
           'label' => t('unchanged vocabulary'),
-          'handler' => 'rules_events_entity_unchanged',
+          'handler' => 'rules_events_vocabulary_unchanged',
         ),
       ),
     ),
     'taxonomy_vocabulary_delete' => $defaults_vocab + array(
       'label' => t('After deleting a vocabulary'),
+      'variables' => array(
+        'vocabulary' => array(
+          'type' => 'taxonomy_vocabulary',
+          'label' => t('deleted vocabulary'),
+        ),
+      ),
+    ),
+    'taxonomy_vocabulary_predelete' => $defaults_vocab + array(
+      'label' => t('Before deleting a vocabulary'),
       'variables' => array(
         'vocabulary' => array(
           'type' => 'taxonomy_vocabulary',
@@ -122,8 +140,8 @@ function rules_taxonomy_term_integration_access($type, $name) {
  * Taxonomy vocabulary integration access callback.
  */
 function rules_taxonomy_vocabulary_integration_access($type, $name) {
-  if ($type == 'event' || $type == 'condition') {
-    return entity_plus_access('view', 'taxonomy_vocabulary');
+  if ($type == 'event' || $type == 'condition' || $type == 'action') {
+    return user_access('administer taxonomy');
   }
 }
 
@@ -142,6 +160,131 @@ class RulesTaxonomyEventHandler extends RulesEventHandlerEntityBundle {
     return t('vocabulary');
   }
 
+}
+
+/**
+ * Implements hook_rules_category_info() on behalf of the node module.
+ */
+function rules_taxonomy_category_info() {
+  return array(
+    'vocabulary' => array(
+      'label' => t('Vocabulary'),
+      'equals group' => t('Vocabulary'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_rules_action_info() on behalf of the taxonomy module.
+ *
+ * @see rules_core_modules()
+ */
+function rules_taxonomy_action_info() {
+  $return['vocabulary_fetch'] = array(
+    'label' => t('Fetch vocabulary by machine name'),
+    'parameter' => array(
+      'id' => array('type' => 'token', 'label' => t('Machine name')),
+    ),
+    'provides' => array(
+      'vocabulary_fetched' => array('type' => 'taxonomy_vocabulary', 'label' => t('Fetched vocabulary')),
+    ),
+    'category' => 'vocabulary',
+    'group' => t('Vocabulary'),
+    'base' => 'rules_action_vocabulary_fetch',
+    'callbacks' => array(
+      'access' => 'rules_action_vocabulary_createfetch_access',
+    ),
+  );
+
+  $return['vocabulary_create'] = array(
+    'label' => t('Create a new vocabulary'),
+    'parameter' => array(
+      'machine_name' => array(
+        'type' => 'token',
+        'label' => t('Vocabulary machine name'),
+        'description' => 'A unique machine-readable name. Can only contain lowercase letters, numbers, and underscores.',
+      ),
+      'name' => array(
+        'type' => 'text',
+        'label' => t('Name'),
+        'description' => t('The name of the vocabulary'),
+      ),
+      'description' => array(
+        'type' => 'text',
+        'label' => t('Description'),
+      ),
+    ),
+    'provides' => array(
+      'vocabulary_created' => array(
+        'type' => 'taxonomy_vocabulary',
+        'label' => t('Created vocabulary'),
+        'save' => TRUE,
+      ),
+    ),
+    'group' => t('Vocabulary'),
+    'base' => 'rules_action_vocabulary_create',
+    'callbacks' => array(
+      'access' => 'rules_action_vocabulary_createfetch_access',
+    ),
+  );
+
+  $return['vocabulary_save'] = array(
+    'label' => t('Save vocabulary'),
+    'parameter' => array(
+      'data' => array(
+        'type' => 'taxonomy_vocabulary',
+        'label' => t('Taxonomy Vocabulary'),
+        'description' => t('Specifies the vocabulary, which should be saved permanently.'),
+        'restriction' => 'selector',
+        'wrapped' => TRUE,
+      ),
+      'immediate' => array(
+        'type' => 'boolean',
+        'label' => t('Force saving immediately'),
+        'description' => t('Usually saving is postponed till the end of the evaluation, so that multiple saves can be fold into one. If this set, saving is forced to happen immediately.'),
+        'default value' => FALSE,
+        'optional' => TRUE,
+        'restriction' => 'input',
+      ),
+    ),
+    'group' => t('Vocabulary'),
+    'base' => 'rules_action_vocabulary_save',
+    'callbacks' => array(
+      'access' => 'rules_action_vocabulary_createfetch_access',
+    ),
+  );
+
+  $return['vocabulary_delete'] = array(
+    'label' => t('Delete vocabulary'),
+    'parameter' => array(
+      'data' => array(
+        'type' => 'taxonomy_vocabulary',
+        'label' => t('Vocabulary'),
+        'description' => t('Specifies the vocabulary, which should be deleted permanently.'),
+        'restriction' => 'selector',
+        'wrapped' => TRUE,
+      ),
+    ),
+    'group' => t('Vocabulary'),
+    'base' => 'rules_action_vocabulary_delete',
+    'callbacks' => array(
+      'access' => 'rules_action_vocabulary_createfetch_access',
+  ),
+);
+
+  return $return;
+
+}
+
+/**
+ * Custom access callback for data create and fetch action.
+ */
+function rules_action_vocabulary_createfetch_access(RulesAbstractPlugin $element) {
+  $op = $element->getElementName();
+  if ($op == 'vocabulary_create' || $op == 'vocabulary_save' || $op == 'vocabulary_delete') {
+    return user_access('administer taxonomy');
+  }
+  return TRUE;
 }
 
 /**

@@ -76,9 +76,8 @@ function rules_entity_presave($entity, $type) {
       rules_invoke_event('taxonomy_term_presave', $entity);
       break;
 
-    case 'taxonomy_vocabulary':
     case 'user':
-      rules_invoke_event($type . '_presave', $entity);
+      rules_invoke_event('user_presave', $entity);
       break;
   }
 }
@@ -103,9 +102,8 @@ function rules_entity_update($entity, $type) {
       rules_invoke_event('taxonomy_term_update', $entity);
       break;
 
-    case 'taxonomy_vocabulary':
     case 'user':
-      rules_invoke_event($type . '_update', $entity);
+      rules_invoke_event('user_update', $entity);
       break;
   }
 }
@@ -130,9 +128,8 @@ function rules_entity_insert($entity, $type) {
       rules_invoke_event('taxonomy_term_insert', $entity);
       break;
 
-    case 'taxonomy_vocabulary':
     case 'user':
-      rules_invoke_event($type . '_insert', $entity);
+      rules_invoke_event('user_insert', $entity);
       break;
   }
 }
@@ -157,9 +154,8 @@ function rules_entity_delete($entity, $type) {
       rules_invoke_event('taxonomy_term_delete', $entity);
       break;
 
-    case 'taxonomy_vocabulary':
     case 'user':
-      rules_invoke_event($type . '_delete', $entity);
+      rules_invoke_event('user_delete', $entity);
       break;
   }
 }
@@ -217,6 +213,62 @@ function rules_get_entity_view_modes($name, $var_info) {
     $modes[$mode] = $mode_info['label'];
   }
   return $modes;
+}
+
+/**
+ * Implements hook_taxonomy_vocabulary_presave().
+ */
+function rules_taxonomy_vocabulary_presave(TaxonomyVocabulary $vocabulary) {
+  // Since core doesn't add (yet) the original vocabulary
+  // add it here for presave and update events. 
+  if (empty($vocabulary->original)) {
+    $config = config('taxonomy.vocabulary.' . $vocabulary->machine_name);
+    $is_new = $config->isNew();
+    if (!$is_new) {
+      $data = $config->get();
+      $original = new TaxonomyVocabulary($data);
+      $vocabulary->original = $original;
+    }
+  }
+  rules_invoke_event('taxonomy_vocabulary_presave', $vocabulary);
+}
+
+/**
+ * Implements hook_taxonomy_vocabulary_update().
+ */
+function rules_taxonomy_vocabulary_update(TaxonomyVocabulary $vocabulary) {
+  rules_invoke_event('taxonomy_vocabulary_update', $vocabulary);
+}
+
+/**
+ * Implements hook_taxonomy_vocabulary_insert().
+ */
+function rules_taxonomy_vocabulary_insert(TaxonomyVocabulary $vocabulary) {
+  rules_invoke_event('taxonomy_vocabulary_insert', $vocabulary);
+}
+
+/**
+ * Implements hook_taxonomy_vocabulary_delete().
+ */
+function rules_taxonomy_vocabulary_delete(TaxonomyVocabulary $vocabulary) {
+  rules_invoke_event('taxonomy_vocabulary_delete', $vocabulary);
+}
+
+/**
+ * Implements hook_taxonomy_vocabulary_predelete().
+ */
+function rules_taxonomy_vocabulary_predelete(TaxonomyVocabulary $vocabulary) {
+  rules_invoke_event('taxonomy_vocabulary_predelete', $vocabulary);
+}
+
+/**
+ * Gets an unchanged vocabulary that doesn't contain any recent changes.
+ */
+function rules_events_vocabulary_unchanged($arguments, $name, $info) {
+  $vocabulary = $arguments['vocabulary'];
+  if (isset($vocabulary->original)) {
+    return $vocabulary->original;
+  }
 }
 
 /**
