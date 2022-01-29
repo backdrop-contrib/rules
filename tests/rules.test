@@ -1922,6 +1922,46 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     RulesLog::logger()->checkLog();
   }
 
+  /** 
+   * Tests integration with the vocabulary module
+   */
+  public function testVocabularyIntegration() {
+
+    // Test creating and saving a new vocabulary.
+    $rule = rule(array(
+      'machine_name' => array('type' => 'token', 'label' => 'Machine name'),
+      'name' => array('type' => 'text', 'label' => 'Name'),
+      'description' => array('type' => 'text', 'label' => 'Description'),
+    ));
+    $rule->action('vocabulary_create', array(
+      'machine_name:select' => 'machine_name',
+      'name:select' => 'name',
+      'description:select' => 'description',
+    ));
+    $rule->integrityCheck();
+    $rule->execute('foo','Foo', 'A foo vocabulary');
+
+    $created_vocabulary = taxonomy_vocabulary_load('foo');
+    $this->assertTrue(!empty($created_vocabulary), 'Vocabulary "foo" created and saved successfully.');
+
+    // Test fetching a vocabulary.
+    $machine_name = 'foo';
+    $action = rules_action('vocabulary_fetch');
+    list($fetched_vocabulary) = $action->execute($machine_name);
+    $this->assertEqual($fetched_vocabulary, $created_vocabulary, 'Vocabulary "foo" fetched successfully.');
+
+    // Test vocabulary_unchanged
+    $rule = rules_reaction_rule();
+    $rule->event('taxonomy_vocabulary_update')
+         ->action('backdrop_message', array('message' => 'New name: [vocabulary:name]. Original name: [vocabulary-unchanged:name].'));
+    $rule->save('test');
+    $created_vocabulary->name = 'Bar';
+    $created_vocabulary->save();
+    $msg = backdrop_get_messages();
+    $this->assertEqual(array_pop($msg['info']), 'New name: Bar. Original name: Foo.', 'Successfully accessed original vocabulary value upon updating.');
+    $rule->delete();
+  }
+
   /**
    * Tests integration for the php module.
    */
@@ -2110,7 +2150,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     foreach ($additional_roles as $index => $role) {
       if ($role == BACKDROP_AUTHENTICATED_ROLE) {
         unset($additional_roles[$index]);
-      } 
+      }
     }
 
     // Execute action and check that only two mails were sent.
