@@ -219,6 +219,7 @@ function rules_scheduler_views_api() {
     'path' => backdrop_get_path('module', 'rules_scheduler') .'/includes',
   );
 }
+
 /**
  * Implements hook_autoload_info().
  */
@@ -228,7 +229,5 @@ function rules_scheduler_autoload_info()
     'RulesSchedulerSchedulerTestCase' => 'rules_scheduler.test',
     'RulesSchedulerDefaultTaskHandler' => 'includes/rules_scheduler.handler.inc',
     'rules_scheduler_views_filter' => 'includes/rules_scheduler_views_filter.inc',
-    'RulesTestTaskHandler' => 'tests/rules_scheduler_test.inc',
   );
 }
-

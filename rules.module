@@ -516,9 +516,17 @@ function rules_flush_caches() {
  */
 function rules_clear_cache() {
   cache_clear_all('*', 'cache_rules', TRUE);
+
   backdrop_static_reset('rules_get_cache');
   backdrop_static_reset('rules_fetch_data');
   backdrop_static_reset('rules_config_update_dirty_flag');
+
+  backdrop_static_reset('RulesAbstractPlugin::loadBasicInclude');
+  backdrop_static_reset('RulesAbstractPlugin::includeFiles');
+  backdrop_static_reset('RulesAbstractPlugin::getFileName');
+
+  backdrop_static_reset('_rules_import_get_plugin');
+
   entity_get_controller('rules_config')->resetCache();
 }
 

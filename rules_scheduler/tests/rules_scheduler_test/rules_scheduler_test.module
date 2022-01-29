@@ -3,3 +3,13 @@
  * @file
  * Rules Scheduler test module.
  */
+
+/**
+ * Implements hook_autoload_info().
+ */
+function rules_scheduler_test_autoload_info()
+{
+  return array(
+    'RulesTestTaskHandler' => 'rules_scheduler_test.inc',
+  );
+}

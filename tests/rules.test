@@ -13,7 +13,7 @@ class RulesTestCase extends BackdropWebTestCase {
    * Overrides BackdropWebTestCase::setUp().
    */
   protected function setUp() {
-    parent::setUp('entity_plus', 'locale', 'rules', 'rules_test');
+    parent::setUp('entity_plus', 'rules', 'rules_test');
     RulesLog::logger()->clear();
     config_set('rules.settings', 'rules_debug_log', 1);
   }
@@ -981,7 +981,7 @@ class RulesTestDataCase extends BackdropWebTestCase {
    * Overrides BackdropWebTestCase::setUp().
    */
   protected function setUp() {
-    parent::setUp('entity_plus', 'locale', 'rules', 'rules_test');
+    parent::setUp('entity_plus', 'rules', 'rules_test');
     config_set('rules.settings','rules_debug_log', 1);
     // Make sure we don't ran over issues with the node_load static cache.
     entity_get_controller('node')->resetCache();
@@ -1122,7 +1122,7 @@ class RulesTriggerTestCase extends BackdropWebTestCase {
    * Overrides BackdropWebTestCase::setUp().
    */
   protected function setUp() {
-    parent::setUp('entity_plus', 'locale', 'rules', 'rules_test');
+    parent::setUp('entity_plus', 'rules', 'rules_test');
     RulesLog::logger()->clear();
     config_set('rules.settings','rules_debug_log', 1);
   }
@@ -1381,7 +1381,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
    * Overrides BackdropWebTestCase::setUp().
    */
   protected function setUp() {
-    $setup_modules = array('entity_plus', 'locale', 'rules', 'rules_test', 'path', 'entity_token');
+    $setup_modules = array('entity_plus', 'rules', 'rules_test', 'path', 'entity_token');
     $available_modules = system_rebuild_module_data();
     if (isset($available_modules['php'])) {
       $this->has_php = TRUE;
@@ -2102,7 +2102,7 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     foreach ($additional_roles as $index => $role) {
       if ($role == BACKDROP_AUTHENTICATED_ROLE) {
         unset($additional_roles[$index]);
-      } 
+      }
     }
 
     // Execute action and check that only two mails were sent.
@@ -2177,7 +2177,7 @@ class RulesEventDispatcherTestCase extends BackdropWebTestCase {
    * Overrides BackdropWebTestCase::setUp().
    */
   protected function setUp() {
-    parent::setUp('entity_plus', 'locale', 'rules', 'rules_test');
+    parent::setUp('entity_plus', 'rules', 'rules_test');
   }
 
   /**
@@ -2240,7 +2240,7 @@ class RulesInvocationEnabledTestCase extends BackdropWebTestCase {
    * Overrides BackdropWebTestCase::setUp().
    */
   protected function setUp() {
-    parent::setUp('entity_plus', 'locale', 'dblog', 'rules', 'rules_test', 'rules_test_invocation');
+    parent::setUp('entity_plus', 'dblog', 'rules', 'rules_test', 'rules_test_invocation');
   }
 
   /**

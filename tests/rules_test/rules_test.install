@@ -1,0 +1,16 @@
+<?php
+/**
+ * @file
+ * Installation functions for the Rules test module.
+ */
+
+/**
+ * Implements hook_enable().
+ */
+function rules_test_enable() {
+  // Clear the rules cache so that lists of included files (among other things)
+  // that are cached will be rebuilt so that we can immediately make use of
+  // rules defined in this module that might be triggered by the enabling of
+  // this module.
+  rules_clear_cache();
+}

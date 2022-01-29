@@ -1805,7 +1805,6 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
       foreach ($this->faces as $interface) {
         $methods = $file_names = array();
         $includes = self::getIncludeFiles($info['module']);
-
         foreach (get_class_methods($interface) as $method) {
           if (isset($info['callbacks'][$method]) && ($function = $info['callbacks'][$method])) {
             $methods[$method][0] = $function;
@@ -1838,7 +1837,7 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
    * callbacks may reside in that file.
    */
   protected function loadBasicInclude() {
-    static $included = array();
+    $included = &backdrop_static(__METHOD__, array());
 
     if (isset($this->info['module']) && !isset($included[$this->info['module']])) {
       $module = $this->info['module'];
@@ -1851,7 +1850,7 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
    * Makes sure all supported destinations are included.
    */
   public static function includeFiles() {
-    static $included;
+    $included = &backdrop_static(__METHOD__);
 
     if (!isset($included)) {
       foreach (module_implements('rules_file_info') as $module) {
@@ -1903,9 +1902,8 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
   }
 
   protected function getFileName($function, $includes) {
-    static $filenames;
+    $filenames = &backdrop_static(__METHOD__);
     if (!isset($filenames) || !array_key_exists($function, $filenames)) {
-      module_load_include('inc','rules','tests/rules_test.test');
       $filenames[$function] = NULL;
       $reflector = new ReflectionFunction($function);
       // On windows the path contains backslashes instead of slashes, fix that.
