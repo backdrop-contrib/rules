@@ -298,7 +298,7 @@ function rules_ui_form_rules_config_confirm_op_submit($form, &$form_state) {
 function rules_ui_add_element($form, &$form_state, $rules_config, $plugin_name, RulesContainerPlugin $parent, $base_path) {
   $cache = rules_get_cache();
   if (!isset($cache['plugin_info'][$plugin_name]['class'])) {
-    menu_not_found();
+    backdrop_not_found();
     exit;
   }
   RulesPluginUI::$basePath = $base_path;
@@ -329,7 +329,8 @@ function rules_ui_add_element($form, &$form_state, $rules_config, $plugin_name, 
     $element = rules_plugin_factory($plugin_name);
     // Always add the new element at the bottom, thus set an appropriate weight.
     $iterator = $parent->getIterator();
-    if ($sibling = end($iterator)) {
+    $iterator_array = iterator_to_array($iterator, TRUE);
+    if ($sibling = end($iterator_array)) {
       $element->weight = $sibling->weight + 1;
     }
     $element->setParent($parent);
@@ -355,7 +356,8 @@ function rules_ui_add_element_submit($form, &$form_state) {
 
   // Always add the new element at the bottom, thus set an appropriate weight.
   $iterator = $form_state['parent_element']->getIterator();
-  if ($sibling = end($iterator)) {
+  $iterator_array = iterator_to_array($iterator, TRUE);
+  if ($sibling = end($iterator_array)) {
     $element->weight = $sibling->weight + 1;
   }
   // Clear the element settings so they won't be processed on serialization as
