@@ -1588,7 +1588,7 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
         }
       }
     }
-    elseif (!empty($this->itemInfo['faces_cache']) && function_exists($this->elementName)) {
+    elseif (!empty($this->itemInfo['faces_cache']) && isset($this->elementName) && function_exists($this->elementName)) {
       // We don't have any info, so just add the name as execution callback.
       $this->override(array('execute' => $this->elementName));
     }
