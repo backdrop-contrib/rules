@@ -36,6 +36,12 @@ jobs:
           repository: backdrop-contrib/entity_ui
           path: modules/entity_ui
 
+      - name: Checkout Entity Tokens
+        uses: actions/checkout@v2
+        with:
+          repository: backdrop-contrib/entity_token
+          path: modules/entity_token
+
       - name: Checkout module
         uses: actions/checkout@v2
         with:
