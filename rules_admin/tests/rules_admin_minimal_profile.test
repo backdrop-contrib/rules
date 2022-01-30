@@ -24,7 +24,7 @@ class RulesAdminMinimalProfileTestCase extends BackdropWebTestCase {
    * Overrides BackdropWebTestCase::setUp().
    */
   protected function setUp() {
-    parent::setUp('entity_token', 'rules', 'rules_admin');
+    parent::setUp('rules', 'rules_admin');
     RulesLog::logger()->clear();
     variable_set('rules_debug_log', TRUE);
   }
