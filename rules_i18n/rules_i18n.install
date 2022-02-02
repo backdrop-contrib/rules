@@ -10,7 +10,7 @@
 function rules_i18n_install() {
   global $language;
 
-  $langcode = $language->language;
+  $langcode = $language->langcode;
   backdrop_static_reset('i18n_object_info');
   backdrop_static_reset('entity_get_info');
   backdrop_static_reset('entity_i18n_controller');
