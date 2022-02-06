@@ -220,7 +220,7 @@ function rules_system_action_info() {
         'to' => array(
           'type' => 'text',
           'label' => t('To'),
-          'description' => t('The e-mail address or addresses where the message will be sent to. The formatting of this string must comply with RFC 2822.'),
+          'description' => t('The e-mail address or addresses where the message will be sent to. The formatting of this string must comply with <a href="http://www.faqs.org/rfcs/rfc2822.html">RFC 2822</a>. Some examples are:<ul><li>user@example.com</li><li>user@example.com, anotheruser@example.com</li><li>User &lt;user@example.com&gt;</li><li>User &lt;user@example.com&gt;, Another User &lt;anotheruser@example.com&gt;</li></ul>.'),
         ),
         'subject' => array(
           'type' => 'text',
