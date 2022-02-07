@@ -5,6 +5,45 @@
  */
 
 /**
+ * Implements hook_requirements().
+ */
+function rules_requirements($phase) {
+  $requirements = array();
+  if ($phase == 'update') {
+    // Required Backdrop modules that were not part of D7 installation.
+    $backdrop_modules = array(
+      'entity_ui' => 'Entity UI',
+      'entity_plus' => 'Entity Plus',
+    );
+    foreach ($backdrop_modules as $module => $module_name) {
+      if (module_exists($module)) {
+        // The module is already installed and enabled, nothing more to do.
+        continue;
+      }
+      $module_files = backdrop_system_listing('/' . $module . '\.module$/', 'modules', 'name', 0);;
+      if (empty($module_files)) {
+        // Module doesn't exist in the code base, so halt the upgrade process.
+        $requirements[] = array(
+          'title' => $module_name,
+          'description' => t('Please add the Backdrop module @module_name to your installation; it is required for the Rules module.', array('@module_name' => $module_name)),
+          'severity' => REQUIREMENT_ERROR,
+        );
+      }
+      else {
+        // Module exists in the code base, but isn't enabled so enable it.
+        module_enable(array($module));
+        $requirements[] = array(
+          'title' => $module_name,
+          'description' => t('The Backdrop module @module_name has been enabled; it is required for the Rules module.', array('@module_name' => $module_name)),
+          'severity' => REQUIREMENT_OK,
+        );
+      }
+    }
+  }
+  return $requirements;
+}
+
+/**
  * Implements hook_enable().
  */
 function rules_enable() {
