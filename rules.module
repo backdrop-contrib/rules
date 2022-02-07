@@ -1482,6 +1482,13 @@ function rules_element_info() {
  * Implements hook_modules_enabled().
  */
 function rules_modules_enabled($modules) {
+  if (!module_exists('entity_plus')) {
+    // Ordinarily, Entity Plus would be enabled before Rules, but if it's not
+    // (which can happen during an upgrade from D7 when we enable Entity Plus as
+    // part of hook_requirements()), then its functions are not accessible to
+    // Rules, so we'll have to bail.
+    return;
+  }
   _entity_plus_defaults_rebuild('rules_config');
   // Re-enable Rules configurations that are dirty, because they require one of
   // the enabled the modules.
