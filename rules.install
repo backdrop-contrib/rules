@@ -20,7 +20,7 @@ function rules_requirements($phase) {
         // The module is already installed and enabled, nothing more to do.
         continue;
       }
-      $module_files = backdrop_system_listing('/' . $module . '\.module$/', 'modules', 'name', 0);;
+      $module_files = backdrop_system_listing('/^' . $module . '\.module$/', 'modules', 'name', 0);
       if (empty($module_files)) {
         // Module doesn't exist in the code base, so halt the upgrade process.
         $requirements[] = array(
