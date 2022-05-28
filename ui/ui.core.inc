@@ -1318,10 +1318,14 @@ class RulesUICategory {
         continue;
       }
       if ($group = RulesUICategory::getItemGroup($info)) {
-        $sorted_data[backdrop_ucfirst($group)][$name] = backdrop_ucfirst($info['label']);
+        if (empty($info['hidden'])) {
+          $sorted_data[backdrop_ucfirst($group)][$name] = backdrop_ucfirst($info['label']);
+        }
       }
       else {
-        $ungrouped[$name] = backdrop_ucfirst($info['label']);
+        if (empty($info['hidden'])) {
+          $ungrouped[$name] = backdrop_ucfirst($info['label']);
+        }
       }
     }
     asort($ungrouped);
