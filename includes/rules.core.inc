@@ -18,6 +18,10 @@ require_once dirname(__FILE__) . '/faces.inc';
  */
 class RulesConfigEntity extends Entity {
 
+  public function __construct(array $values = array())
+  {
+    parent::__construct($values);
+  }
   /**
    * Implements EntityInterface::id().
    */
@@ -35,12 +39,16 @@ class RulesConfigEntity extends Entity {
   /**
    * Implements EntityInterface::bundle().
    */
-  public function bundle() {}
+  public function bundle() {
+    return 'rules_config';
+  }
 
   /**
    * Implements EntityInterface::label().
    */
-  public function label() {}
+  public function label() {
+    return $this->label;
+  }
 
   /**
    * Implements EntityInterface::uri().
