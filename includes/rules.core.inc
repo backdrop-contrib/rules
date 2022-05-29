@@ -37,13 +37,6 @@ class RulesConfigEntity extends Entity {
   }
 
   /**
-   * Implements EntityInterface::bundle().
-   */
-  public function bundle() {
-    return 'rules_config';
-  }
-
-  /**
    * Implements EntityInterface::label().
    */
   public function label() {
