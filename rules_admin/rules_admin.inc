@@ -235,7 +235,7 @@ function rules_admin_settings($form, &$form_state) {
       RulesLog::WARN => t('In case of errors'),
       RulesLog::INFO => t('Always'),
     ),
-    '#description' => t('Debug information is only shown when rules are evaluated and is visible for users having the permission <a href="!url">%link</a>.', array('%link' => t('Access the Rules debug log'), '!url' => url('admin/people/permissions', array('fragment' => 'module-rules')))),
+    '#description' => t('Debug information is only shown when rules are evaluated and is visible for users having the permission <a href="!url">%link</a>.', array('%link' => t('Access the Rules debug log'), '!url' => url('admin/config/people/permissions', array('fragment' => 'module-rules')))),
   );
 
   // Add a submit button
