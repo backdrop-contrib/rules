@@ -2,5 +2,5 @@
 name = Rules I18n
 description = Tests translating Rules configs.
 group = Rules
-file = rules_scheduler.test
+file = rules_i18n.test
 dependencies[] = i18n_string
