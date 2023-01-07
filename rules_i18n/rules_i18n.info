@@ -5,3 +5,4 @@ backdrop = 1.x
 
 dependencies[] = rules
 dependencies[] = i18n_string
+dependencies[] = entity_plus_i18n

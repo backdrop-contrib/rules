@@ -139,7 +139,7 @@ function rules_i18n_autoload_info()
   return array(
     'RulesI18nStringController' => 'rules_i18n.i18n.inc',
     'RulesI18nStringObjectWrapper' => 'rules_i18n.i18n.inc',
-    'RulesI18nStringEvaluator' => 'rules_i18.rules.inc',
+    'RulesI18nStringEvaluator' => 'rules_i18n.rules.inc',
     'RulesI18nTestCase' => 'rules_i18n.test',
   );
 }
