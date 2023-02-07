@@ -302,7 +302,7 @@ class RulesEntityController extends EntityPlusControllerExportable {
   public function delete($ids, DatabaseTransaction $transaction = NULL) {
     $transaction = isset($transaction) ? $transaction : db_transaction();
     // Use entity-load as ids may be the names as well as the ids.
-    $configs = $ids ? entity_load('rules_config', $ids) : array();
+    $configs = $ids ? entity_load_multiple('rules_config', $ids) : array();
     if ($configs) {
       foreach ($configs as $config) {
         db_delete('rules_trigger')
