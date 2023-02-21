@@ -18,10 +18,6 @@ require_once dirname(__FILE__) . '/faces.inc';
  */
 class RulesConfigEntity extends Entity {
 
-  public function __construct(array $values = array())
-  {
-    parent::__construct($values);
-  }
   /**
    * Implements EntityInterface::id().
    */
