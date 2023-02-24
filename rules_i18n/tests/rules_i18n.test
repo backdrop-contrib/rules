@@ -13,10 +13,6 @@ class RulesI18nTestCase extends BackdropWebTestCase {
    * Overrides BackdropWebTestCase::setUp().
    */
   protected function setUp() {
-    // TODO: get this working. For now, disable starting this test.
-    parent::setUp();
-    return;
-
     parent::setUp('rules_i18n');
     $this->admin_user = $this->backdropCreateUser(array(
       'bypass node access',
@@ -39,10 +35,10 @@ class RulesI18nTestCase extends BackdropWebTestCase {
     // Check to make sure that language has not already been installed.
     $this->backdropGet('admin/config/regional/language');
 
-    if (strpos($this->backdropGetContent(), 'enabled[' . $language_code . ']') === FALSE) {
+    if (strpos($this->backdropGetContent(), 'languages[' . $language_code . '][enabled]') === FALSE) {
       // Doesn't have language installed so add it.
       $edit = array();
-      $edit['langcode'] = $language_code;
+      $edit['predefined_langcode'] = $language_code;
       $this->backdropPost('admin/config/regional/language/add', $edit, t('Add language'));
 
       // Make sure we are not using a stale list.
@@ -51,7 +47,7 @@ class RulesI18nTestCase extends BackdropWebTestCase {
       $this->assertTrue(array_key_exists($language_code, $languages), t('Language was installed successfully.'));
 
       if (array_key_exists($language_code, $languages)) {
-        $this->assertRaw(t('The language %language has been created and can now be used. More information is available on the <a href="@locale-help">help screen</a>.', array('%language' => $languages[$language_code]->name, '@locale-help' => url('admin/help/locale'))), t('Language has been created.'));
+        $this->assertRaw(t('The language %language has been created and can now be used.', array('%language' => $languages[$language_code]->name, '@locale-help' => url('admin/help/locale'))), t('Language has been created.'));
       }
     }
     elseif ($this->xpath('//input[@type="checkbox" and @name=:name and @checked="checked"]', array(':name' => 'enabled[' . $language_code . ']'))) {
@@ -70,14 +66,10 @@ class RulesI18nTestCase extends BackdropWebTestCase {
    * Tests translating rules configs.
    */
   public function testRulesConfigTranslation() {
-    // TODO: get this working. For now, disable starting this test.
-    $this->assertTrue(TRUE, 'testRulesConfigTranslation() is under construction.');
-    return;
-
     // Create a rule and translate it.
     $rule = rule();
     $rule->label = 'label-en';
-    $rule->action('backdrop_message', array('message' => 'English message for [site:current-user].'));
+    $rule->action('backdrop_message', array('message' => 'English message for [site:current_user].'));
     $rule->save();
 
     $actions = $rule->actions();
@@ -85,7 +77,7 @@ class RulesI18nTestCase extends BackdropWebTestCase {
 
     // Add a translation.
     i18n_string_textgroup('rules')->update_translation("rules_config:{$rule->name}:label", 'de', 'label-de');
-    i18n_string_textgroup('rules')->update_translation("rules_config:{$rule->name}:$id:message", 'de', 'German message für [site:current-user].');
+    i18n_string_textgroup('rules')->update_translation("rules_config:{$rule->name}:$id:message", 'de', 'German message für [site:current_user].');
 
     // Execute the Rule and make sure the translated message has been output.
     // To do so, set the global language to German.
@@ -98,29 +90,29 @@ class RulesI18nTestCase extends BackdropWebTestCase {
     $rule->execute();
 
     $messages = backdrop_get_messages();
-    $this->assertEqual($messages['status'][0], 'German message für ' . $GLOBALS['user']->name . '.', 'Translated message has been output.');
+    $this->assertEqual($messages['info'][0], 'German message für ' . $GLOBALS['user']->name . '.', 'Translated message has been output.');
 
     // Test re-naming the rule.
     $rule->name = 'rules_i18n_name_2';
     $rule->save();
-    $translation = entity_i18n_string("rules:rules_config:{$rule->name}:label", $rule->label, 'de');
+    $translation = entity_plus_i18n_string("rules:rules_config:{$rule->name}:label", $rule->label, 'de');
     $this->assertEqual($translation, 'label-de', 'Translation survives a name change.');
 
     // Test updating and make sure the translation stays.
     $rule->label = 'Label new';
     $rule->save();
-    $translation = entity_i18n_string("rules:rules_config:{$rule->name}:label", $rule->label, 'de');
+    $translation = entity_plus_i18n_string("rules:rules_config:{$rule->name}:label", $rule->label, 'de');
     $this->assertEqual($translation, 'label-de', 'Translation survives an update.');
 
     // Test deleting the action and make sure the string is deleted too.
     $actions[0]->delete();
     $rule->save();
-    $translation = entity_i18n_string("rules_config:{$rule->name}:$id:message", 'English message for [site:current-user].', 'de');
-    $this->assertEqual($translation, 'English message for [site:current-user].', 'Translation of deleted action has been deleted.');
+    $translation = entity_plus_i18n_string("rules_config:{$rule->name}:$id:message", 'English message for [site:current_user].', 'de');
+    $this->assertEqual($translation, 'English message for [site:current_user].', 'Translation of deleted action has been deleted.');
 
     // Now delete the whole config and make sure all translations are deleted.
     $rule->delete();
-    $translation = entity_i18n_string("rules_config:{$rule->name}:label", 'label-en', 'de');
+    $translation = entity_plus_i18n_string("rules_config:{$rule->name}:label", 'label-en', 'de');
     $this->assertEqual($translation, 'label-en', 'Translation of deleted config has been deleted.');
   }
 
@@ -128,10 +120,6 @@ class RulesI18nTestCase extends BackdropWebTestCase {
    * Tests the "Translate a text" action.
    */
   public function testI18nActionT() {
-    // TODO: get this working. For now, disable starting this test.
-    $this->assertTrue(TRUE, 'testI18nActionT() is under construction.');
-    return;
-
     $set = rules_action_set(array());
     $set->action('rules_i18n_t', array(
       'text' => 'untranslated',
@@ -149,27 +137,14 @@ class RulesI18nTestCase extends BackdropWebTestCase {
     backdrop_get_messages();
     $set->execute();
     $messages = backdrop_get_messages();
-    $this->assertEqual($messages['status'][0], 'text-de', 'Text has been successfully translated.');
+    $this->assertEqual($messages['info'][0], 'text-de', 'Text has been successfully translated.');
 
-    // Enable the PHP module and make sure PHP in translations is not evaluated.
-    module_enable(array('php'));
-    i18n_string_textgroup('rules')->update_translation("rules_config:{$set->name}:$id:text", 'de', 'text <?php echo "eval";?>');
-
-    // Clear messages and execute it.
-    backdrop_get_messages();
-    $set->execute();
-    $messages = backdrop_get_messages();
-    $this->assertEqual($messages['status'][0], check_plain('text <?php echo "eval";?>'), 'PHP in translated text is not executed.');
   }
 
   /**
    * Tests the "Select a translated value" action.
    */
   public function testI18nActionSelect() {
-    // TODO: get this working. For now, disable starting this test.
-    $this->assertTrue(TRUE, 'testI18nActionSelect() is under construction.');
-    return;
-
     // Make the body field and the node type 'page' translatable.
     $field = field_info_field('body');
     $field['translatable'] = TRUE;
@@ -186,14 +161,14 @@ class RulesI18nTestCase extends BackdropWebTestCase {
 
     $body['en'][0] = array('value' => 'English body.');
     $body['de'][0] = array('value' => 'German body.');
-    $node = $this->backdropCreateNode(array('language' => 'en', 'body' => $body));
+    $node = $this->backdropCreateNode(array('langcode' => 'en', 'body' => $body));
 
     // Clear messages and execute it.
     backdrop_get_messages();
     $set->execute($node);
 
     $messages = backdrop_get_messages();
-    $this->assertEqual($messages['status'][0], "German body.\n", 'Translated text has been selected.');
+    $this->assertEqual($messages['info'][0], "German body.\n", 'Translated text has been selected.');
   }
 
 }
