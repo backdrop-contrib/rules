@@ -1905,16 +1905,16 @@ class RulesIntegrationTestCase extends BackdropWebTestCase {
     // Test user blocking.
     rules_action('user_block')->execute($user);
     $user = user_load($user->uid, TRUE);
-    $this->assertTrue(rules_condition('user_is_blocked')->execute($user), 'User has been blocked.');
+    $this->assertTrue(rules_condition('user_is_blocked')->execute($user), 'User account has been blocked.');
 
     rules_action('user_unblock')->execute($user);
     $user = user_load($user->uid, TRUE);
-    $this->assertFalse(rules_condition('user_is_blocked')->execute($user), 'User has been unblocked.');
+    $this->assertFalse(rules_condition('user_is_blocked')->execute($user), 'User account has been unblocked.');
 
     RulesLog::logger()->checkLog();
   }
 
-  /** 
+  /**
    * Tests integration with the vocabulary module
    */
   public function testVocabularyIntegration() {

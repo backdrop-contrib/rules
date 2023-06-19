@@ -10,3 +10,5 @@ dependencies[] = entity_ui
 dependencies[] = entity_token (>= 2.0.0)
 
 stylesheets[all][] = rules.css
+
+version = 2.2.0
