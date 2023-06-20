@@ -71,15 +71,15 @@ function rules_user_event_info() {
       'access callback' => 'rules_user_integration_access',
     ),
     'user_login' => array(
-      'label' => t('User account has logged in'),
+      'label' => t('User has logged in'),
       'group' => t('User account'),
       'variables' => array(
-        'account' => array('type' => 'user', 'label' => t('logged in user account')),
+        'account' => array('type' => 'user', 'label' => t('logged in user')),
       ),
       'access callback' => 'rules_user_integration_access',
     ),
     'user_logout' => array(
-      'label' => t('User account has logged out'),
+      'label' => t('User has logged out'),
       'group' => t('User account'),
       'variables' => array(
         'account' => array('type' => 'user', 'label' => t('logged out user account')),
