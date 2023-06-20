@@ -846,9 +846,9 @@ abstract class RulesPlugin extends RulesExtendable {
   /**
    * Whether the currently logged in user has access to all configured elements.
    *
-   * Note that this only checks whether the current user has permission to all
-   * configured elements, but not whether a user has access to configure Rule
-   * configurations in general. Use rules_config_access() for that.
+   * Note that this only checks whether the current user account has permission
+   * to all configured elements, but not whether a user has access to configure
+   * Rule configurations in general. Use rules_config_access() for that.
    *
    * Use this to determine access permissions for configuring or triggering the
    * execution of certain configurations independent of the Rules UI.

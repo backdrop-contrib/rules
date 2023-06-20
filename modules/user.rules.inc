@@ -22,35 +22,35 @@ function rules_user_event_info() {
   return array(
     'user_insert' => array(
       'label' => t('After saving a new user account'),
-      'group' => t('User'),
+      'group' => t('User account'),
       'variables' => array(
-        'account' => array('type' => 'user', 'label' => t('registered user')),
+        'account' => array('type' => 'user', 'label' => t('registered user account')),
       ),
       'access callback' => 'rules_user_integration_access',
     ),
     'user_update' => array(
       'label' => t('After updating an existing user account'),
-      'group' => t('User'),
+      'group' => t('User account'),
       'variables' => array(
-        'account' => array('type' => 'user', 'label' => t('updated user')),
-        'account_unchanged' => array('type' => 'user', 'label' => t('unchanged user'), 'handler' => 'rules_events_entity_unchanged'),
+        'account' => array('type' => 'user', 'label' => t('updated user account')),
+        'account_unchanged' => array('type' => 'user', 'label' => t('unchanged user account'), 'handler' => 'rules_events_entity_unchanged'),
       ),
       'access callback' => 'rules_user_integration_access',
     ),
     'user_presave' => array(
       'label' => t('Before saving a user account'),
-      'group' => t('User'),
+      'group' => t('User account'),
       'variables' => array(
-        'account' => array('type' => 'user', 'label' => t('saved user'), 'skip save' => TRUE),
-        'account_unchanged' => array('type' => 'user', 'label' => t('unchanged user'), 'handler' => 'rules_events_entity_unchanged'),
+        'account' => array('type' => 'user', 'label' => t('saved user account'), 'skip save' => TRUE),
+        'account_unchanged' => array('type' => 'user', 'label' => t('unchanged user account'), 'handler' => 'rules_events_entity_unchanged'),
       ),
       'access callback' => 'rules_user_integration_access',
     ),
     'user_view' => array(
       'label' => t('User account page is viewed'),
-      'group' => t('User'),
+      'group' => t('User account'),
       'variables' => array(
-        'account' => array('type' => 'user', 'label' => t('viewed user')),
+        'account' => array('type' => 'user', 'label' => t('viewed user account')),
         'view_mode' => array(
           'type' => 'text',
           'label' => t('view mode'),
@@ -64,15 +64,15 @@ function rules_user_event_info() {
     ),
     'user_delete' => array(
       'label' => t('After a user account has been deleted'),
-      'group' => t('User'),
+      'group' => t('User account'),
       'variables' => array(
-        'account' => array('type' => 'user', 'label' => t('deleted user')),
+        'account' => array('type' => 'user', 'label' => t('deleted user account')),
       ),
       'access callback' => 'rules_user_integration_access',
     ),
     'user_login' => array(
       'label' => t('User has logged in'),
-      'group' => t('User'),
+      'group' => t('User account'),
       'variables' => array(
         'account' => array('type' => 'user', 'label' => t('logged in user')),
       ),
@@ -80,9 +80,9 @@ function rules_user_event_info() {
     ),
     'user_logout' => array(
       'label' => t('User has logged out'),
-      'group' => t('User'),
+      'group' => t('User account'),
       'variables' => array(
-        'account' => array('type' => 'user', 'label' => t('logged out user')),
+        'account' => array('type' => 'user', 'label' => t('logged out user account')),
       ),
       'access callback' => 'rules_user_integration_access',
     ),
@@ -119,9 +119,9 @@ function rules_user_integration_access($type, $name) {
 function rules_user_condition_info() {
   return array(
     'user_has_role' => array(
-      'label' => t('User has role(s)'),
+      'label' => t('User account has role(s)'),
       'parameter' => array(
-        'account' => array('type' => 'user', 'label' => t('User')),
+        'account' => array('type' => 'user', 'label' => t('User account')),
         'roles' => array(
           'type' => 'list<integer>',
           'label' => t('Roles'),
@@ -134,19 +134,19 @@ function rules_user_condition_info() {
           'restriction' => 'input',
           'optional' => TRUE,
           'default value' => 'AND',
-          'description' => t('If matching against all selected roles, the user must have <em>all</em> the roles selected.'),
+          'description' => t('If matching against all selected roles, the user account must have <em>all</em> the roles selected.'),
         ),
       ),
-      'group' => t('User'),
+      'group' => t('User account'),
       'access callback' => 'rules_user_integration_access',
       'base' => 'rules_condition_user_has_role',
     ),
     'user_is_blocked' => array(
-      'label' => t('User is blocked'),
+      'label' => t('User account is blocked'),
       'parameter' => array(
-        'account' => array('type' => 'user', 'label' => t('User')),
+        'account' => array('type' => 'user', 'label' => t('User account')),
       ),
-      'group' => t('User'),
+      'group' => t('User account'),
       'access callback' => 'rules_user_integration_access',
       'base' => 'rules_condition_user_is_blocked',
     ),
@@ -154,10 +154,10 @@ function rules_user_condition_info() {
 }
 
 /**
- * User has role condition help callback.
+ * User account has role condition help callback.
  */
 function rules_condition_user_has_role_help() {
-  return t('Whether the user has the selected role(s).');
+  return t('Whether the user account has the selected role(s).');
 }
 
 /**
@@ -178,8 +178,8 @@ function rules_user_action_info() {
     'parameter' => array(
       'account' => array(
         'type' => 'user',
-        'label' => t('User'),
-        'description' => t('The user whose roles should be changed.'),
+        'label' => t('User account'),
+        'description' => t('The user account whose roles should be changed.'),
         'save' => TRUE,
       ),
       'roles' => array(
@@ -188,51 +188,51 @@ function rules_user_action_info() {
         'options list' => 'rules_user_roles_options_list',
       ),
     ),
-    'group' => t('User'),
+    'group' => t('User account'),
     'access callback' => 'rules_user_role_change_access',
   );
   $items['user_add_role'] = $defaults + array(
-    'label' => t('Add user role'),
+    'label' => t('Add user account role'),
     'base' => 'rules_action_user_add_role',
   );
   $items['user_remove_role'] = $defaults + array(
-    'label' => t('Remove user role'),
+    'label' => t('Remove user account role'),
     'base' => 'rules_action_user_remove_role',
   );
   $defaults = array(
     'parameter' => array(
       'account' => array(
         'type' => 'user',
-        'label' => t('User'),
+        'label' => t('User account'),
         'save' => TRUE,
       ),
     ),
-    'group' => t('User'),
+    'group' => t('User account'),
     'access callback' => 'rules_user_integration_access',
   );
   $items['user_block'] = $defaults + array(
-    'label' => t('Block a user'),
+    'label' => t('Block a user account'),
     'base' => 'rules_action_user_block',
   );
   $items['user_unblock'] = $defaults + array(
-    'label' => t('Unblock a user'),
+    'label' => t('Unblock a user account'),
     'base' => 'rules_action_user_unblock',
   );
   $items['user_send_account_email'] = array(
-    'label' => t('Send account e-mail'),
+    'label' => t('Send user account e-mail'),
     'parameter' => array(
       'account' => array(
         'type' => 'user',
-        'label' => t('Account'),
+        'label' => t('User account'),
       ),
       'email_type' => array(
         'type' => 'text',
         'label' => t('E-mail type'),
-        'description' => t("Select the e-mail based on your site's account settings to send to the user."),
+        'description' => t("Select the e-mail based on your site's account settings to send to the user account."),
         'options list' => 'rules_user_account_email_options_list',
       ),
     ),
-    'group' => t('User'),
+    'group' => t('User account'),
     'base' => 'rules_action_user_send_account_email',
     'access callback' => 'rules_user_integration_access',
   );
@@ -240,14 +240,14 @@ function rules_user_action_info() {
 }
 
 /**
- * User integration role actions access callback.
+ * User account integration role actions access callback.
  */
 function rules_user_role_change_access() {
   return entity_plus_metadata_user_roles() && user_access('administer permissions');
 }
 
 /**
- * Options list callback for user roles.
+ * Options list callback for user account roles.
  */
 function rules_user_roles_options_list($element) {
   return entity_plus_metadata_user_roles('roles', array(), $element instanceof RulesConditionInterface ? 'view' : 'edit');
@@ -260,7 +260,7 @@ function rules_user_roles_options_list($element) {
  */
 function rules_user_account_email_options_list() {
   return array(
-    'register_admin_created' => t('Welcome (new user created by administrator)'),
+    'register_admin_created' => t('Welcome (new user account created by administrator)'),
     'register_no_approval_required' => t('Welcome (no approval required)'),
     'register_pending_approval' => t('Welcome (awaiting approval)'),
     'password_reset' => t('Password recovery'),
