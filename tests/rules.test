@@ -8,7 +8,8 @@
  * Rules test cases.
  */
 class RulesTestCase extends BackdropWebTestCase {
-
+  protected $normal_role;
+  
   /**
    * Overrides BackdropWebTestCase::setUp().
    */

@@ -8,7 +8,8 @@
  * Test the i18n integration.
  */
 class RulesI18nTestCase extends BackdropWebTestCase {
-
+  protected $admin_user;
+  
   /**
    * Overrides BackdropWebTestCase::setUp().
    */
