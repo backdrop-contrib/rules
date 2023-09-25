@@ -1071,7 +1071,17 @@ class RulesContainerPluginUI extends RulesPluginUI {
         $child = $this->element->elementMap()->lookup($id);
         $child->weight = $data['weight'];
         $parent = $this->element->elementMap()->lookup($data['parent_id']);
-        $child->setParent($parent ? $parent : $this->element);
+        if ($parent->parentElement()->isRoot() == FALSE) {
+          if ($parent->pluginInfo()['class'] == 'RulesCondition') {
+            backdrop_set_message(t('The <em>OR</em> and <em>AND</em> conditions must "wrap" all the options indented below themselves.'));
+          }
+          else {
+            $child->setParent($parent ? $parent : $this->element);
+          }
+        }
+        else {
+          $child->setParent($parent ? $parent : $this->element);
+        }
       }
       $this->element->sortChildren(TRUE);
     }
