@@ -672,7 +672,7 @@ class RulesDataUITaxonomyVocabulary extends RulesDataUIEntity implements RulesDa
    */
   public static function optionsList(RulesPlugin $element, $name) {
     $options = array();
-    foreach (taxonomy_vocabulary_get_names() as $machine_name => $vocab) {
+    foreach (taxonomy_vocabulary_load_multiple(FALSE) as $machine_name => $vocab) {
       $options[$machine_name] = $vocab->name;
     }
     return $options;
