@@ -97,7 +97,7 @@ function _rules_system_watchdog_log_entry_info() {
  * Implements hook_rules_action_info() on behalf of the system module.
  */
 function rules_system_action_info() {
-  return array(
+  $return = array(
     'backdrop_message' => array(
       'label' => t('Show a message on the site'),
       'group' => t('System'),
@@ -304,6 +304,18 @@ function rules_system_action_info() {
       'access callback' => 'rules_system_integration_access',
     ),
   );
+
+  $return['drupal_message'] = $return['backdrop_message'];
+  $return['drupal_message']['label'] = t('Show a message on the site. DEPRECATED.');
+  $return['drupal_message']['base'] = 'rules_action_drupal_message';
+  $return['drupal_message']['hidden'] = TRUE; // @todo To be implemented
+  
+  $return['drupal_watchdog'] = $return['backdrop_watchdog'];
+  $return['drupal_watchdog']['label'] = t('Logs a message to the system dblog. DEPRECATED.');
+  $return['drupal_watchdog']['base'] = 'rules_action_drupal_watchdog';
+  $return['drupal_watchdog']['hidden'] = TRUE; // @todo To be implemented
+
+  return $return;
 }
 
 /**
