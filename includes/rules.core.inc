@@ -728,7 +728,7 @@ abstract class RulesPlugin extends RulesExtendable {
    * When converted to a string, just use the export format.
    */
   public function __toString() {
-    return $this->isRoot() ? $this->export() : entity_var_json_export($this->export());
+    return $this->isRoot() ? $this->export() : entity_plus_var_json_export($this->export());
   }
 
   /**
