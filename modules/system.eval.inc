@@ -210,6 +210,7 @@ function rules_mail($key, &$message, $params) {
   $message['body'][] = $params['message'];
   if (!empty($params['from'])) {
     $message['from'] = $params['from'];
+    $message['headers']['From'] = $params['from'];
   }
   if (!empty($params['cc'])) {
     $message['headers']['Cc'] = $params['cc'];
