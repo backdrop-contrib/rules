@@ -3,16 +3,16 @@ on: [pull_request]
 jobs:
   simpletest:
     name: Run Simpletest
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Setup env
         run: |
           echo "REPO_NAME=${PWD##*/}" >> $GITHUB_ENV
-          echo 'USE_PHP_V=7.4' >> $GITHUB_ENV
+          echo 'USE_PHP_V=8.2' >> $GITHUB_ENV
       - name: Install MariaDB
         uses: shogo82148/actions-setup-mysql@v1
         with:
-          mysql-version: 'mariadb-10.5'
+          mysql-version: 'mariadb-10.11'
           root-password: 'root'
           auto-start: true
 
@@ -26,32 +26,33 @@ jobs:
         with:
           php-version: ${{ env.USE_PHP_V }}
           coverage: none
+          tools: none
 
       - name: Checkout Backdrop core
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: backdrop/backdrop
 
       - name: Checkout Entity Plus
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: backdrop-contrib/entity_plus
           path: modules/entity_plus
 
       - name: Checkout Entity UI
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: backdrop-contrib/entity_ui
           path: modules/entity_ui
 
       - name: Checkout Entity Tokens
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: backdrop-contrib/entity_token
           path: modules/entity_token
 
       - name: Checkout module
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: modules/${{ env.REPO_NAME }}
 
@@ -61,6 +62,7 @@ jobs:
           sudo sed -i -e "s?_PWD?$PWD?g" -e "s/_PHP_V/${{ env.USE_PHP_V }}/g" /etc/apache2/sites-available/000-default.conf
           sudo apt-get install libapache2-mod-fcgid
           sudo a2enmod rewrite proxy fcgid proxy_fcgi
+          sudo chmod 751 /home/runner
           sudo systemctl start apache2.service
           sudo sed -i -e 's/user = www-data/user = runner/' /etc/php/${{ env.USE_PHP_V }}/fpm/pool.d/www.conf
           sudo sed -i -e 's/listen.owner = www-data/listen.owner = runner/' /etc/php/${{ env.USE_PHP_V }}/fpm/pool.d/www.conf
