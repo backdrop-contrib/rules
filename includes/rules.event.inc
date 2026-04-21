@@ -330,9 +330,12 @@ class RulesEventHandlerEntityBundle extends RulesEventHandlerBase {
    * Implements RulesEventHandlerInterface::summary().
    */
   public function summary() {
-    $bundle = &$this->settings['bundle'];
-    $bundle_label = isset($this->entityInfo['bundles'][$bundle]['label']) ? $this->entityInfo['bundles'][$bundle]['label'] : $bundle;
-    $suffix = isset($bundle) ? ' ' . t('of @bundle-key %name', array('@bundle-key' => $this->getBundlePropertyLabel(), '%name' => $bundle_label)) : '';
+    $suffix = '';
+    if ($this->settings['bundle']) {
+      $bundle = $this->settings['bundle'];
+      $bundle_label = isset($this->entityInfo['bundles'][$bundle]['label']) ? $this->entityInfo['bundles'][$bundle]['label'] : $bundle;
+      $suffix = ' ' . t('of @bundle-key %name', array('@bundle-key' => $this->getBundlePropertyLabel(), '%name' => $bundle_label));
+    }
     return check_plain($this->eventInfo['label']) . $suffix;
   }
 
