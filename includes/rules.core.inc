@@ -1564,7 +1564,7 @@ abstract class RulesAbstractPlugin extends RulesPlugin {
 
   protected function setUp() {
     parent::setUp();
-    if (isset($this->cache[$this->itemName . '_info'][$this->elementName])) {
+    if (!is_null($this->elementName) && isset($this->cache[$this->itemName . '_info'][$this->elementName])) {
       $this->info = $this->cache[$this->itemName . '_info'][$this->elementName];
       // Remember that the info has been correctly setup.
       // @see self::forceSetup()
