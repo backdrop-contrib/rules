@@ -4,8 +4,8 @@ jobs:
   functional_test:
     timeout-minutes: 10
     runs-on: ubuntu-latest
-    with:
-      module_dependencies: "entity_plus,entity_ui,entity_token"
     steps:
       - name: Run Tests
         uses: backdrop-ops/gha/actions/simpletest@main
+        with:
+          module_dependencies: "entity_plus,entity_ui,entity_token"
