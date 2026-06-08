@@ -6,6 +6,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run Tests
-        uses: backdrop-ops/gha/actions/simpletest@main
+        uses: backdrop-ops/gha/actions/simpletest@v1
         with:
           module_dependencies: "entity_plus,entity_ui,entity_token"
