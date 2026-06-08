@@ -1,36 +1,9 @@
-name: Coding Standards
+name: Coding standards
 on: [pull_request]
 jobs:
-  phpcs:
-    name: Run phpcs
+  coding_standards:
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.1'
-          coverage: none
-          tools: phpcs
-
-      - uses: actions/checkout@v4
-
-      - name: Get composer cache directory
-        id: composer-cache
-        run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - name: Cache composer directory
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('./composer.json') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
-      - name: Composer install coder_sniffer
-        run: composer install --ansi --prefer-dist --no-interaction --no-progress
-
-      - name: Backdrop coding standards
-        run: >
-          vendor/bin/phpcs -n
-          --standard=vendor/backdrop/coder/coder_sniffer/Backdrop
-          --ignore="vendor/*"
-          --extensions=install,module,php,inc .
+      - name: Run PHP_CodeSniffer
+        uses: backdrop-ops/gha/actions/phpcs_full@main
