@@ -15,6 +15,17 @@ function rules_action_backdrop_message($message, $status, $repeat) {
   backdrop_set_message(filter_xss_admin($message), $status, $repeat);
 }
 
+/** 
+ * Action: Show a backdrop message (drupal namespace).
+ * 
+ * @deprecated
+ */
+function rules_action_drupal_message($message, $status, $repeat) {
+  watchdog('rules', 'The action drupal_message is deprecated. This action is now named <em>backdrop_message</em>.', array(), WATCHDOG_DEPRECATED);
+  rules_log('The action drupal_message is deprecated. This action is now named <em>backdrop_message</em>.', array(), RulesLog::WARN);
+  rules_action_backdrop_message($message, $status, $repeat);
+}
+
 /**
  * Action: Write a watchdog db log message.
  */
@@ -27,6 +38,17 @@ function rules_action_backdrop_watchdog($type, $message, $severity, $link_text, 
     $link = NULL;
   }
   watchdog($type, $message, array(), $severity, $link);
+}
+
+/** 
+ * Action: Write a watchdog db log message (drupal namespace).
+ * 
+ * @deprecated
+ */
+function rules_action_drupal_watchdog($type, $message, $severity, $link_text, $link_path) {
+  watchdog('rules', 'The action drupal_watchdog is deprecated. This action is now named <em>backdrop_watchdog</em>.', array(), WATCHDOG_DEPRECATED);
+  rules_log('The action drupal_watchdog is deprecated. This action is now named <em>backdrop_watchdog</em>.', array(), RulesLog::WARN);
+  rules_action_backdrop_watchdog($type, $message, $severity, $link_text, $link_path);
 }
 
 /**
